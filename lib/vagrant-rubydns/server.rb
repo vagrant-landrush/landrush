@@ -18,21 +18,13 @@ module VagrantRubydns
       Pathname('.vagrant_dns.json')
     end
 
-    def self.entries
-      if configfile.exist?
-        JSON.parse(File.read('.vagrant_dns.json'))
-      else
-        {}
-      end
-    end
-
     def self.run
-      # Start the RubyDNS server
       server = self
       RubyDNS::run_server(:listen => INTERFACES) do
         match(/vagrant.dev/, IN::A) do |transaction|
-          if server.entries.has_key? transaction.name
-            transaction.respond!(server.entries[transaction.name])
+          ip = Config.get(transaction.name)
+          if ip
+            transaction.respond!(ip)
           else
             transaction.passthrough!(server.upstream)
           end

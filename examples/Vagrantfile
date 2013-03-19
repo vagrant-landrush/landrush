@@ -4,8 +4,8 @@
 # If you're doing development and want to run this locally you can simply
 # `bundle install`, then prefix all your vagrant commands with `bundle exec`, like so:
 #
-#   bundle exec vagrant up
-#   bundle exce vagrant halt
+#   VAGRANT_CWD=examples bundle exec vagrant up
+#   VAGRANT_CWD=examples bundle exce vagrant halt
 #
 
 # This line is unnecessary when the plugin is installed normally; it's just

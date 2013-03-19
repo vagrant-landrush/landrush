@@ -1,14 +1,14 @@
 module VagrantRubydns
   class Plugin < Vagrant.plugin('2')
-    name "vagrant-rubydns"
+    name 'vagrant-rubydns'
 
-    command "rubydns" do
-      require_relative "command"
+    command 'rubydns' do
+      require_relative 'command'
       Command
     end
 
-    provisioner "rubydns" do
-      require_relative "provisioner"
+    provisioner 'rubydns' do
+      require_relative 'provisioner'
       Provisioner
     end
 
