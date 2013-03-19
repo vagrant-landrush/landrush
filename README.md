@@ -21,16 +21,26 @@ Bring up a machine that has a private network IP address and a hostname (see the
 
     $ vagrant up
 
-And you should be able to get your hostname from the local server:
+And you should be able to get your hostname from your host:
 
     $ dig -p 10053 @localhost myhost.vagrant.dev
-    
-If you shut down your guest, the entry will be gone! Any DNS queries that do not match will be passed through to an upstream DNS server, so this will be able to serve as the one-stop shop for your guests DNS needs.
+
+You can also make this visible to the guest by using the provisioner, which will set `resolv.conf` and `iptables` rules such that DNS points at our server:
+
+    config.vm.provision :rubydns 
+
+If you shut down your guest, the entries associated with it will be removed.
+
+You can add static host entries to the DNS server in your Vagrantfile like so:
+
+    config.rubydns.host 'myhost.example.com', '1.2.3.4'
+
+Any DNS queries that do not match will be passed through to an upstream DNS server, so this will be able to serve as the one-stop shop for your guests' DNS needs.
 
 ## Work in Progress - Lots to do!
 
-* There's a stub provisioner in here - we'll use that to automatically point guests to our DNS server as they come up.
-* Lots of static values that need configurin' - config location, ports, TLD, etc.
+* The provisioner assumes resolv.conf-based DNS and iptables-based firewall.
+* Lots of static values that need configurin' - config location, ports, etc.
 * Tests tests tests.
 
 ## Contributing
