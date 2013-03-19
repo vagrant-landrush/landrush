@@ -15,6 +15,7 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
+tags
 
 .vagrant
 .vagrant_dns.json
