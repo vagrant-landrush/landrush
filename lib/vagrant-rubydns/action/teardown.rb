@@ -6,13 +6,22 @@ module VagrantRubydns
       end
 
       def call(env)
-        hostname = Util.hostname(env[:machine])
-
-        env[:ui].info "removing #{hostname} from DNS"
-
-        Store.delete(hostname)
-
+        teardown_static_dns(env)
+        teardown_machine_dns(env)
         @app.call(env)
+      end
+
+      def teardown_machine_dns(env)
+        hostname = Util.hostname(env[:machine])
+        env[:ui].info "[rubydns] removing machine entry: #{hostname}"
+        Store.delete(hostname)
+      end
+
+      def teardown_static_dns(env)
+        env[:global_config].rubydns.hosts.each do |hostname, _|
+          env[:ui].info "[rubydns] removing static entry: #{hostname}"
+          Store.delete hostname
+        end
       end
     end
   end

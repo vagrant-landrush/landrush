@@ -17,7 +17,7 @@ module VagrantRubydns
     def self.run
       server = self
       RubyDNS::run_server(:listen => INTERFACES) do
-        match(/vagrant.dev/, IN::A) do |transaction|
+        match(/.*/, IN::A) do |transaction|
           ip = Store.get(transaction.name)
           if ip
             transaction.respond!(ip)

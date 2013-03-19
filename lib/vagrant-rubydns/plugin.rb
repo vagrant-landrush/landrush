@@ -7,6 +7,11 @@ module VagrantRubydns
       Command
     end
 
+    config 'rubydns' do
+      require_relative 'config'
+      Config
+    end
+
     provisioner 'rubydns' do
       require_relative 'provisioner'
       Provisioner
