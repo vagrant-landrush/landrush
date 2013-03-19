@@ -8,9 +8,6 @@ module VagrantRubydns
     end
 
     def provision
-      # hostname, ip_address = Util.host_and_ip(@machine)
-      # Config.set(hostname, ip_address)
-
       @machine.env.ui.info "setting up machine's DNS to point to our server"
 
       redirect_dns_to_unpriviledged_port_tcp = 'OUTPUT -t nat -d 10.0.2.2 -p tcp --dport 53 -j DNAT --to-destination 10.0.2.2:10053'

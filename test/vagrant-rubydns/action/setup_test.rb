@@ -14,8 +14,8 @@ module VagrantRubydns
         env[:called].must_equal true
       end
 
-      it "stores the machine's hostname => ip address in the config" do
-        Config.clear!
+      it "stores the machine's hostname => ip address" do
+        Store.clear!
 
         app = Proc.new {}
         setup = Setup.new(app, nil)
@@ -23,7 +23,7 @@ module VagrantRubydns
         env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
         setup.call(env)
 
-        Config.get('somehost.vagrant.dev').must_equal '1.2.3.4'
+        Store.get('somehost.vagrant.dev').must_equal '1.2.3.4'
       end
     end
   end

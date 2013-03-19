@@ -14,15 +14,11 @@ module VagrantRubydns
       @upstream ||= RubyDNS::Resolver.new([[:udp, "8.8.8.8", 53], [:tcp, "8.8.8.8", 53]])
     end
 
-    def self.configfile
-      Pathname('.vagrant_dns.json')
-    end
-
     def self.run
       server = self
       RubyDNS::run_server(:listen => INTERFACES) do
         match(/vagrant.dev/, IN::A) do |transaction|
-          ip = Config.get(transaction.name)
+          ip = Store.get(transaction.name)
           if ip
             transaction.respond!(ip)
           else

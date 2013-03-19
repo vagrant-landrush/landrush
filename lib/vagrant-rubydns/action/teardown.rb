@@ -10,7 +10,7 @@ module VagrantRubydns
 
         env[:ui].info "removing #{hostname} from DNS"
 
-        Config.delete(hostname)
+        Store.delete(hostname)
 
         @app.call(env)
       end

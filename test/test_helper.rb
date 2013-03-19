@@ -8,7 +8,7 @@ require 'support/fake_ui'
 require 'vagrant-rubydns'
 
 # must be called before minitest/autorun to ensure proper at_exit ordering
-MiniTest::Unit.after_tests { VagrantRubydns::Config.clear! }
+MiniTest::Unit.after_tests { VagrantRubydns::Store.clear! }
 
 require 'minitest/autorun'
 

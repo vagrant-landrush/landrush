@@ -10,7 +10,7 @@ module VagrantRubydns
 
         env[:ui].info "setting #{hostname} to #{ip_address} in in DNS"
 
-        Config.set(hostname, ip_address)
+        Store.set(hostname, ip_address)
 
         @app.call(env)
       end
