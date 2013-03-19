@@ -3,9 +3,9 @@ $:.push(File.expand_path('../../lib', __FILE__))
 require 'bundler/setup'
 require 'minitest/spec'
 
-require 'vagrant-rubydns'
+require 'support/fake_ui'
 
-require 'ruby-debug'
+require 'vagrant-rubydns'
 
 # must be called before minitest/autorun to ensure proper at_exit ordering
 MiniTest::Unit.after_tests { VagrantRubydns::Config.clear! }
@@ -34,5 +34,5 @@ def fake_environment_with_machine(hostname, ip)
   machine.config.vm.hostname = hostname
   machine.config.vm.network :private_network, ip: ip
 
-  { machine: machine }
+  { machine: machine, ui: FakeUI }
 end

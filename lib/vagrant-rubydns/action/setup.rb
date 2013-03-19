@@ -6,7 +6,11 @@ module VagrantRubydns
       end
 
       def call(env)
-        Config.set(Util.hostname(env), Util.ip_address(env))
+        hostname, ip_address = Util.host_and_ip(env[:machine])
+
+        env[:ui].info "setting #{hostname} to #{ip_address} in in DNS"
+
+        Config.set(hostname, ip_address)
 
         @app.call(env)
       end
