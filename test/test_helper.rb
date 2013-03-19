@@ -12,6 +12,11 @@ MiniTest::Unit.after_tests { VagrantRubydns::Store.clear! }
 
 require 'minitest/autorun'
 
+def fake_environment(extras={})
+  env = Vagrant::Environment.new
+  { ui: FakeUI, global_config: env.config_global }.merge(extras)
+end
+
 def fake_environment_with_machine(hostname, ip)
   provider_cls = Class.new do
     def initialize(machine)
@@ -34,5 +39,5 @@ def fake_environment_with_machine(hostname, ip)
   machine.config.vm.hostname = hostname
   machine.config.vm.network :private_network, ip: ip
 
-  { machine: machine, ui: FakeUI }
+  { machine: machine, ui: FakeUI, global_config: env.config_global }
 end

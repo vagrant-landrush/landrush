@@ -5,7 +5,8 @@ module VagrantRubydns
   module Action
     describe Teardown do
       it "calls the next app in the chain" do
-        env = {called: false, ui: FakeUI}
+        env = fake_environment(called: false)
+
         app = lambda { |e| e[:called] = true }
 
         teardown = Teardown.new(app, nil)

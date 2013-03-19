@@ -5,7 +5,8 @@ module VagrantRubydns
   module Action
     describe Setup do
       it "calls the next app in the chain" do
-        env = {called: false, ui: FakeUI}
+        env = fake_environment(called: false)
+
         app = lambda { |e| e[:called] = true }
 
         setup = Setup.new(app, nil)
