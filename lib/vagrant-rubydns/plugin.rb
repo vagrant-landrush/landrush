@@ -25,6 +25,7 @@ module VagrantRubydns
     action_hook 'rubydns_teardown', :machine_action_halt do |hook|
       require_relative 'action/teardown'
       hook.after(Vagrant::Action::Builtin::GracefulHalt, Action::Teardown)
+      hook.after(VagrantPlugins::ProviderVirtualBox::Action::ForcedHalt, Action::Teardown)
     end
   end
 end
