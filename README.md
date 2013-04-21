@@ -17,6 +17,10 @@ Spin up the DNS server
 
     $ vagrant rubydns
 
+Enable the plugin in your `Vagrantfile`:
+
+    config.rubydns.enable
+
 Bring up a machine that has a private network IP address and a hostname (see the `Vagrantfile` for an example) 
 
     $ vagrant up
@@ -27,7 +31,7 @@ And you should be able to get your hostname from your host:
     
 If you shut down your guest, the entries associated with it will be removed.
 
-You can add static host entries to the DNS server in your Vagrantfile like so:
+You can add static host entries to the DNS server in your `Vagrantfile` like so:
 
     config.rubydns.host 'myhost.example.com', '1.2.3.4'
 
