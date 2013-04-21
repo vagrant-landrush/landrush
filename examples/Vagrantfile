@@ -15,6 +15,7 @@ Vagrant.require_plugin "vagrant-rubydns"
 Vagrant.configure("2") do |config|
   config.vm.box = "precise64"
 
+  config.rubydns.enable
   config.vm.provision :rubydns
 
   config.vm.network :private_network, ip: '172.16.32.111'

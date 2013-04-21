@@ -26,6 +26,20 @@ module VagrantRubydns
 
         Store.get('somehost.vagrant.dev').must_equal '1.2.3.4'
       end
+
+      it "does nothing if it is not enabled via config" do
+        Store.clear!
+
+        app = Proc.new {}
+        setup = Setup.new(app, nil)
+
+        env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
+        env[:global_config].rubydns.disable
+
+        setup.call(env)
+
+        Store.get('somehost.vagrant.dev').must_equal nil
+      end
     end
   end
 end

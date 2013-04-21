@@ -36,6 +36,8 @@ def fake_environment_with_machine(hostname, ip)
     env
   )
 
+  machine.config.rubydns.enable
+
   machine.config.vm.hostname = hostname
   machine.config.vm.network :private_network, ip: ip
 

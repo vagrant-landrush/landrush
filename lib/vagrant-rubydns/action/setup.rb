@@ -6,8 +6,10 @@ module VagrantRubydns
       end
 
       def call(env)
-        setup_machine_dns(env)
-        setup_static_dns(env)
+        if env[:global_config].rubydns.enabled?
+          setup_machine_dns(env)
+          setup_static_dns(env)
+        end
         @app.call(env)
       end
 
