@@ -12,14 +12,11 @@ module VagrantRubydns
       Config
     end
 
-    provisioner 'rubydns' do
-      require_relative 'provisioner'
-      Provisioner
-    end
-
     action_hook 'rubydns_setup', :machine_action_up do |hook|
       require_relative 'action/setup'
+      require_relative 'action/redirect_dns'
       hook.before(VagrantPlugins::ProviderVirtualBox::Action::Boot, Action::Setup)
+      hook.after(VagrantPlugins::ProviderVirtualBox::Action::Boot, Action::RedirectDns)
     end
 
     action_hook 'rubydns_teardown', :machine_action_halt do |hook|

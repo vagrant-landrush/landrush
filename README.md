@@ -1,9 +1,10 @@
 # Vagrant RubyDNS Plugin
 
+Simple DNS that's visible on both the guest and the host.
+
 Spins up a small RubyDNS server that you can point your VMs at, automatically
 registers/deregisters IP addresseses of guests as they come up and down.
 
-**Goal**: simple DNS that's visible on both the guest and the host
 
 ## Installation
 
@@ -12,10 +13,6 @@ Install under Vagrant (1.1 or later):
     $ vagrant plugin install vagrant-rubydns
 
 ## Usage
-
-Spin up the DNS server
-
-    $ vagrant rubydns
 
 Enable the plugin in your `Vagrantfile`:
 

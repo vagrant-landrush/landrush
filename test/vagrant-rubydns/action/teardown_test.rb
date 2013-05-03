@@ -6,31 +6,75 @@ module VagrantRubydns
     describe Teardown do
       it "calls the next app in the chain" do
         env = fake_environment(called: false)
-
         app = lambda { |e| e[:called] = true }
-
         teardown = Teardown.new(app, nil)
+
         teardown.call(env)
 
         env[:called].must_equal true
       end
 
       it "clears the machine's hostname => ip address" do
-        Store.set('somehost.vagrant.dev', '1.2.3.4')
-
         app = Proc.new {}
         teardown = Teardown.new(app, nil)
-
         env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
+
+        Store.hosts.set('somehost.vagrant.dev', '1.2.3.4')
         teardown.call(env)
 
-        Store.get('somehost.vagrant.dev').must_equal nil
+        Store.hosts.get('somehost.vagrant.dev').must_equal nil
+      end
+
+      it "removes the machine as a dependent VM" do
+        app = Proc.new {}
+        teardown = Teardown.new(app, nil)
+        env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
+
+        DependentVMs.add(env[:machine])
+        teardown.call(env)
+
+        DependentVMs.list.must_equal []
+      end
+
+      it "stops the rubydns server when there are no dependent machines left" do
+        app = Proc.new {}
+        teardown = Teardown.new(app, nil)
+        env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
+
+        Server.start
+        teardown.call(env)
+
+        Server.stop_count.must_equal 1
+      end
+
+      it "leaves the rubydns server when other dependent vms exist" do
+        app = Proc.new {}
+        teardown = Teardown.new(app, nil)
+        env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
+
+        other_env = fake_environment_with_machine('otherhost.vagrant.dev', '1.2.3.4')
+        DependentVMs.add(other_env[:machine])
+
+        Server.start
+        teardown.call(env)
+
+        Server.stop_count.must_equal 0
+      end
+
+      it "leaves the server alone if it's not running" do
+        app = Proc.new {}
+        teardown = Teardown.new(app, nil)
+        env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
+
+        teardown.call(env)
+
+        Server.stop_count.must_equal 0
       end
 
       it "does nothing when rubydns is disabled" do
         # somewhat unrealistic since this entry shouldn't be there if it was
         # disabled in the first place, but oh well
-        Store.set('somehost.vagrant.dev', '1.2.3.4')
+        Store.hosts.set('somehost.vagrant.dev', '1.2.3.4')
 
         app = Proc.new {}
         teardown = Teardown.new(app, nil)
@@ -40,7 +84,7 @@ module VagrantRubydns
 
         teardown.call(env)
 
-        Store.get('somehost.vagrant.dev').must_equal '1.2.3.4'
+        Store.hosts.get('somehost.vagrant.dev').must_equal '1.2.3.4'
       end
     end
   end

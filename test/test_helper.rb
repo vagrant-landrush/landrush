@@ -3,12 +3,7 @@ $:.push(File.expand_path('../../lib', __FILE__))
 require 'bundler/setup'
 require 'minitest/spec'
 
-require 'support/fake_ui'
-
 require 'vagrant-rubydns'
-
-# must be called before minitest/autorun to ensure proper at_exit ordering
-MiniTest::Unit.after_tests { VagrantRubydns::Store.clear! }
 
 require 'minitest/autorun'
 
@@ -43,3 +38,10 @@ def fake_environment_with_machine(hostname, ip)
 
   { machine: machine, ui: FakeUI, global_config: env.config_global }
 end
+
+# order is important on these
+require 'support/fake_working_dir'
+require 'support/clear_dependent_vms'
+
+require 'support/fake_ui'
+require 'support/disable_server_daemon'

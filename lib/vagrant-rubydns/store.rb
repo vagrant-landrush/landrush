@@ -1,35 +1,47 @@
 module VagrantRubydns
   class Store
-    STORE_FILE = Pathname('.vagrant_dns.json')
+    def self.hosts
+      @hosts ||= new(VagrantRubydns.working_dir.join('hosts.json'))
+    end
 
-    def self.set(key, value)
+    attr_accessor :backing_file
+
+    def initialize(backing_file)
+      @backing_file = Pathname(backing_file)
+    end
+
+    def set(key, value)
       write(current_config.merge(key => value))
     end
 
-    def self.delete(key)
+    def delete(key)
       write(current_config.reject { |k, _| k == key })
     end
 
-    def self.get(key)
+    def get(key)
       current_config[key]
     end
 
-    def self.clear!
+    def clear!
       write({})
     end
 
     protected
 
-    def self.current_config
-      if STORE_FILE.exist?
-        JSON.parse(File.read(STORE_FILE))
+    def current_config
+      if backing_file.exist?
+        begin
+          JSON.parse(File.read(backing_file))
+        rescue JSON::ParserError
+          {}
+        end
       else
         {}
       end
     end
 
-    def self.write(config)
-      File.open(STORE_FILE, "w") do |f|
+    def write(config)
+      File.open(backing_file, "w") do |f|
         f.write(JSON.pretty_generate(config))
       end
     end

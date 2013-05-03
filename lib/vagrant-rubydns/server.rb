@@ -1,7 +1,7 @@
 require 'rubydns'
 
 module VagrantRubydns
-  class Server
+  class Server < RExec::Daemon::Base
 
     INTERFACES = [
       [:udp, "0.0.0.0", 10053],
@@ -14,13 +14,24 @@ module VagrantRubydns
       @upstream ||= RubyDNS::Resolver.new([[:udp, "8.8.8.8", 53], [:tcp, "8.8.8.8", 53]])
     end
 
+    def self.logfile
+      VagrantRubydns.working_dir.join('server.log')
+    end
+
+    # For RExec
+    @@base_directory = VagrantRubydns.working_dir
+
+    def self.running?
+      RExec::Daemon::ProcessFile.status(self) == :running
+    end
+
     def self.run
       server = self
       RubyDNS::run_server(:listen => INTERFACES) do
-        logger.level = Logger::INFO
+        self.logger.level = Logger::INFO
         
         match(/.*/, IN::A) do |transaction|
-          ip = Store.get(transaction.name)
+          ip = Store.hosts.get(transaction.name)
           if ip
             transaction.respond!(ip)
           else
