@@ -14,9 +14,14 @@ module VagrantRubydns
   end
 end
 
-require 'vagrant-rubydns/plugin'
-require 'vagrant-rubydns/store'
+require 'rubydns'
+
 require 'vagrant-rubydns/dependent_vms'
+require 'vagrant-rubydns/plugin'
+require 'vagrant-rubydns/resolver_config'
 require 'vagrant-rubydns/server'
+require 'vagrant-rubydns/store'
 require 'vagrant-rubydns/util'
 require 'vagrant-rubydns/version'
+
+require 'ext/rexec'

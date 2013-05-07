@@ -25,6 +25,10 @@ module VagrantRubydns
       RExec::Daemon::ProcessFile.status(self) == :running
     end
 
+    def self.prefork
+      ResolverConfig.ensure_config_exists
+    end
+
     def self.run
       server = self
       RubyDNS::run_server(:listen => INTERFACES) do
