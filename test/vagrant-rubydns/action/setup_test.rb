@@ -50,9 +50,12 @@ module VagrantRubydns
         env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
 
         Server.start
+        original_pid = Server.pid
+
         setup.call(env)
 
-        Server.start_count.must_equal 1
+        Server.running?.must_equal true
+        Server.pid.must_equal original_pid
       end
 
       it "does nothing if it is not enabled via config" do

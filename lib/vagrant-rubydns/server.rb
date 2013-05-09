@@ -2,36 +2,53 @@ require 'rubydns'
 
 module VagrantRubydns
   class Server < RExec::Daemon::Base
-
-    INTERFACES = [
-      [:udp, "0.0.0.0", 10053],
-      [:tcp, "0.0.0.0", 10053]
-    ]
     Name = Resolv::DNS::Name
-    IN = Resolv::DNS::Resource::IN
+    IN   = Resolv::DNS::Resource::IN
 
-    def self.upstream
-      @upstream ||= RubyDNS::Resolver.new([[:udp, "8.8.8.8", 53], [:tcp, "8.8.8.8", 53]])
+    def self.port
+      @port ||= 10053
     end
 
-    def self.logfile
-      VagrantRubydns.working_dir.join('server.log')
+    def self.port=(port)
+      @port = port
+    end
+
+    def self.upstream_servers
+      [[:udp, "8.8.8.8", 53], [:tcp, "8.8.8.8", 53]]
+    end
+
+    def self.interfaces
+      [
+        [:udp, "0.0.0.0", port],
+        [:tcp, "0.0.0.0", port]
+      ]
+    end
+
+    def self.upstream
+      @upstream ||= RubyDNS::Resolver.new(upstream_servers)
+    end
+
+    def self.pid
+      RExec::Daemon::ProcessFile.recall(self)
     end
 
     # For RExec
-    @@base_directory = VagrantRubydns.working_dir
+    def self.working_directory
+      VagrantRubydns.working_dir
+    end
 
     def self.running?
       RExec::Daemon::ProcessFile.status(self) == :running
     end
 
     def self.prefork
+      super
       ResolverConfig.ensure_config_exists
     end
 
     def self.run
       server = self
-      RubyDNS::run_server(:listen => INTERFACES) do
+      RubyDNS::run_server(:listen => interfaces) do
         self.logger.level = Logger::INFO
         
         match(/.*/, IN::A) do |transaction|

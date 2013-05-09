@@ -44,7 +44,7 @@ module VagrantRubydns
         Server.start
         teardown.call(env)
 
-        Server.stop_count.must_equal 1
+        Server.running?.must_equal false
       end
 
       it "leaves the rubydns server when other dependent vms exist" do
@@ -58,7 +58,7 @@ module VagrantRubydns
         Server.start
         teardown.call(env)
 
-        Server.stop_count.must_equal 0
+        Server.running?.must_equal true
       end
 
       it "leaves the server alone if it's not running" do
@@ -68,7 +68,7 @@ module VagrantRubydns
 
         teardown.call(env)
 
-        Server.stop_count.must_equal 0
+        Server.running?.must_equal false
       end
 
       it "does nothing when rubydns is disabled" do

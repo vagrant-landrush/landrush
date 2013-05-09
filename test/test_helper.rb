@@ -39,9 +39,15 @@ def fake_environment_with_machine(hostname, ip)
   { machine: machine, ui: FakeUI, global_config: env.config_global }
 end
 
+class MiniTest::Spec
+  alias_method :hush, :capture_io
+end
+
 # order is important on these
-require 'support/fake_working_dir'
 require 'support/clear_dependent_vms'
 
 require 'support/fake_ui'
-require 'support/disable_server_daemon'
+require 'support/test_server_daemon'
+
+# need to be last; don't want to delete dir out from servers before they clean up
+require 'support/fake_working_dir'
