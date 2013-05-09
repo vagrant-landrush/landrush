@@ -26,9 +26,9 @@ module VagrantRubydns
       Tempfile.open('vagrant_rubydns_host_config') do |f|
         f.write(desired_contents)
         f.close
-        `sudo cp #{f.path} /etc/resolver/vagrant.dev`
-        `sudo chown root:wheel /etc/resolver/vagrant.dev`
-        `sudo chmod 644 /etc/resolver/vagrant.dev`
+        system "sudo cp #{f.path} /etc/resolver/vagrant.dev"
+        system "sudo chown root:wheel /etc/resolver/vagrant.dev"
+        system "sudo chmod 644 /etc/resolver/vagrant.dev"
       end
     end
 
