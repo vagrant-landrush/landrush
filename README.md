@@ -36,9 +36,7 @@ Any DNS queries that do not match will be passed through to an upstream DNS serv
 
 ### Visibility on the Guest
 
-You can also make this visible to the guest by using the provisioner, which will set `resolv.conf` and `iptables` rules such that DNS points at our server:
-
-    config.vm.provision :rubydns 
+Linux guests using iptables should automatically have their DNS traffic redirected properly to our DNS server. File an issue if this does not work for you.
 
 ### Visibility on the Host
 
@@ -58,8 +56,9 @@ This gives us automatic access to the vagrant-rubydns hosts without having to wo
 
 ## Work in Progress - Lots to do!
 
-* The provisioner assumes resolv.conf-based DNS and iptables-based firewall.
+* The guest visibility strategy assumes iptables-based firewall.
 * Lots of static values that need configurin' - config location, ports, etc.
+* VirtualBox only right now, need to support VMWare
 * Tests tests tests.
 
 ## Contributing
