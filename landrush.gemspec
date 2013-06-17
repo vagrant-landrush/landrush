@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Paul Hinze"]
   spec.email         = ["paul.t.hinze@gmail.com"]
   spec.description   = <<-DESCRIP.gsub(/^    /, '')
-    Even a Vagrant needs a place to settle down once in awhile.
+    Even a Vagrant needs a place to settle down once in a while.
 
     This Vagrant plugin spins up a lightweight DNS server and makes it visible
     to your guests and your host, so that you can easily access all your

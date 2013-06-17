@@ -1,10 +1,12 @@
-# Vagrant landrush Plugin
+# Landrush: DNS for Vagrant
 
 Simple DNS that's visible on both the guest and the host.
 
-Spins up a small landrush server that you can point your VMs at, automatically
-registers/deregisters IP addresseses of guests as they come up and down.
+> Because even a Vagrant needs a place to settle down once in a while.
 
+Spins up a small DNS server and redirects DNS traffic from your VMs to use it,
+automatically registers/deregisters IP addresseses of guests as they come up
+and down.
 
 ## Installation
 
