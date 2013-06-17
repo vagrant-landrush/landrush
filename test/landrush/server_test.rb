@@ -1,6 +1,6 @@
 require 'test_helper'
 
-module VagrantRubydns
+module Landrush
   describe Server do
     after {
       if Server.running?

@@ -1,6 +1,6 @@
 require 'rubydns'
 
-module VagrantRubydns
+module Landrush
   class Server < RExec::Daemon::Base
     Name = Resolv::DNS::Name
     IN   = Resolv::DNS::Resource::IN
@@ -25,7 +25,7 @@ module VagrantRubydns
     end
 
     def self.upstream
-      @upstream ||= RubyDNS::Resolver.new(upstream_servers)
+      @upstream ||= landrush::Resolver.new(upstream_servers)
     end
 
     def self.pid
@@ -34,7 +34,7 @@ module VagrantRubydns
 
     # For RExec
     def self.working_directory
-      VagrantRubydns.working_dir
+      Landrush.working_dir
     end
 
     def self.running?

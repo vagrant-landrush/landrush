@@ -1,10 +1,10 @@
-module VagrantRubydns
+module Landrush
   class Command < Vagrant.plugin('2', :command)
     DAEMON_COMMANDS = %w(start stop restart status)
     DEPENDENT_VM_COMMADNS = %w(dependentvms)
 
     def execute
-      ARGV.shift # flush rubydns from ARGV, RExec wants to use it for daemon commands
+      ARGV.shift # flush landrush from ARGV, RExec wants to use it for daemon commands
 
       command = ARGV.first
       if DAEMON_COMMANDS.include?(command)
@@ -29,13 +29,13 @@ module VagrantRubydns
     def usage(msg); <<-EOS.gsub(/^      /, '')
       ERROR: #{msg}
 
-      vagrant rubydns <command>
+      vagrant landrush <command>
 
       commands:
         {start|stop|restart|status}
-          control the rubydns server daemon
+          control the landrush server daemon
         dependentvms
-          list vms currently dependent on the rubydns server
+          list vms currently dependent on the landrush server
       EOS
     end
   end

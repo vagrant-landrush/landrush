@@ -3,7 +3,7 @@ $:.push(File.expand_path('../../lib', __FILE__))
 require 'bundler/setup'
 require 'minitest/spec'
 
-require 'vagrant-rubydns'
+require 'landrush'
 
 require 'minitest/autorun'
 
@@ -31,7 +31,7 @@ def fake_environment_with_machine(hostname, ip)
     env
   )
 
-  machine.config.rubydns.enable
+  machine.config.landrush.enable
 
   machine.config.vm.hostname = hostname
   machine.config.vm.network :private_network, ip: ip

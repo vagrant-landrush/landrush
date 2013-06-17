@@ -1,4 +1,4 @@
-module VagrantRubydns
+module Landrush
   class Config < Vagrant.plugin('2', :config)
     attr_accessor :hosts
 

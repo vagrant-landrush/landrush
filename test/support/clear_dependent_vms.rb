@@ -1,7 +1,7 @@
 module ClearDependentVms
   def setup
     super
-    VagrantRubydns::DependentVMs.clear!
+    Landrush::DependentVMs.clear!
   end
 end
 

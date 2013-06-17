@@ -1,4 +1,4 @@
-module VagrantRubydns
+module Landrush
   module Util
     def self.host_and_ip(machine)
       [hostname(machine), ip_address(machine)]

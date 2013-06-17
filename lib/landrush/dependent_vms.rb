@@ -5,7 +5,7 @@ require 'fileutils'
 #
 # Poor man's race condition defense - touch and rm files in a directory and count them.
 #
-module VagrantRubydns
+module Landrush
   class DependentVMs
     extend Enumerable
 
@@ -34,7 +34,7 @@ module VagrantRubydns
     end
 
     def self.dir
-      VagrantRubydns.working_dir.join('dependent_vms').tap(&:mkpath)
+      Landrush.working_dir.join('dependent_vms').tap(&:mkpath)
     end
   end
 end

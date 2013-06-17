@@ -1,12 +1,12 @@
 module FakeWorkingDirHooks
   def setup
     super
-    VagrantRubydns.working_dir = '/tmp/vagrant_rubydns_test_working_dir'
+    Landrush.working_dir = '/tmp/vagrant_landrush_test_working_dir'
   end
 
   def teardown
     super
-    VagrantRubydns.working_dir.rmtree if VagrantRubydns.working_dir.directory?
+    Landrush.working_dir.rmtree if Landrush.working_dir.directory?
   end
 end
 

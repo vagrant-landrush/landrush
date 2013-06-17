@@ -1,4 +1,4 @@
-module VagrantRubydns
+module Landrush
   module Action
     class RedirectDns
       def initialize(app, env)

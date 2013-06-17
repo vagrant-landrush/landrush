@@ -3,7 +3,7 @@ module RExec
   module Daemon
     module Controller
       def self.puts(str)
-        Kernel.puts "[vagrant-rubydns] #{str}"
+        Kernel.puts "[landrush] #{str}"
       end
     end
   end

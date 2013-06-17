@@ -1,7 +1,7 @@
 require 'test_helper'
-require 'vagrant-rubydns/action/teardown'
+require 'landrush/action/teardown'
 
-module VagrantRubydns
+module Landrush
   module Action
     describe Teardown do
       it "calls the next app in the chain" do
@@ -36,7 +36,7 @@ module VagrantRubydns
         DependentVMs.list.must_equal []
       end
 
-      it "stops the rubydns server when there are no dependent machines left" do
+      it "stops the landrush server when there are no dependent machines left" do
         app = Proc.new {}
         teardown = Teardown.new(app, nil)
         env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
@@ -47,7 +47,7 @@ module VagrantRubydns
         Server.running?.must_equal false
       end
 
-      it "leaves the rubydns server when other dependent vms exist" do
+      it "leaves the landrush server when other dependent vms exist" do
         app = Proc.new {}
         teardown = Teardown.new(app, nil)
         env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
@@ -71,7 +71,7 @@ module VagrantRubydns
         Server.running?.must_equal false
       end
 
-      it "does nothing when rubydns is disabled" do
+      it "does nothing when landrush is disabled" do
         # somewhat unrealistic since this entry shouldn't be there if it was
         # disabled in the first place, but oh well
         Store.hosts.set('somehost.vagrant.dev', '1.2.3.4')
@@ -80,7 +80,7 @@ module VagrantRubydns
         teardown = Teardown.new(app, nil)
 
         env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
-        env[:global_config].rubydns.disable
+        env[:global_config].landrush.disable
 
         teardown.call(env)
 

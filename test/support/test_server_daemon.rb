@@ -1,5 +1,5 @@
 # Set test port so there's nothing colliding
-VagrantRubydns::Server.port = 11153
+Landrush::Server.port = 11153
 
 module SilenceOutput
   def silence
@@ -21,7 +21,7 @@ module SilenceOutput
   end
 end
 
-class VagrantRubydns::Server
+class Landrush::Server
   extend SilenceOutput
 end
 
@@ -29,8 +29,8 @@ module TestServerHooks
   def teardown
     super
     # Cleanup any stray server instances from tests
-    if VagrantRubydns::Server.running?
-      VagrantRubydns::Server.stop
+    if Landrush::Server.running?
+      Landrush::Server.stop
     end
   end
 end

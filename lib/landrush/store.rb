@@ -1,7 +1,7 @@
-module VagrantRubydns
+module Landrush
   class Store
     def self.hosts
-      @hosts ||= new(VagrantRubydns.working_dir.join('hosts.json'))
+      @hosts ||= new(Landrush.working_dir.join('hosts.json'))
     end
 
     attr_accessor :backing_file

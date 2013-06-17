@@ -1,6 +1,6 @@
 require 'test_helper'
 
-module VagrantRubydns
+module Landrush
   describe DependentVMs do
     describe "any?" do
       it "reports false when nothing has happened" do

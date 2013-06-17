@@ -1,7 +1,7 @@
 require 'test_helper'
-require 'vagrant-rubydns/action/setup'
+require 'landrush/action/setup'
 
-module VagrantRubydns
+module Landrush
   module Action
     describe Setup do
       it "calls the next app in the chain" do
@@ -34,7 +34,7 @@ module VagrantRubydns
         DependentVMs.list.must_equal %w[somehost.vagrant.dev]
       end
 
-      it "starts the rubydns server if it's not already started" do
+      it "starts the landrush server if it's not already started" do
         app = Proc.new {}
         setup = Setup.new(app, nil)
         env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
@@ -63,7 +63,7 @@ module VagrantRubydns
         setup = Setup.new(app, nil)
         env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
 
-        env[:global_config].rubydns.disable
+        env[:global_config].landrush.disable
         setup.call(env)
 
         Store.hosts.get('somehost.vagrant.dev').must_equal nil

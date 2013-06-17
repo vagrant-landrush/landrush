@@ -1,9 +1,9 @@
 require 'test_helper'
 
-module VagrantRubydns
+module Landrush
   describe Store do
     before {
-      @store = Store.new(Tempfile.new(%w[rubydns_test_store .json]))
+      @store = Store.new(Tempfile.new(%w[landrush_test_store .json]))
     }
 
     after {
