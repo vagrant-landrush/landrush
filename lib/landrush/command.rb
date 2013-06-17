@@ -1,7 +1,6 @@
 module Landrush
   class Command < Vagrant.plugin('2', :command)
     DAEMON_COMMANDS = %w(start stop restart status)
-    DEPENDENT_VM_COMMADNS = %w(dependentvms)
 
     def execute
       ARGV.shift # flush landrush from ARGV, RExec wants to use it for daemon commands
@@ -15,6 +14,8 @@ module Landrush
         else
           @env.ui.info("No dependent VMs")
         end
+      elsif command == 'install'
+        ResolverConfg.ensure_config_exists
       else
         boom("'#{command}' is not a command")
       end
@@ -36,6 +37,8 @@ module Landrush
           control the landrush server daemon
         dependentvms
           list vms currently dependent on the landrush server
+        install
+          install resolver config for host visbility (requires sudo)
       EOS
     end
   end

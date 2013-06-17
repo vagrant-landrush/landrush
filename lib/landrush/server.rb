@@ -43,7 +43,6 @@ module Landrush
 
     def self.prefork
       super
-      ResolverConfig.ensure_config_exists
     end
 
     def self.run
