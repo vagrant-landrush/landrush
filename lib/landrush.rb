@@ -6,7 +6,7 @@ end
 
 module Landrush
   def self.working_dir
-    @working_dir ||= Pathname(File.expand_path('~/.vagrant_landrush')).tap(&:mkpath)
+    @working_dir ||= Pathname(File.expand_path('~/.vagrant.d/data/landrush')).tap(&:mkpath)
   end
 
   def self.working_dir=(working_dir)
