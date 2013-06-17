@@ -48,6 +48,7 @@ require 'support/clear_dependent_vms'
 
 require 'support/fake_ui'
 require 'support/test_server_daemon'
+require 'support/fake_resolver_config'
 
 # need to be last; don't want to delete dir out from servers before they clean up
 require 'support/fake_working_dir'
