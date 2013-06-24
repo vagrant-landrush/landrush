@@ -25,6 +25,7 @@ def fake_environment_with_machine(hostname, ip)
     'fake_provider',
     provider_cls,
     'provider_config',
+    {}, # provider_options
     env.config_global,
     Pathname('data_dir'),
     'box',
