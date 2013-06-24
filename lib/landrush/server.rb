@@ -25,7 +25,7 @@ module Landrush
     end
 
     def self.upstream
-      @upstream ||= landrush::Resolver.new(upstream_servers)
+      @upstream ||= RubyDNS::Resolver.new(upstream_servers)
     end
 
     def self.pid
