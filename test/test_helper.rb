@@ -13,12 +13,16 @@ def fake_environment(extras={})
 end
 
 def fake_environment_with_machine(hostname, ip)
+  env = Vagrant::Environment.new
+  machine = fake_machine(hostname, ip, env)
+  { machine: machine, ui: FakeUI, global_config: env.config_global }
+end
+
+def fake_machine(hostname, ip, env = Vagrant::Environment.new)
   provider_cls = Class.new do
     def initialize(machine)
     end
   end 
-
-  env = Vagrant::Environment.new
 
   machine = Vagrant::Machine.new(
     'fake_machine',
@@ -33,11 +37,15 @@ def fake_environment_with_machine(hostname, ip)
   )
 
   machine.config.landrush.enable
-
   machine.config.vm.hostname = hostname
   machine.config.vm.network :private_network, ip: ip
 
-  { machine: machine, ui: FakeUI, global_config: env.config_global }
+  machine
+end
+
+def fake_static_entry(env, hostname, ip)
+  env[:global_config].landrush.host(hostname, ip)
+  Landrush::Store.hosts.set(hostname, ip)
 end
 
 class MiniTest::Spec

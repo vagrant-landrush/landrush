@@ -51,14 +51,27 @@ module Landrush
         app = Proc.new {}
         teardown = Teardown.new(app, nil)
         env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
-
-        other_env = fake_environment_with_machine('otherhost.vagrant.dev', '1.2.3.4')
-        DependentVMs.add(other_env[:machine])
+        other_machine = fake_machine('otherhost.vagrant.dev', '2.3.4.5')
+        DependentVMs.add(other_machine)
 
         Server.start
         teardown.call(env)
 
         Server.running?.must_equal true
+      end
+
+      it "leaves static entries when other dependent vms exist" do
+        app = Proc.new {}
+        teardown = Teardown.new(app, nil)
+        env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
+        other_machine = fake_machine('otherhost.vagrant.dev', '1.2.3.4')
+        DependentVMs.add(other_machine)
+
+        fake_static_entry(env, 'static.vagrant.dev', '3.4.5.6')
+
+        teardown.call(env)
+
+        Store.hosts.get('static.vagrant.dev').must_equal '3.4.5.6'
       end
 
       it "leaves the server alone if it's not running" do

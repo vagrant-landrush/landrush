@@ -6,40 +6,42 @@ module Landrush
       end
 
       def call(env)
-        if env[:global_config].landrush.enabled?
-          teardown_static_dns(env)
-          teardown_machine_dns(env)
-
-          DependentVMs.remove(env[:machine])
-          stop_server_if_necessary(env)
-        end
-        @app.call(env)
+        @env = env
+        teardown if env[:global_config].landrush.enabled?
+        @app.call(@env)
       end
 
-      def stop_server_if_necessary(env)
-        if Server.running?
-          if DependentVMs.none?
-            env[:ui].info "[landrush] no dependent vms left, stopping dns server"
-            Server.stop
-          else
-            env[:ui].info "[landrush] there are dependent vms left, leaving dns server"
-          end
+      def teardown
+        teardown_machine_dns
+        DependentVMs.remove(@env[:machine])
+
+        if DependentVMs.none?
+          teardown_static_dns
+          teardown_server
         else
-          env[:ui].info "[landrush] dns server already stopped"
+          info "there are #{DependentVMs.count} VMs left, leaving DNS server and static entries"
         end
       end
 
-      def teardown_machine_dns(env)
-        hostname = Util.hostname(env[:machine])
-        env[:ui].info "[landrush] removing machine entry: #{hostname}"
+      def teardown_machine_dns
+        hostname = Util.hostname(@env[:machine])
+        info "removing machine entry: #{hostname}"
         Store.hosts.delete(hostname)
       end
 
-      def teardown_static_dns(env)
-        env[:global_config].landrush.hosts.each do |hostname, _|
-          env[:ui].info "[landrush] removing static entry: #{hostname}"
+      def teardown_static_dns
+        @env[:global_config].landrush.hosts.each do |hostname, _|
+          info "removing static entry: #{hostname}"
           Store.hosts.delete hostname
         end
+      end
+
+      def teardown_server
+        Server.stop
+      end
+
+      def info(msg)
+        @env[:ui].info "[landrush] #{msg}"
       end
     end
   end
