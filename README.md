@@ -44,15 +44,24 @@ Linux guests using iptables should automatically have their DNS traffic redirect
 
 I'm currently developing this on OS X 10.8, and there's a nice trick you can pull to unobtrusibly add a secondary DNS server only for specific domains.
 
-All you do is drop a file in `/etc/resolvers/$DOMAIN` with information on how to connect to the DNS server you'd like to use for that domain.
+All you do is drop a file in `/etc/resolver/$DOMAIN` with information on how to connect to the DNS server you'd like to use for that domain.
 
-So what I do is name all of my vagrant servers with the pattern `$host.vagrant.dev` and then drop a file called `/etc/resolvers/vagrant.dev` with these contents:
+So what I do is name all of my vagrant servers with the pattern `$host.vagrant.dev` and then drop a file called `/etc/resolver/vagrant.dev` with these contents:
 
 ```
 # Use landrush server for this domain
 nameserver 127.0.0.1
 port 10053
 ```
+
+Once you have done this, you can run `scutil --dns` to confirm that the DNS resolution is working -- you should see something like:
+```
+resolver #8
+  domain   : vagrant.dev
+  nameserver[0] : 127.0.0.1
+  port     : 10053
+```
+
 
 This gives us automatic access to the landrush hosts without having to worry about it getting in the way of our normal DNS config.
 
