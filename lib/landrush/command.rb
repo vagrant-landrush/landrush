@@ -15,7 +15,7 @@ module Landrush
           @env.ui.info("No dependent VMs")
         end
       elsif command == 'install'
-        ResolverConfg.ensure_config_exists
+        ResolverConfig.ensure_config_exists
       else
         boom("'#{command}' is not a command")
       end
