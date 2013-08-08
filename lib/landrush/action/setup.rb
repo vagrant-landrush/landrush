@@ -11,7 +11,6 @@ module Landrush
           start_server_if_necessary(env)
           setup_machine_dns(env)
           setup_static_dns(env)
-          env[:machine].config.vm.provision :landrush
         end
         @app.call(env)
       end
