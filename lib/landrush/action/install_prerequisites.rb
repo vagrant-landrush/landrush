@@ -6,10 +6,12 @@ module Landrush
       end
 
       def call(env)
-        @machine = env[:machine]
-        @machine.ui.info('setting up prerequisites')
+        if env[:global_config].landrush.enabled?
+          @machine = env[:machine]
+          @machine.ui.info('setting up prerequisites')
 
-        install_prerequisites
+          install_prerequisites
+        end
 
         @app.call(env)
       end

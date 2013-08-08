@@ -11,13 +11,15 @@ module Landrush
       end
 
       def call(env)
-        @machine = env[:machine]
+        if env[:global_config].landrush.enabled?
+          @machine = env[:machine]
 
-        @machine.ui.info "setting up machine's DNS to point to our server"
-        @machine.guest.capability(:redirect_dns, host: _target_host, port: 10053)
+          @machine.ui.info "setting up machine's DNS to point to our server"
+          @machine.guest.capability(:redirect_dns, host: _target_host, port: 10053)
 
-        @machine.config.vm.networks.each do |type, options|
-          @machine.ui.info "network: #{type.inspect}, #{options.inspect}"
+          @machine.config.vm.networks.each do |type, options|
+            @machine.ui.info "network: #{type.inspect}, #{options.inspect}"
+          end
         end
 
         @app.call(env)
