@@ -2,7 +2,7 @@
 
 Simple DNS that's visible on both the guest and the host.
 
-> Because even a Vagrant needs a place to settle down once in a while.
+> Even a Vagrant needs a place to settle down once in a while.
 
 Spins up a small DNS server and redirects DNS traffic from your VMs to use it,
 automatically registers/deregisters IP addresseses of guests as they come up
@@ -13,6 +13,8 @@ and down.
 Install under Vagrant (1.1 or later):
 
     $ vagrant plugin install landrush
+
+If you're on OS X, see **Visibility on the Host** below.
 
 ## Usage
 
@@ -32,7 +34,6 @@ And you should be able to get your hostname from your host:
 
 If you shut down your guest, the entries associated with it will be removed.
 
-
 ### Static entries
 
 You can add static host entries to the DNS server in your `Vagrantfile` like so:
@@ -40,6 +41,10 @@ You can add static host entries to the DNS server in your `Vagrantfile` like so:
     config.landrush.host 'myhost.example.com', '1.2.3.4'
 
 This is great for overriding production services for nodes you might be testing locally. For example, perhaps you might want to override the hostname of your puppetmaster to point to a local vagrant box instead.
+
+### Wildcard Subdomains
+
+For your convenience, any subdomain of a DNS entry known to landrush will resolve to the same IP address as the entry. For example: given `myhost.vagrant.dev -> 1.2.3.4`, both `foo.myhost.vagrant.dev` and `bar.myhost.vagrant.dev` will also resolve to `1.2.3.4`.
 
 ### Unmatched Queries
 
@@ -81,16 +86,7 @@ vagrant landrush install
 
 Check out `vagrant landrush` for additional commands to monitor the DNS server daemon.
 
-## Work in Progress - Lots to do!
+## Help Out!
 
-* The guest visibility strategy assumes iptables-based firewall.
-* Lots of static values that need configurin' - config location, ports, etc.
-* Tests tests tests.
+This project could use your feedback and help! Please don't hesitate to open issues or submit pull requests. NO HESITATION IS ALLOWED. NONE WHATSOEVER.
 
-## Contributing
-
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
