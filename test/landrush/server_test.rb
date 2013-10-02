@@ -2,34 +2,48 @@ require 'test_helper'
 
 module Landrush
   describe Server do
-    after {
-      if Server.running?
-        Server.stop
-      end
-    }
+    def query(host)
+      output = `dig -p #{Server.port} @127.0.0.1 #{host}`
+      answer_line = output.split("\n").grep(/^#{Regexp.escape(host)}/).first
+      answer_line.split.last
+    end
+
     describe 'start/stop' do
       it 'starts and stops a daemon' do
-        hush { Server.start }
-
+        Server.start
         Server.running?.must_equal true
 
-        hush { Server.stop }
-
+        Server.stop
         Server.running?.must_equal false
       end
 
       it 'can be queried for upstream entries' do
-        hush { Server.start }
+        Server.start
 
-        output = `dig -p #{Server.port} @127.0.0.1 phinze.com`
+        query("phinze.com").must_match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/)
+      end
 
-        answer_line = output.split("\n").grep(/^phinze\.com\./).first
+      it 'responds properly to configured machine entries' do
+        Server.start
 
-        answer_line.wont_equal nil
+        fake_host = 'boogers.vagrant.dev'
+        fake_ip = '99.98.97.96'
 
-        ip_address = answer_line.split.last
+        Store.hosts.set(fake_host, fake_ip)
 
-        ip_address.must_match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/)
+        query(fake_host).must_equal fake_ip
+      end
+
+      it 'also resolves wildcard subdomains to a given machine' do
+        Server.start
+
+        fake_host = 'boogers.vagrant.dev'
+        fake_ip = '99.98.97.96'
+
+        Store.hosts.set(fake_host, fake_ip)
+
+        query("green.#{fake_host}").must_match(fake_ip)
+        query("blue.#{fake_host}").must_match(fake_ip)
       end
     end
   end

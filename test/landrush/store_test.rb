@@ -51,5 +51,21 @@ module Landrush
         @store.get('now').must_equal nil # you don't!
       end
     end
+
+    describe "find" do
+      it "returns the key that matches the end of the search term" do
+        @store.set('somehost.vagrant.dev', 'here')
+
+        @store.find('foo.somehost.vagrant.dev').must_equal 'somehost.vagrant.dev'
+        @store.find('bar.somehost.vagrant.dev').must_equal 'somehost.vagrant.dev'
+        @store.find('foo.otherhost.vagrant.dev').must_equal nil
+        @store.find('host.vagrant.dev').must_equal nil
+      end
+
+      it "returns exact matches too" do
+        @store.set('somehost.vagrant.dev', 'here')
+        @store.find('somehost.vagrant.dev').must_equal 'somehost.vagrant.dev'
+      end
+    end
   end
 end

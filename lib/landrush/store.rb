@@ -18,6 +18,12 @@ module Landrush
       write(current_config.reject { |k, _| k == key })
     end
 
+    def find(search)
+      current_config.keys.detect do |key|
+        search == key || search.match(/\.#{key}$/)
+      end
+    end
+
     def get(key)
       current_config[key]
     end

@@ -49,11 +49,11 @@ module Landrush
       server = self
       RubyDNS::run_server(:listen => interfaces) do
         self.logger.level = Logger::INFO
-        
+
         match(/.*/, IN::A) do |transaction|
-          ip = Store.hosts.get(transaction.name)
-          if ip
-            transaction.respond!(ip)
+          host = Store.hosts.find(transaction.name)
+          if host
+            transaction.respond!(Store.hosts.get(host))
           else
             transaction.passthrough!(server.upstream)
           end
