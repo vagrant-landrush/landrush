@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'landrush/action/common'
 require 'landrush/action/setup'
 
 module Landrush
@@ -12,16 +13,6 @@ module Landrush
         setup.call(env)
 
         env[:called].must_equal true
-      end
-
-      it "stores the machine's hostname => ip address" do
-        app = Proc.new {}
-        setup = Setup.new(app, nil)
-        env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
-
-        setup.call(env)
-
-        Store.hosts.get('somehost.vagrant.dev').must_equal '1.2.3.4'
       end
 
       it "records the booting host as a dependent VM" do
@@ -66,7 +57,30 @@ module Landrush
         env[:global_config].landrush.disable
         setup.call(env)
 
-        Store.hosts.get('somehost.vagrant.dev').must_equal nil
+        DependentVMs.list.must_equal []
+      end
+
+      describe 'after boot' do
+        it "stores the machine's hostname => ip address" do
+          app = Proc.new {}
+          setup = Setup.new(app, nil)
+          env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
+
+          setup.call(env)
+
+          Store.hosts.get('somehost.vagrant.dev').must_equal '1.2.3.4'
+        end
+
+        it "does nothing if it is not enabled via config" do
+          app = Proc.new {}
+          setup = Setup.new(app, nil)
+          env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
+
+          env[:global_config].landrush.disable
+          setup.call(env)
+
+          Store.hosts.get('somehost.vagrant.dev').must_equal nil
+        end
       end
     end
   end

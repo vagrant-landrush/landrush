@@ -13,12 +13,12 @@ module Landrush
       (dir.directory? ? dir.children : []).each(&block)
     end
 
-    def self.add(machine)
-      FileUtils.touch(file_for(machine))
+    def self.add(hostname)
+      FileUtils.touch(file_for(hostname))
     end
 
-    def self.remove(machine)
-      file_for(machine).tap { |f| f.delete if f.exist? }
+    def self.remove(hostname)
+      file_for(hostname).tap { |f| f.delete if f.exist? }
     end
 
     def self.list
@@ -29,8 +29,8 @@ module Landrush
       dir.rmtree
     end
 
-    def self.file_for(machine)
-      dir.join(Util.hostname(machine))
+    def self.file_for(hostname)
+      dir.join(hostname)
     end
 
     def self.dir

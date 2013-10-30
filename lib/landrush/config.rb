@@ -30,12 +30,9 @@ module Landrush
     end
 
     def validate(machine)
-      if @enabled
-        unless Util.hostname(machine).to_s.length > 0
+      if enabled?
+        unless machine.config.vm.hostname.to_s.length > 0
           return { 'landrush' => ['you must specify a hostname so we can make a DNS entry for it'] }
-        end
-        unless Util.ip_address(machine)
-          return { 'landrush' => ['you must specify a private network or else DNS makes no sense'] }
         end
       end
       {}

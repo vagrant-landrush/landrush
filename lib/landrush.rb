@@ -21,7 +21,6 @@ require 'landrush/plugin'
 require 'landrush/resolver_config'
 require 'landrush/server'
 require 'landrush/store'
-require 'landrush/util'
 require 'landrush/version'
 
 require 'ext/rexec'

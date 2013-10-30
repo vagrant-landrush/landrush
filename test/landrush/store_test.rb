@@ -66,6 +66,15 @@ module Landrush
         @store.set('somehost.vagrant.dev', 'here')
         @store.find('somehost.vagrant.dev').must_equal 'somehost.vagrant.dev'
       end
+
+      it "returns for prefix searches as well" do
+        @store.set('somehost.vagrant.dev', 'here')
+
+        @store.find('somehost').must_equal 'somehost.vagrant.dev'
+        @store.find('somehost.vagrant').must_equal 'somehost.vagrant.dev'
+        @store.find('somehost.vagr').must_equal nil
+        @store.find('someh').must_equal nil
+      end
     end
   end
 end

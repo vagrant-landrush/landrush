@@ -13,19 +13,17 @@ module Landrush
     end
 
     action_hook 'landrush_setup', :machine_action_up do |hook|
+      require_relative 'action/common'
       require_relative 'action/setup'
       require_relative 'action/install_prerequisites'
       require_relative 'action/redirect_dns'
 
-      register_boot_hooks = lambda { |boot_action|
-        hook.before(boot_action, pre_boot_actions)
-        hook.after(boot_action, post_boot_actions)
-      }
-
-      register_boot_hooks.call(VagrantPlugins::ProviderVirtualBox::Action::Boot)
+      hook.before(VagrantPlugins::ProviderVirtualBox::Action::Network, pre_boot_actions)
+      hook.after(Vagrant::Action::Builtin::WaitForCommunicator, post_boot_actions)
 
       if defined?(HashiCorp::VagrantVMwarefusion)
-        register_boot_hooks.call(HashiCorp::VagrantVMwarefusion::Action::Boot)
+        hook.before(HashiCorp::VagrantVMwarefusion::Action::Network, pre_boot_actions)
+        hook.after(HashiCorp::VagrantVMwarefusion::Action::Boot, post_boot_actions)
       end
     end
 
@@ -43,11 +41,13 @@ module Landrush
     end
 
     action_hook 'landrush_teardown', :machine_action_halt do |hook|
+      require_relative 'action/common'
       require_relative 'action/teardown'
       hook.after(Vagrant::Action::Builtin::GracefulHalt, Action::Teardown)
     end
 
     action_hook 'landrush_teardown', :machine_action_destroy do |hook|
+      require_relative 'action/common'
       require_relative 'action/teardown'
       hook.after(Vagrant::Action::Builtin::GracefulHalt, Action::Teardown)
     end
@@ -75,6 +75,11 @@ module Landrush
     guest_capability('linux', 'add_iptables_rule') do
       require_relative 'cap/linux/add_iptables_rule'
       Cap::Linux::AddIptablesRule
+    end
+
+    guest_capability('linux', 'read_host_visible_ip_address') do
+      require_relative 'cap/linux/read_host_visible_ip_address'
+      Cap::Linux::ReadHostVisibleIpAddress
     end
   end
 end

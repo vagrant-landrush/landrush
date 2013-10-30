@@ -1,25 +1,18 @@
 module Landrush
   module Action
     class InstallPrerequisites
-      def initialize(app, env)
-        @app = app
-      end
+      include Common
 
       def call(env)
-        if env[:global_config].landrush.enabled?
-          @machine = env[:machine]
-          @machine.ui.info('setting up prerequisites')
-
-          install_prerequisites
+        handle_action_stack(env) do
+          install_prerequisites if enabled?
         end
-
-        @app.call(env)
       end
 
       def install_prerequisites
-        unless @machine.guest.capability(:iptables_installed)
-          @machine.ui.info('iptables not installed, installing it')
-          @machine.guest.capability(:install_iptables)
+        unless machine.guest.capability(:iptables_installed)
+          info 'iptables not installed, installing it'
+          machine.guest.capability(:install_iptables)
         end
       end
     end

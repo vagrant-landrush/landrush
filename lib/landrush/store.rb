@@ -20,7 +20,9 @@ module Landrush
 
     def find(search)
       current_config.keys.detect do |key|
-        search == key || search.match(/\.#{key}$/)
+        key == search             ||
+          search =~ /#{key}$/     ||
+          key    =~ /^#{search}\./
       end
     end
 

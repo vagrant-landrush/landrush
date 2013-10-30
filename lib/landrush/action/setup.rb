@@ -1,40 +1,61 @@
 module Landrush
   module Action
     class Setup
-      def initialize(app, env)
-        @app = app
-      end
+      include Common
 
       def call(env)
-        if env[:global_config].landrush.enabled?
-          DependentVMs.add(env[:machine])
-          start_server_if_necessary(env)
-          setup_machine_dns(env)
-          setup_static_dns(env)
+        handle_action_stack(env) do
+          pre_boot_setup if enabled?
         end
-        @app.call(env)
+
+        # This is after the middleware stack returns, which, since we're right
+        # before the Network action, should mean that all interfaces are good
+        # to go.
+        record_machine_dns_entry if enabled?
       end
 
-      def start_server_if_necessary(env)
-        if Server.running?
-          env[:ui].info "[landrush] dns server already running"
-        else
-          env[:ui].info "[landrush] starting dns server"
-          Server.start
-        end
+      def pre_boot_setup
+        record_dependent_vm
+        add_prerequisite_network_interface
+        start_server
+        setup_static_dns
       end
 
-      def setup_machine_dns(env)
-        hostname, ip_address = Util.host_and_ip(env[:machine])
-        env[:ui].info "[landrush] adding machine entry: #{hostname} => #{ip_address}"
-        Store.hosts.set(hostname, ip_address)
+      def record_dependent_vm
+        DependentVMs.add(machine_hostname)
       end
 
-      def setup_static_dns(env)
-        env[:global_config].landrush.hosts.each do |hostname, ip_address|
-          env[:ui].info "[landrush] adding static entry: #{hostname} => #{ip_address}"
+      def add_prerequisite_network_interface
+        return unless virtualbox? && !private_network_exists?
+
+        info 'virtualbox requires an additional private network; adding it'
+        machine.config.vm.network :private_network, type: :dhcp
+      end
+
+      def start_server
+        return if Server.running?
+
+        info 'starting dns server'
+        Server.start
+      end
+
+      def setup_static_dns
+        global_config.landrush.hosts.each do |hostname, ip_address|
+          info "adding static entry: #{hostname} => #{ip_address}"
           Store.hosts.set hostname, ip_address
         end
+      end
+
+      def record_machine_dns_entry
+        ip_address = machine.guest.capability(:read_host_visible_ip_address)
+
+        info "adding machine entry: #{machine_hostname} => #{ip_address}"
+
+        Store.hosts.set(machine_hostname, ip_address)
+      end
+
+      def private_network_exists?
+        machine.config.vm.networks.any? { |type, _| type == :private_network }
       end
     end
   end

@@ -1,19 +1,17 @@
 module Landrush
   module Action
     class Teardown
-      def initialize(app, env)
-        @app = app
-      end
+      include Common
 
       def call(env)
-        @env = env
-        teardown if env[:global_config].landrush.enabled?
-        @app.call(@env)
+        handle_action_stack(env) do
+          teardown if enabled?
+        end
       end
 
       def teardown
         teardown_machine_dns
-        DependentVMs.remove(@env[:machine])
+        DependentVMs.remove(machine_hostname)
 
         if DependentVMs.none?
           teardown_static_dns
@@ -25,24 +23,19 @@ module Landrush
       end
 
       def teardown_machine_dns
-        hostname = Util.hostname(@env[:machine])
-        info "removing machine entry: #{hostname}"
-        Store.hosts.delete(hostname)
+        info "removing machine entry: #{machine_hostname}"
+        Store.hosts.delete(machine_hostname)
       end
 
       def teardown_static_dns
-        @env[:global_config].landrush.hosts.each do |hostname, _|
-          info "removing static entry: #{hostname}"
-          Store.hosts.delete hostname
+        global_config.landrush.hosts.each do |static_hostname, _|
+          info "removing static entry: #{static_hostname}"
+          Store.hosts.delete static_hostname
         end
       end
 
       def teardown_server
         Server.stop
-      end
-
-      def info(msg)
-        @env[:ui].info "[landrush] #{msg}"
       end
     end
   end

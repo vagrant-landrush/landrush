@@ -17,8 +17,6 @@ Vagrant.configure("2") do |config|
 
   config.landrush.enable
 
-  config.vm.network :private_network, ip: '172.16.32.111'
-
   config.vm.hostname = "myhost.vagrant.dev"
 
   config.landrush.host 'static1.example.com', '1.2.3.4'

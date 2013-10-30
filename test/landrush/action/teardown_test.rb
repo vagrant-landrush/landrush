@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'landrush/action/common'
 require 'landrush/action/teardown'
 
 module Landrush
@@ -30,7 +31,7 @@ module Landrush
         teardown = Teardown.new(app, nil)
         env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
 
-        DependentVMs.add(env[:machine])
+        DependentVMs.add('somehost.vagrant.dev')
         teardown.call(env)
 
         DependentVMs.list.must_equal []
@@ -51,8 +52,7 @@ module Landrush
         app = Proc.new {}
         teardown = Teardown.new(app, nil)
         env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
-        other_machine = fake_machine('otherhost.vagrant.dev', '2.3.4.5')
-        DependentVMs.add(other_machine)
+        DependentVMs.add('otherhost.vagrant.dev')
 
         Server.start
         teardown.call(env)
@@ -64,8 +64,7 @@ module Landrush
         app = Proc.new {}
         teardown = Teardown.new(app, nil)
         env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
-        other_machine = fake_machine('otherhost.vagrant.dev', '1.2.3.4')
-        DependentVMs.add(other_machine)
+        DependentVMs.add('otherhost.vagrant.dev')
 
         fake_static_entry(env, 'static.vagrant.dev', '3.4.5.6')
 
