@@ -24,7 +24,7 @@ Enable the plugin in your `Vagrantfile`:
 
     config.landrush.enable
 
-Bring up a machine that has a private network IP address and a hostname (see the `Vagrantfile` for an example)
+Bring up a machine that has a hostname set (see the `Vagrantfile` for an example)
 
     $ vagrant up
 
