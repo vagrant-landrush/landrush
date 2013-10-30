@@ -20,6 +20,7 @@ module Landrush
           teardown_server
         else
           info "there are #{DependentVMs.count} VMs left, leaving DNS server and static entries"
+          info DependentVMs.list.map { |dvm| " - #{dvm}" }.join("\n")
         end
       end
 
