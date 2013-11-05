@@ -27,7 +27,15 @@ module Landrush
     end
 
     def get(key)
-      current_config[key]
+      value = current_config[key]
+      redirect = find(value)
+      if value
+        if redirect
+          get(redirect)
+        else
+          value
+        end
+      end
     end
 
     def clear!

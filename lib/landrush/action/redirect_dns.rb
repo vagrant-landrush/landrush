@@ -23,7 +23,7 @@ module Landrush
         when :virtualbox then
           '10.0.2.2'
         when :vmware_fusion then
-          _gateway_for_ip(@machine.guest.capability(:configured_dns_server))
+          _gateway_for_ip(machine.guest.capability(:configured_dns_server))
         end
       end
 

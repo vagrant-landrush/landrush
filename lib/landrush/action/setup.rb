@@ -40,9 +40,9 @@ module Landrush
       end
 
       def setup_static_dns
-        global_config.landrush.hosts.each do |hostname, ip_address|
-          info "adding static entry: #{hostname} => #{ip_address}"
-          Store.hosts.set hostname, ip_address
+        global_config.landrush.hosts.each do |hostname, dns_value|
+          info "adding static entry: #{hostname} => #{dns_value}"
+          Store.hosts.set hostname, dns_value
         end
       end
 
