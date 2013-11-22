@@ -13,26 +13,31 @@ module Landrush
       `uname`.chomp == 'Darwin'
     end
 
+    def self.config_dir
+      @config_dir ||= Pathname('/etc/resolver')
+    end
+
     def self.config_file
-      @config_file ||= Pathname('/etc/resolver/vagrant.dev')
+      config_dir.join('vagrant.dev')
     end
 
     def self.contents_match?
       config_file.exist? && File.read(config_file) == desired_contents
     end
 
-    def self.write_config
+    def self.write_config(opts)
       puts "Mometarily using sudo to put the host config in place..."
+      sudo = opts.fetch(:sudo, 'sudo')
+      system "#{sudo} mkdir #{config_dir}" unless config_dir.directory?
       Tempfile.open('vagrant_landrush_host_config') do |f|
         f.write(desired_contents)
         f.close
-        sudo = config_file.parent.writable? ? '' : 'sudo'
         system "#{sudo} cp #{f.path} #{config_file}"
         system "#{sudo} chmod 644 #{config_file}"
       end
     end
 
-    def self.ensure_config_exists
+    def self.ensure_config_exists(opts={})
       unless osx?
         puts "Not an OSX machine, so skipping host DNS resolver config."
         return
@@ -42,7 +47,7 @@ module Landrush
         puts "Host DNS resolver config looks good."
       else
         puts "Need to configure the host."
-        write_config
+        write_config(opts)
       end
     end
 

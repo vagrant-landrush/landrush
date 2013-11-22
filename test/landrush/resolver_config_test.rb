@@ -6,7 +6,7 @@ module Landrush
       it 'writes a resolver config on the host if one is not already there' do
         ResolverConfig.config_file.exist?.must_equal false
         hush {
-          ResolverConfig.ensure_config_exists
+          ResolverConfig.ensure_config_exists(sudo: '')
         }
         ResolverConfig.config_file.exist?.must_equal true
         ResolverConfig.config_file.read.must_equal <<-EOF.gsub(/^ +/, '')
@@ -14,7 +14,9 @@ module Landrush
           nameserver 127.0.0.1
           port 10053
         EOF
-      end 
+      end
+
+
     end
   end
 end
