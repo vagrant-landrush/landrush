@@ -62,6 +62,16 @@ module Landrush
       Cap::Debian::InstallIptables
     end
 
+    guest_capability('redhat', 'iptables_installed') do
+      require_relative 'cap/redhat/iptables_installed'
+      Cap::Redhat::IptablesInstalled
+    end
+
+    guest_capability('redhat', 'install_iptables') do
+      require_relative 'cap/redhat/install_iptables'
+      Cap::Redhat::InstallIptables
+    end
+
     guest_capability('linux', 'configured_dns_server') do
       require_relative 'cap/linux/configured_dns_server'
       Cap::Linux::ConfiguredDnsServer
