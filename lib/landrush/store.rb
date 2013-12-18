@@ -28,14 +28,6 @@ module Landrush
 
     def get(key)
       value = current_config[key]
-      redirect = find(value)
-      if value
-        if redirect
-          get(redirect)
-        else
-          value
-        end
-      end
     end
 
     def clear!

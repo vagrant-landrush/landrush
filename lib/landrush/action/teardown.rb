@@ -23,14 +23,17 @@ module Landrush
       end
 
       def teardown_machine_dns
+        ip_address = machine.guest.capability(:read_host_visible_ip_address)
         info "removing machine entry: #{machine_hostname}"
         Store.hosts.delete(machine_hostname)
+	Store.hosts.delete("#{ip_address.split('.').reverse.join('.')}.in-addr.arpa.")
       end
 
       def teardown_static_dns
-        global_config.landrush.hosts.each do |static_hostname, _|
+        global_config.landrush.hosts.each do |static_hostname, dns_value|
           info "removing static entry: #{static_hostname}"
           Store.hosts.delete static_hostname
+	  Store.hosts.delete("#{dns_value.split('.').reverse.join('.')}.in-addr.arpa.")
         end
       end
 

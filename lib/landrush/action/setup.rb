@@ -43,6 +43,7 @@ module Landrush
         global_config.landrush.hosts.each do |hostname, dns_value|
           info "adding static entry: #{hostname} => #{dns_value}"
           Store.hosts.set hostname, dns_value
+	  Store.hosts.set("#{dns_value.split('.').reverse.join('.')}.in-addr.arpa.", hostname)
         end
       end
 
@@ -52,6 +53,7 @@ module Landrush
         info "adding machine entry: #{machine_hostname} => #{ip_address}"
 
         Store.hosts.set(machine_hostname, ip_address)
+	Store.hosts.set("#{ip_address.split('.').reverse.join('.')}.in-addr.arpa.", machine_hostname)
       end
 
       def private_network_exists?
