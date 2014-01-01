@@ -21,6 +21,8 @@ module Landrush
             io.puts "#{value}"
           end
         end
+      elsif command == 'help'
+        @env.ui.info(help)
       else
         boom("'#{command}' is not a command")
       end
@@ -35,6 +37,11 @@ module Landrush
     def usage(msg); <<-EOS.gsub(/^      /, '')
       ERROR: #{msg}
 
+      #{help}
+      EOS
+    end
+
+    def help; <<-EOS.gsub(/^      /, '')
       vagrant landrush <command>
 
       commands:
@@ -44,7 +51,10 @@ module Landrush
           list all DNS entries known to landrush
         dependentvms, vms
           list vms currently dependent on the landrush server
+        help
+          you're lookin at it!
       EOS
     end
+
   end
 end
