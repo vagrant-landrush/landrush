@@ -17,12 +17,17 @@ module Landrush
       def pre_boot_setup
         record_dependent_vm
         add_prerequisite_network_interface
+        setup_host_resolver
         start_server
         setup_static_dns
       end
 
       def record_dependent_vm
         DependentVMs.add(machine_hostname)
+      end
+
+      def setup_host_resolver
+        ResolverConfig.ensure_config_exists
       end
 
       def add_prerequisite_network_interface

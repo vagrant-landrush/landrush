@@ -21,8 +21,6 @@ module Landrush
             io.puts "#{value}"
           end
         end
-      elsif command == 'install'
-        ResolverConfig.ensure_config_exists
       else
         boom("'#{command}' is not a command")
       end
@@ -46,8 +44,6 @@ module Landrush
           list all DNS entries known to landrush
         dependentvms
           list vms currently dependent on the landrush server
-        install
-          install resolver config for host visbility (requires sudo)
       EOS
     end
   end

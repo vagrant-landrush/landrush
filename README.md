@@ -2,8 +2,6 @@
 
 Simple DNS that's visible on both the guest and the host.
 
-> Even a Vagrant needs a place to settle down once in a while.
-
 Spins up a small DNS server and redirects DNS traffic from your VMs to use it,
 automatically registers/deregisters IP addresseses of guests as they come up
 and down.
@@ -13,8 +11,6 @@ and down.
 Install under Vagrant (1.1 or later):
 
     $ vagrant plugin install landrush
-
-If you're on OS X, see **Visibility on the Host** below.
 
 ## Usage
 
@@ -52,35 +48,13 @@ Any DNS queries that do not match will be passed through to an upstream DNS serv
 
 ### Visibility on the Guest
 
-Linux guests using iptables should automatically have their DNS traffic redirected properly to our DNS server. File an issue if this does not work for you.
+Linux guests should automatically have their DNS traffic redirected via `iptables` rules to the Landrush DNS server. File an issue if this does not work for you.
 
 ### Visibility on the Host
 
-If you're on an OS X host, we can use a nice trick to unobtrusibly add a secondary DNS server only for specific domains.
+If you're on an OS X host, we use a nice trick to unobtrusively add a secondary DNS server only for specific domains.
 
-If you name all of my vagrant servers with the pattern `$host.vagrant.dev` and then drop a file called `/etc/resolver/vagrant.dev` with these contents:
-
-```
-# Use landrush server for this domain
-nameserver 127.0.0.1
-port 10053
-```
-
-Once you have done this, you can run `scutil --dns` to confirm that the DNS resolution is working -- you should see something like:
-```
-resolver #8
-  domain   : vagrant.dev
-  nameserver[0] : 127.0.0.1
-  port     : 10053
-```
-
-This gives us automatic access to the landrush hosts without having to worry about it getting in the way of our normal DNS config.
-
-There's also a handy command to automate the creation of this file:
-
-```
-vagrant landrush install
-```
+Similar behavior can theoretically be achieved on Linux hosts with `dnsmasq`; hopefully sometime in the near future this project will support visibility on linux hosts too!
 
 ### Additional CLI commands
 
