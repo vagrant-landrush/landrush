@@ -8,3 +8,7 @@ Rake::TestTask.new do |t|
 end
 
 task :default => :test
+
+task :generate_diagrams do
+  sh "cd doc; seqdiag --fontmap=support/seqdiag.fontmap -Tsvg vagrant_dns_without_landrush.diag"
+end

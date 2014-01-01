@@ -1,0 +1,28 @@
+seqdiag {
+  default_fontfamily = "monospace";
+  group {
+    label = "the real world";
+    color = "#aaaaff";
+    fontfamily = "monospace";
+    fontsize = 16;
+
+    internet [label = "Internet", shape = cloud, stacked];
+    host [label = "Host", icon = "img/osx.png"];
+  }
+  group {
+    label = "virtualized";
+    color = "#aaffaa";
+    fontfamily = "monospace";
+    fontsize = 16;
+
+    provider [label = "VM Provider", icon = "img/vbox.png"];
+    guest [label = "Guest", icon = "img/ubuntu.png"];
+  }
+
+  guest -> provider [label = "github.com?"];
+           provider -> host [label = "github.com?"];
+                       host -> internet [label = "github.com?"];
+                       host <- internet [label = "192.30.252.129"];
+           provider <- host [label = "192.30.252.129"];
+  guest <- provider [label = "192.30.252.129"];
+}
