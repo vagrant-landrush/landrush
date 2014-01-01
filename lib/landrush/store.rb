@@ -14,6 +14,10 @@ module Landrush
       write(current_config.merge(key => value))
     end
 
+    def each(*args, &block)
+      current_config.each(*args, &block)
+    end
+
     def delete(key)
       write(current_config.reject { |k, _| k == key })
     end

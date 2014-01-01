@@ -14,6 +14,13 @@ module Landrush
         else
           @env.ui.info("No dependent VMs")
         end
+      elsif command == 'ls' || command == 'list'
+        IO.popen("/usr/bin/pr -2 -t -a", "w") do |io|
+          Landrush::Store.hosts.each do |key, value|
+            io.puts "#{key}"
+            io.puts "#{value}"
+          end
+        end
       elsif command == 'install'
         ResolverConfig.ensure_config_exists
       else
@@ -35,6 +42,8 @@ module Landrush
       commands:
         {start|stop|restart|status}
           control the landrush server daemon
+        list, ls
+          list all DNS entries known to landrush
         dependentvms
           list vms currently dependent on the landrush server
         install
