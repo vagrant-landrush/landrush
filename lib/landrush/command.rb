@@ -8,7 +8,7 @@ module Landrush
       command = ARGV.first
       if DAEMON_COMMANDS.include?(command)
         Server.daemonize
-      elsif command == 'dependentvms'
+      elsif command == 'dependentvms' || command == 'vms'
         if DependentVMs.any?
           @env.ui.info(DependentVMs.list.map { |dvm| " - #{dvm}" }.join("\n"))
         else
@@ -42,7 +42,7 @@ module Landrush
           control the landrush server daemon
         list, ls
           list all DNS entries known to landrush
-        dependentvms
+        dependentvms, vms
           list vms currently dependent on the landrush server
       EOS
     end
