@@ -27,7 +27,7 @@ module Landrush
       end
 
       def setup_host_resolver
-        ResolverConfig.ensure_config_exists
+        ResolverConfig.new(env).ensure_config_exists!
       end
 
       def add_prerequisite_network_interface

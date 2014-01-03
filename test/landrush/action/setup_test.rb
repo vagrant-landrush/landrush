@@ -5,6 +5,9 @@ require 'landrush/action/setup'
 module Landrush
   module Action
     describe Setup do
+      before { ResolverConfig.sudo = ''     }
+      after  { ResolverConfig.sudo = 'sudo' }
+
       it "calls the next app in the chain" do
         env = fake_environment(called: false)
         app = lambda { |e| e[:called] = true }
