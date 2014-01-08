@@ -42,6 +42,8 @@ This is great for overriding production services for nodes you might be testing 
 
 For your convenience, any subdomain of a DNS entry known to landrush will resolve to the same IP address as the entry. For example: given `myhost.vagrant.dev -> 1.2.3.4`, both `foo.myhost.vagrant.dev` and `bar.myhost.vagrant.dev` will also resolve to `1.2.3.4`.
 
+Note that from the __host__, you still can only resolve subdomains of `.vagrant.dev` - so wildcard subdomains only apply to that space. For the __guest__, wildcard subdomains work for anything.
+
 ### Unmatched Queries
 
 Any DNS queries that do not match will be passed through to an upstream DNS server, so this will be able to serve as the one-stop shop for your guests' DNS needs.
