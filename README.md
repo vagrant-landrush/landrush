@@ -48,6 +48,14 @@ Note that from the __host__, you still can only resolve subdomains of `.vagrant.
 
 Any DNS queries that do not match will be passed through to an upstream DNS server, so this will be able to serve as the one-stop shop for your guests' DNS needs.
 
+If you would like to configure your own upstream servers, add upstream entries to your `Vagrantfile` like so:
+
+    config.landrush.upstream '10.1.1.10'
+    # Set the port to 1001
+    config.landrush.upstream '10.1.2.10', 1001
+    # If your upstream is TCP only for some strange reason
+    config.landrush.upstream '10.1.3.10', 1001, :tcp
+
 ### Visibility on the Guest
 
 Linux guests should automatically have their DNS traffic redirected via `iptables` rules to the Landrush DNS server. File an issue if this does not work for you.
