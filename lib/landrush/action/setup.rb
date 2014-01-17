@@ -18,6 +18,7 @@ module Landrush
         record_dependent_vm
         add_prerequisite_network_interface
         setup_host_resolver
+        configure_server
         start_server
         setup_static_dns
       end
@@ -35,6 +36,10 @@ module Landrush
 
         info 'virtualbox requires an additional private network; adding it'
         machine.config.vm.network :private_network, type: :dhcp
+      end
+
+      def configure_server
+        Store.config.set('upstream', global_config.landrush.upstream_servers)
       end
 
       def start_server

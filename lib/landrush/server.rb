@@ -14,7 +14,8 @@ module Landrush
     end
 
     def self.upstream_servers
-      [[:udp, "8.8.8.8", 53], [:tcp, "8.8.8.8", 53]]
+      # Doing collect to cast protocol to symbol because JSON store doesn't know about symbols
+      @upstream_servers ||= Store.config.get('upstream').collect {|i| [i[0].to_sym, i[1], i[2]]}
     end
 
     def self.interfaces
