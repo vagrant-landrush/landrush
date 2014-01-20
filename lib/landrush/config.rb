@@ -1,10 +1,13 @@
 module Landrush
   class Config < Vagrant.plugin('2', :config)
     attr_accessor :hosts
+    attr_accessor :upstream_servers
 
     def initialize
       @hosts = {}
       @enabled = false
+      @default_upstream = [[:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53]]
+      @upstream_servers = @default_upstream
     end
 
     def enable(enabled=true)
@@ -21,6 +24,19 @@ module Landrush
 
     def host(hostname, ip_address)
       @hosts[hostname] = ip_address
+    end
+
+    def upstream(ip, port=53, protocol=nil)
+      if @upstream_servers == @default_upstream
+        @upstream_servers = []
+      end
+
+      if !protocol
+        @upstream_servers.push [:udp, ip, port]
+        @upstream_servers.push [:tcp, ip, port]
+      else
+        @upstream_servers.push [protocol, ip, port]
+      end 
     end
 
     def merge(other)
