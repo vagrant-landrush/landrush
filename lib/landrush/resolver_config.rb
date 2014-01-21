@@ -42,7 +42,7 @@ module Landrush
     end
 
     def config_file
-      config_dir.join('vagrant.dev')
+      config_dir.join(@env[:global_config].landrush.tld)
     end
 
     def contents_match?
