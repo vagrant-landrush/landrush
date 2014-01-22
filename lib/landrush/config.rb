@@ -7,6 +7,7 @@ module Landrush
       @hosts = {}
       @enabled = false
       @default_upstream = [[:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53]]
+      @default_tld = 'vagrant.dev'
       @upstream_servers = @default_upstream
     end
 
@@ -24,6 +25,14 @@ module Landrush
 
     def host(hostname, ip_address)
       @hosts[hostname] = ip_address
+    end
+
+    def tld
+      @tld ||= @default_tld
+    end
+
+    def tld=(tld)
+      @tld = tld
     end
 
     def upstream(ip, port=53, protocol=nil)

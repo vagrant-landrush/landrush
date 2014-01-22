@@ -42,7 +42,11 @@ This is great for overriding production services for nodes you might be testing 
 
 For your convenience, any subdomain of a DNS entry known to landrush will resolve to the same IP address as the entry. For example: given `myhost.vagrant.dev -> 1.2.3.4`, both `foo.myhost.vagrant.dev` and `bar.myhost.vagrant.dev` will also resolve to `1.2.3.4`.
 
-Note that from the __host__, you still can only resolve subdomains of `.vagrant.dev` - so wildcard subdomains only apply to that space. For the __guest__, wildcard subdomains work for anything.
+If you would like to configure your guests to be accessible from the host as subdomains of something other than the default `vagrant.dev`, you can use the `config.landrush.tld` option in your Vagrantfile like so:
+
+    config.landrush.tld = 'vm'
+
+Note that from the __host__, you will only be able to access subdomains of your configured TLD by default- so wildcard subdomains only apply to that space. For the __guest__, wildcard subdomains work for anything.
 
 ### Unmatched Queries
 
