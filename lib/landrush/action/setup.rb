@@ -61,6 +61,11 @@ module Landrush
 
         info "adding machine entry: #{machine_hostname} => #{ip_address}"
 
+        if not machine_hostname.match(global_config.landrush.tld)
+          log :error, "hostname #{machine_hostname} does not match the configured TLD: #{global_config.landrush.tld}"
+          log :error, "You will not be able to access #{machine_hostname} from the host"
+        end
+
         Store.hosts.set(machine_hostname, ip_address)
       end
 

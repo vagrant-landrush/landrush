@@ -56,6 +56,17 @@ module Landrush
       def info(msg)
         env[:ui].info "[landrush] #{msg}"
       end
+
+      def log(level, msg)
+        # Levels from github.com/mitchellh/vagrant/blob/master/lib/vagrant/ui.rb
+        valid_levels = [:ask, :detail, :warn, :error, :info, :output, :success]
+
+        if valid_levels.include? level
+          env[:ui].send level, "[landrush] #{msg}"
+        else
+          env[:ui].error "[landrush] (Invalid logging level #{level}) #{msg}"
+        end
+      end
     end
   end
 end
