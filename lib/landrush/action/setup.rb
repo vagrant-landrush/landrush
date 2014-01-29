@@ -12,6 +12,7 @@ module Landrush
         # before the Network action, should mean that all interfaces are good
         # to go.
         record_machine_dns_entry if enabled?
+        setup_static_dns if enabled?
       end
 
       def pre_boot_setup
@@ -20,7 +21,6 @@ module Landrush
         setup_host_resolver
         configure_server
         start_server
-        setup_static_dns
       end
 
       def record_dependent_vm
@@ -51,6 +51,7 @@ module Landrush
 
       def setup_static_dns
         global_config.landrush.hosts.each do |hostname, dns_value|
+          dns_value ||= machine.guest.capability(:read_host_visible_ip_address)
           info "adding static entry: #{hostname} => #{dns_value}"
           Store.hosts.set hostname, dns_value
         end
