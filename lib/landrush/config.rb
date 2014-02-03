@@ -23,7 +23,7 @@ module Landrush
       @enabled
     end
 
-    def host(hostname, ip_address)
+    def host(hostname, ip_address=nil)
       @hosts[hostname] = ip_address
     end
 
