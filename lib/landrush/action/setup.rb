@@ -54,6 +54,7 @@ module Landrush
           dns_value ||= machine.guest.capability(:read_host_visible_ip_address)
           info "adding static entry: #{hostname} => #{dns_value}"
           Store.hosts.set hostname, dns_value
+	  Store.hosts.set("#{dns_value.split('.').reverse.join('.')}.in-addr.arpa.", hostname)
         end
       end
 
@@ -68,6 +69,7 @@ module Landrush
         end
 
         Store.hosts.set(machine_hostname, ip_address)
+	Store.hosts.set("#{ip_address.split('.').reverse.join('.')}.in-addr.arpa.", machine_hostname)
       end
 
       def private_network_exists?
