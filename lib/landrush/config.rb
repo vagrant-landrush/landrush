@@ -2,6 +2,7 @@ module Landrush
   class Config < Vagrant.plugin('2', :config)
     attr_accessor :hosts
     attr_accessor :upstream_servers
+    attr_accessor :host_ip_address
 
     def initialize
       @hosts = {}
