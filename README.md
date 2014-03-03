@@ -68,7 +68,13 @@ Linux guests should automatically have their DNS traffic redirected via `iptable
 
 If you're on an OS X host, we use a nice trick to unobtrusively add a secondary DNS server only for specific domains.
 
-Similar behavior can theoretically be achieved on Linux hosts with `dnsmasq`; hopefully sometime in the near future this project will support visibility on linux hosts too!
+Similar behavior can be achieved on Linux hosts with `dnsmasq`. You can integrate Landrush with dnsmasq on Ubuntu like so (tested on Ubuntu 13.10):
+
+    sudo apt-get install -y resolvconf dnsmasq
+    sudo sh -c 'echo "server=/vagrant.dev/127.0.0.1#10053" > /etc/dnsmasq.d/vagrant-landrush'
+    sudo service dnsmasq restart
+
+If you use a TLD other than the default `vagrant.dev`, replace the TLD in the above instructions accordingly. Please be aware that anything ending in '.local' as TLD will not work because the `avahi` daemon reserves this TLD for its own uses.
 
 ### Additional CLI commands
 
