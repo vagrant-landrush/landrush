@@ -5,7 +5,7 @@ module Landrush
 
       def call(env)
         handle_action_stack(env) do
-          install_prerequisites if enabled?
+          install_prerequisites if enabled? and manage_guests?
         end
       end
 

@@ -2,10 +2,12 @@ module Landrush
   class Config < Vagrant.plugin('2', :config)
     attr_accessor :hosts
     attr_accessor :upstream_servers
+    attr_accessor :manage_guests
 
     def initialize
       @hosts = {}
       @enabled = false
+      @manage_guests = true
       @default_upstream = [[:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53]]
       @default_tld = 'vagrant.dev'
       @upstream_servers = @default_upstream
