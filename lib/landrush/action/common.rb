@@ -53,6 +53,10 @@ module Landrush
         global_config.landrush.enabled?
       end
 
+      def manage_guests?
+        global_config.landrush.manage_guests
+      end
+
       def info(msg)
         env[:ui].info "[landrush] #{msg}"
       end
