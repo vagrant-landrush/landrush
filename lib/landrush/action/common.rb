@@ -38,7 +38,7 @@ module Landrush
       end
 
       def global_config
-        env[:global_config]
+        env[:machine].config
       end
 
       def machine
