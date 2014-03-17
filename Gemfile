@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 
-gemspec
+group :plugins do
+  gemspec
+end
 
 group :development do
   # We depend on Vagrant for development, but we don't add it as a
