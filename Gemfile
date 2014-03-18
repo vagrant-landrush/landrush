@@ -1,12 +1,20 @@
 source 'https://rubygems.org'
 
-gemspec
+# Can't use `gemspec` to pull in dependencies, because the landrush gem needs
+# to be in the :plugins group for Vagrant to detect and load it in development
+
+gem 'rubydns', '0.7.0'
+gem 'rake'
+
+# Vagrant's special group
+group :plugins do
+  gem 'landrush', path: '.'
+end
 
 group :development do
-  # We depend on Vagrant for development, but we don't add it as a
-  # gem dependency because we expect to be installed within the
-  # Vagrant environment itself using `vagrant plugin`.
-  gem "vagrant", :git => "git://github.com/mitchellh/vagrant.git"
+  gem 'vagrant',
+    :git => 'git://github.com/mitchellh/vagrant.git',
+    :ref => 'v1.5.1'
 
-  gem "debugger"
+  gem 'byebug'
 end
