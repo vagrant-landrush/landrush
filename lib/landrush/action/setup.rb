@@ -39,7 +39,7 @@ module Landrush
       end
 
       def configure_server
-        Store.config.set('upstream', global_config.landrush.upstream_servers)
+        Store.config.set('upstream', config.upstream_servers)
       end
 
       def start_server
@@ -50,7 +50,7 @@ module Landrush
       end
 
       def setup_static_dns
-        global_config.landrush.hosts.each do |hostname, dns_value|
+        config.hosts.each do |hostname, dns_value|
           dns_value ||= machine.guest.capability(:read_host_visible_ip_address)
           info "adding static entry: #{hostname} => #{dns_value}"
           Store.hosts.set hostname, dns_value
@@ -62,8 +62,8 @@ module Landrush
 
         info "adding machine entry: #{machine_hostname} => #{ip_address}"
 
-        if not machine_hostname.match(global_config.landrush.tld)
-          log :error, "hostname #{machine_hostname} does not match the configured TLD: #{global_config.landrush.tld}"
+        if not machine_hostname.match(config.tld)
+          log :error, "hostname #{machine_hostname} does not match the configured TLD: #{config.tld}"
           log :error, "You will not be able to access #{machine_hostname} from the host"
         end
 

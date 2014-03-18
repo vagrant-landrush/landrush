@@ -37,12 +37,18 @@ module Landrush
         }
       end
 
-      def global_config
-        env[:global_config]
-      end
-
       def machine
         env[:machine]
+      end
+
+      def config
+        if env.key? :global_config
+          # < Vagrant 1.5
+          env[:global_config].landrush
+        else
+          # >= Vagrant 1.5
+          machine.config.landrush
+        end
       end
 
       def machine_hostname
@@ -50,7 +56,7 @@ module Landrush
       end
 
       def enabled?
-        global_config.landrush.enabled?
+        config.enabled?
       end
 
       def info(msg)

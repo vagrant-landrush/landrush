@@ -9,7 +9,7 @@ module Landrush
       after  { ResolverConfig.sudo = 'sudo' }
 
       it "calls the next app in the chain" do
-        env = fake_environment(called: false)
+        env = fake_environment
         app = lambda { |e| e[:called] = true }
         setup = Setup.new(app, nil)
 
@@ -21,7 +21,7 @@ module Landrush
       it "records the booting host as a dependent VM" do
         app = Proc.new {}
         setup = Setup.new(app, nil)
-        env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
+        env = fake_environment
 
         setup.call(env)
 
@@ -31,7 +31,7 @@ module Landrush
       it "starts the landrush server if it's not already started" do
         app = Proc.new {}
         setup = Setup.new(app, nil)
-        env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
+        env = fake_environment
 
         setup.call(env)
 
@@ -41,7 +41,7 @@ module Landrush
       it "does not attempt to start the server if it's already up" do
         app = Proc.new {}
         setup = Setup.new(app, nil)
-        env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
+        env = fake_environment
 
         Server.start
         original_pid = Server.pid
@@ -55,9 +55,9 @@ module Landrush
       it "does nothing if it is not enabled via config" do
         app = Proc.new {}
         setup = Setup.new(app, nil)
-        env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
+        env = fake_environment
 
-        env[:global_config].landrush.disable
+        env[:machine].config.landrush.disable
         setup.call(env)
 
         DependentVMs.list.must_equal []
@@ -67,7 +67,7 @@ module Landrush
         it "stores the machine's hostname => ip address" do
           app = Proc.new {}
           setup = Setup.new(app, nil)
-          env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
+          env = fake_environment
 
           setup.call(env)
 
@@ -77,9 +77,9 @@ module Landrush
         it "does nothing if it is not enabled via config" do
           app = Proc.new {}
           setup = Setup.new(app, nil)
-          env = fake_environment_with_machine('somehost.vagrant.dev', '1.2.3.4')
+          env = fake_environment
 
-          env[:global_config].landrush.disable
+          env[:machine].config.landrush.disable
           setup.call(env)
 
           Store.hosts.get('somehost.vagrant.dev').must_equal nil

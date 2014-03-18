@@ -7,15 +7,8 @@ require 'landrush'
 
 require 'minitest/autorun'
 
-def fake_environment(extras={})
-  env = Vagrant::Environment.new
-  { ui: FakeUI, global_config: env.config_global }.merge(extras)
-end
-
-def fake_environment_with_machine(hostname, ip)
-  env = Vagrant::Environment.new
-  machine = fake_machine(hostname, ip, env)
-  { machine: machine, ui: FakeUI, global_config: env.config_global }
+def fake_environment(options={})
+  { machine: fake_machine(options), ui: FakeUI }
 end
 
 class RecordingCommunicator
@@ -54,41 +47,55 @@ class RecordingCommunicator
 end
 
 class Landrush::FakeProvider
-  def initialize(machine)
+  def initialize(*args)
+  end
+
+  def _initialize(*args)
   end
 
   def ssh_info
   end
 end
 
-def fake_machine(hostname, ip, env = Vagrant::Environment.new)
+class Landrush::FakeConfig
+  def landrush
+    @landrush_config ||= Landrush::Config.new
+  end
+
+  def vm
+    VagrantPlugins::Kernel_V2::VMConfig.new
+  end
+end
+
+def fake_machine(options={})
+  env = options.fetch(:env, Vagrant::Environment.new)
   machine = Vagrant::Machine.new(
     'fake_machine',
     'fake_provider',
     Landrush::FakeProvider,
     'provider_config',
     {}, # provider_options
-    env.config_global,
+    env.vagrantfile.config, # config
     Pathname('data_dir'),
     'box',
-    env
+    options.fetch(:env, Vagrant::Environment.new),
+    env.vagrantfile
   )
 
   machine.instance_variable_set("@communicator", RecordingCommunicator.new)
   machine.communicate.stub_command(
     "ifconfig  | grep 'inet addr:' | grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1 }'",
-    "#{ip}\n"
+    "#{options.fetch(:ip, '1.2.3.4')}\n"
   )
 
   machine.config.landrush.enable
-  machine.config.vm.hostname = hostname
-
+  machine.config.vm.hostname = options.fetch(:hostname, 'somehost.vagrant.dev')
 
   machine
 end
 
 def fake_static_entry(env, hostname, ip)
-  env[:global_config].landrush.host(hostname, ip)
+  env[:machine].config.landrush.host(hostname, ip)
   Landrush::Store.hosts.set(hostname, ip)
 end
 
