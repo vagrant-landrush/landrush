@@ -4,6 +4,7 @@ module Landrush
       SUPPORTED_PROVIDERS = {
         'VagrantPlugins::ProviderVirtualBox::Provider' => :virtualbox,
         'HashiCorp::VagrantVMwarefusion::Provider'     => :vmware_fusion,
+        'VagrantPlugins::Parallels::Provider'          => :parallels,
         'Landrush::FakeProvider'                       => :fake_provider,
       }
 
@@ -29,6 +30,10 @@ module Landrush
 
       def vmware?
         provider == :vmware_fusion
+      end
+      
+      def parallels?
+        provider == :parallels
       end
 
       def provider

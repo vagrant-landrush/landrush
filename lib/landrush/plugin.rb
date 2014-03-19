@@ -25,6 +25,10 @@ module Landrush
         hook.before(HashiCorp::VagrantVMwarefusion::Action::Network, pre_boot_actions)
         hook.after(HashiCorp::VagrantVMwarefusion::Action::Boot, post_boot_actions)
       end
+
+      if defined?(VagrantPlugins::Parallels)
+        hook.before(VagrantPlugins::Parallels::Action::Network, pre_boot_actions)
+      end
     end
 
     def self.pre_boot_actions
