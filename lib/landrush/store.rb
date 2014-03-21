@@ -28,9 +28,9 @@ module Landrush
 
     def find(search)
       current_config.keys.detect do |key|
-        key == search             ||
-          search =~ /#{key}$/     ||
-          key    =~ /^#{search}\./
+        key.casecmp(search) == 0   ||
+          search =~ /#{key}$/i     ||
+          key    =~ /^#{search}\./i
       end
     end
 
