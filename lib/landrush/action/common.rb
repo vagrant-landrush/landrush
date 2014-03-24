@@ -4,6 +4,7 @@ module Landrush
       SUPPORTED_PROVIDERS = {
         'VagrantPlugins::ProviderVirtualBox::Provider' => :virtualbox,
         'HashiCorp::VagrantVMwarefusion::Provider'     => :vmware_fusion,
+        'VagrantPlugins::Parallels::Provider'          => :parallels,
         'Landrush::FakeProvider'                       => :fake_provider,
       }
 
@@ -30,11 +31,21 @@ module Landrush
       def vmware?
         provider == :vmware_fusion
       end
+      
+      def parallels?
+        provider == :parallels
+      end
 
       def provider
-        SUPPORTED_PROVIDERS.fetch(machine.provider.class.name) { |key|
+        provider_name = SUPPORTED_PROVIDERS.fetch(machine.provider.class.name) { |key|
           raise "The landrush plugin does not support the #{key} provider yet!"
         }
+
+        if provider_name == :parallels and VagrantPlugins::Parallels::VERSION < "1.0.3"
+          raise "The landrush plugin supports the Parallels provider v1.0.3 and later. Please, update your 'vagrant-parallels' plugin."
+        end
+
+        provider_name
       end
 
       def machine
