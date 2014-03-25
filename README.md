@@ -64,6 +64,13 @@ If you would like to configure your own upstream servers, add upstream entries t
 
 Linux guests should automatically have their DNS traffic redirected via `iptables` rules to the Landrush DNS server. File an issue if this does not work for you.
 
+To disable this functionality:
+
+    config.landrush.guest_redirect_dns = false
+
+You may want to do this if you are already proxying all your DNS requests through your host (e.g. using VirtualBox's natdnshostresolver1 option) and you
+have DNS servers that you can easily set as upstreams in the daemon (e.g. DNS requests that go through the host's VPN connection).
+
 ### Visibility on the Host
 
 If you're on an OS X host, we use a nice trick to unobtrusively add a secondary DNS server only for specific domains.
