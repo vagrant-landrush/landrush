@@ -36,7 +36,10 @@ module Landrush
 
     def get(key)
       value = current_config[key]
-      redirect = find(value)
+      redirect = nil
+      if value.is_a? String
+        redirect = find(value)
+      end
       if value
         if redirect
           get(redirect)
