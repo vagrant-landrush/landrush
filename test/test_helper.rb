@@ -84,7 +84,7 @@ def fake_machine(options={})
 
   machine.instance_variable_set("@communicator", RecordingCommunicator.new)
   machine.communicate.stub_command(
-    "ifconfig  | grep 'inet addr:' | grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1 }'",
+    "PATH=$PATH:/sbin ifconfig  | grep 'inet addr:' | grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1 }'",
     "#{options.fetch(:ip, '1.2.3.4')}\n"
   )
 
