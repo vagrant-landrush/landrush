@@ -3,11 +3,10 @@ module Landrush
     DAEMON_COMMANDS = %w(start stop restart status)
 
     def execute
-      ARGV.shift # flush landrush from ARGV, RExec wants to use it for daemon commands
-
+      ARGV.shift
       command = ARGV.first
       if DAEMON_COMMANDS.include?(command)
-        Server.daemonize
+        Server.send(command)
       elsif command == 'dependentvms' || command == 'vms'
         if DependentVMs.any?
           @env.ui.info(DependentVMs.list.map { |dvm| " - #{dvm}" }.join("\n"))
@@ -54,6 +53,21 @@ module Landrush
         help
           you're lookin at it!
       EOS
+    end
+
+    def self.executable
+      if Bundler::SharedHelpers.in_bundle?
+        ['bundle', 'exec', 'vagrant', 'landrush']
+      else
+        ['vagrant', 'landrush']
+      end
+    end
+
+    def self.run_sudo(args)
+      cmd = ['sudo'] + executable + args
+      unless system(*cmd)
+        raise "Failed executing `#{cmd.join(' ')}`: #{$?}"
+      end
     end
 
   end
