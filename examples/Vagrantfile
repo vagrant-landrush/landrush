@@ -8,10 +8,6 @@
 #   VAGRANT_CWD=examples bundle exce vagrant halt
 #
 
-# This line is unnecessary when the plugin is installed normally; it's just
-# here for the development / testing use case.
-Vagrant.require_plugin "landrush"
-
 Vagrant.configure("2") do |config|
   config.vm.box = "precise64"
 
