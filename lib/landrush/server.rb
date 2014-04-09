@@ -25,6 +25,10 @@ module Landrush
       ]
     end
 
+    def self.privileged_port?
+      self.port < 1024
+    end
+
     def self.upstream
       @upstream ||= RubyDNS::Resolver.new(upstream_servers)
     end
@@ -36,6 +40,31 @@ module Landrush
     # For RExec
     def self.working_directory
       Landrush.working_dir
+    end
+
+    def self.start
+      if privileged_port? and Process.uid > 0
+        Landrush::Command.run_sudo(['start'])
+      else
+        super
+      end
+    end
+
+    def self.stop
+      if privileged_port? and Process.uid > 0
+        Landrush::Command.run_sudo(['stop'])
+      else
+        super
+      end
+    end
+
+    def self.restart
+      if privileged_port? and Process.uid > 0
+        Landrush::Command.run_sudo(['restart'])
+      else
+        stop
+        start
+      end
     end
 
     def self.running?
