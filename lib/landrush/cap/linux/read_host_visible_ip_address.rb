@@ -31,7 +31,7 @@ module Landrush
         end
 
         def self.command
-          %Q(ip addr show | awk '$1=="inet" {print $2}' | cut -f1 -d'/' | tail -n1)
+          %Q(hostname -I | awk -F' ' '{print $NF}')
         end
       end
     end
