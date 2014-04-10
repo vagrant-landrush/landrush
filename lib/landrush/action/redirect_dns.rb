@@ -11,7 +11,7 @@ module Landrush
 
       def redirect_dns
         info "setting up machine's DNS to point to our server"
-        machine.guest.capability(:redirect_dns, host: _target_host, port: 10053)
+        machine.guest.capability(:redirect_dns, host: _target_host, port: Server.port)
 
         machine.config.vm.networks.each do |type, options|
           info "network: #{type.inspect}, #{options.inspect}"
