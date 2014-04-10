@@ -58,7 +58,8 @@ module Landrush
       end
 
       def record_machine_dns_entry
-        ip_address = machine.guest.capability(:read_host_visible_ip_address)
+        ip_address = machine.config.landrush.host_ip_address ||
+                     machine.guest.capability(:read_host_visible_ip_address)
 
         info "adding machine entry: #{machine_hostname} => #{ip_address}"
 

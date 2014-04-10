@@ -30,6 +30,16 @@ And you should be able to get your hostname from your host:
 
 If you shut down your guest, the entries associated with it will be removed.
 
+### Dynamic entries
+
+Every time a VM is started, its IP address is automatically detected and a DNS record is created that maps the hostname to its IP.
+
+If for any reason the auto-detection detects no IP address or the wrong IP address, or you want to override it, you can do like so:
+
+    config.landrush.host_ip_address = '1.2.3.4'
+
+If you are using a multi-machine `Vagrantfile`, configure this inside each of your `config.vm.define` sections.
+
 ### Static entries
 
 You can add static host entries to the DNS server in your `Vagrantfile` like so:
