@@ -31,7 +31,7 @@ module Landrush
       def vmware?
         provider == :vmware_fusion
       end
-      
+
       def parallels?
         provider == :parallels
       end
@@ -68,6 +68,10 @@ module Landrush
 
       def enabled?
         config.enabled?
+      end
+
+      def guest_redirect_dns?
+        config.guest_redirect_dns?
       end
 
       def info(msg)

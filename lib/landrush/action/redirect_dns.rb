@@ -5,7 +5,7 @@ module Landrush
 
       def call(env)
         handle_action_stack(env) do
-          redirect_dns if enabled?
+          redirect_dns if enabled? and guest_redirect_dns?
         end
       end
 
@@ -36,4 +36,3 @@ module Landrush
     end
   end
 end
-

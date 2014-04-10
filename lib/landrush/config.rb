@@ -10,6 +10,7 @@ module Landrush
       @default_upstream = [[:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53]]
       @default_tld = 'vagrant.dev'
       @upstream_servers = @default_upstream
+      @guest_redirect_dns = true
     end
 
     def enable(enabled=true)
@@ -22,6 +23,14 @@ module Landrush
 
     def enabled?
       @enabled
+    end
+
+    def guest_redirect_dns=(guest_redirect_dns=true)
+      @guest_redirect_dns=guest_redirect_dns
+    end
+
+    def guest_redirect_dns?
+      @guest_redirect_dns
     end
 
     def host(hostname, ip_address=nil)
@@ -46,7 +55,7 @@ module Landrush
         @upstream_servers.push [:tcp, ip, port]
       else
         @upstream_servers.push [protocol, ip, port]
-      end 
+      end
     end
 
     def merge(other)
