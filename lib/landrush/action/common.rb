@@ -41,7 +41,7 @@ module Landrush
           raise "The landrush plugin does not support the #{key} provider yet!"
         }
 
-        if provider_name == :parallels and VagrantPlugins::Parallels::VERSION < "1.0.3"
+        if provider_name == :parallels and Gem::Version.new(VagrantPlugins::Parallels::VERSION) < Gem::Version.new("1.0.3")
           raise "The landrush plugin supports the Parallels provider v1.0.3 and later. Please, update your 'vagrant-parallels' plugin."
         end
 
