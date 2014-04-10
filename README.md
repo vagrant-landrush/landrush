@@ -1,4 +1,4 @@
-# Landrush: DNS for Vagrant
+# Landrush: DNS for Vagrant [![Build Status](https://travis-ci.org/phinze/landrush.png)](https://travis-ci.org/phinze/landrush)
 
 Simple DNS that's visible on both the guest and the host.
 
