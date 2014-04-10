@@ -2,6 +2,10 @@ module Landrush
   class Command < Vagrant.plugin('2', :command)
     DAEMON_COMMANDS = %w(start stop restart status)
 
+    def self.synopsis
+      "manages DNS for both guest and host"
+    end
+
     def execute
       ARGV.shift # flush landrush from ARGV, RExec wants to use it for daemon commands
 
