@@ -22,13 +22,16 @@ module Landrush
         # TODO: Find a better heuristic for this implementation.
         #
         def self.read_host_visible_ip_address(machine)
-          command = "ifconfig  | grep 'inet addr:' | grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1 }'"
           result  = ""
           machine.communicate.execute(command) do |type, data|
             result << data if type == :stdout
           end
 
           result.chomp.split("\n").last
+        end
+
+        def self.command
+          %Q(hostname -I | awk -F' ' '{print $NF}')
         end
       end
     end
