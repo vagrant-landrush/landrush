@@ -54,7 +54,7 @@ module Landrush
         match(/.*/, IN::A) do |transaction|
           host = Store.hosts.find(transaction.name)
           if host
-            transaction.respond!(Store.hosts.get(host))
+            transaction.respond!(Store.hosts.get(host), {:ttl => 0})
           else
             transaction.passthrough!(server.upstream)
           end
