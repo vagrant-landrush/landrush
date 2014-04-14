@@ -1,20 +1,31 @@
 module Landrush
   class Config < Vagrant.plugin('2', :config)
     attr_accessor :hosts
+    attr_accessor :enabled
+    attr_accessor :tld
     attr_accessor :upstream_servers
     attr_accessor :host_ip_address
+    attr_accessor :guest_redirect_dns
+
+    DEFAULTS = {
+      :enabled => false,
+      :tld => 'vagrant.dev',
+      :upstream_servers => [[:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53]],
+      :host_ip_address => nil,
+      :guest_redirect_dns => true
+    }
 
     def initialize
       @hosts = {}
-      @enabled = false
-      @default_upstream = [[:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53]]
-      @default_tld = 'vagrant.dev'
-      @upstream_servers = @default_upstream
-      @guest_redirect_dns = true
+      @enabled = UNSET_VALUE
+      @tld = UNSET_VALUE
+      @upstream_servers = UNSET_VALUE
+      @host_ip_address = UNSET_VALUE
+      @guest_redirect_dns = UNSET_VALUE
     end
 
     def enable(enabled=true)
-      @enabled = true
+      @enabled = enabled
     end
 
     def disable
@@ -25,10 +36,6 @@ module Landrush
       @enabled
     end
 
-    def guest_redirect_dns=(guest_redirect_dns=true)
-      @guest_redirect_dns=guest_redirect_dns
-    end
-
     def guest_redirect_dns?
       @guest_redirect_dns
     end
@@ -37,16 +44,8 @@ module Landrush
       @hosts[hostname] = ip_address
     end
 
-    def tld
-      @tld ||= @default_tld
-    end
-
-    def tld=(tld)
-      @tld = tld
-    end
-
     def upstream(ip, port=53, protocol=nil)
-      if @upstream_servers == @default_upstream
+      if @upstream_servers == UNSET_VALUE
         @upstream_servers = []
       end
 
@@ -64,13 +63,24 @@ module Landrush
       end
     end
 
-    def validate(machine)
-      if enabled?
-        unless machine.config.vm.hostname.to_s.length > 0
-          return { 'landrush' => ['you must specify a hostname so we can make a DNS entry for it'] }
+    def finalize!
+      DEFAULTS.each do |name, value|
+        if instance_variable_get('@' + name.to_s) == UNSET_VALUE
+          instance_variable_set '@' + name.to_s, value
         end
       end
-      {}
+    end
+
+    def validate(machine)
+      errors = _detected_errors
+
+      if enabled?
+        unless machine.config.vm.hostname.to_s.length > 0
+          errors << 'you must specify a hostname so we can make a DNS entry for it'
+        end
+      end
+
+      { 'landrush' => errors }
     end
   end
 end
