@@ -14,37 +14,33 @@ module Landrush
       @backing_file = Pathname(backing_file)
     end
 
-    def set(key, value)
-      write(current_config.merge(key => value))
+    def set(key, value, type = 'a')
+      config = current_config
+      config[type] = (config[type] || {}).merge(key => value)
+      write(config)
     end
 
     def each(*args, &block)
       current_config.each(*args, &block)
     end
 
-    def delete(key)
-      write(current_config.reject { |k, v| k == key || v == key })
+    def delete(key, type = 'a')
+      config = current_config
+      config[type] = (config[type] || {}).reject { |k, v| k == key || v == key }
+      write(config)
     end
 
-    def has?(key, value = nil)
-      if value.nil?
-        current_config.has_key? key
-      else
-        current_config[key] == value
-      end
-    end
-
-    def find(search)
+    def find(search, type = 'a')
       search = (IPAddr.new(search).reverse) if (IPAddr.new(search) rescue nil)
-      current_config.keys.detect do |key|
+      (current_config[type] || {}).keys.detect do |key|
         key.casecmp(search) == 0   ||
           search =~ /#{key}$/i     ||
           key    =~ /^#{search}\./i
       end
     end
 
-    def get(key)
-      current_config[key]
+    def get(key, type = 'a')
+      (current_config[type] || {})[key]
     end
 
     def clear!

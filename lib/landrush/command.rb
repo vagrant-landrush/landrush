@@ -19,12 +19,7 @@ module Landrush
           @env.ui.info("No dependent VMs")
         end
       elsif command == 'ls' || command == 'list'
-        IO.popen("/usr/bin/pr -2 -t -a", "w") do |io|
-          Landrush::Store.hosts.each do |key, value|
-            io.puts "#{key}"
-            io.puts "#{value}"
-          end
-        end
+        list_zone
       elsif command == 'set'
         host, ip = ARGV[1,2]
         Landrush::Store.hosts.set(host, ip)
@@ -69,6 +64,18 @@ module Landrush
         help
           you're lookin at it!
       EOS
+    end
+
+    def list_zone
+      IO.popen("/usr/bin/pr -3 -t -a", "w") do |io|
+        Landrush::Store.hosts.each do |type, records|
+          records.each do |key, value|
+            io.puts "#{key}"
+            io.puts "0 IN #{type.upcase}"
+            io.puts "#{Array(value).join(' ')}"
+          end
+        end
+      end
     end
 
   end

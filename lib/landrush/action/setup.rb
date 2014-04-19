@@ -58,13 +58,11 @@ module Landrush
       end
 
       def setup_static_dns
-        config.hosts.each do |hostname, dns_value|
+        config.hosts.each do |hostname, (dns_value, type)|
           dns_value ||= machine.guest.capability(:read_host_visible_ip_address)
-          if !Store.hosts.has?(hostname, dns_value)
-            info "adding static entry: #{hostname} => #{dns_value}"
-            Store.hosts.set hostname, dns_value
-            Store.hosts.set(IPAddr.new(dns_value).reverse, hostname)
-          end
+          info "adding static entry: #{hostname} => #{dns_value} as #{type}"
+          Store.hosts.set hostname, dns_value, type
+          Store.hosts.set IPAddr.new(dns_value).reverse, hostname, 'ptr'
         end
       end
 
@@ -77,11 +75,9 @@ module Landrush
           log :error, "You will not be able to access #{machine_hostname} from the host"
         end
 
-        if !Store.hosts.has?(machine_hostname, ip_address)
-          info "adding machine entry: #{machine_hostname} => #{ip_address}"
-          Store.hosts.set(machine_hostname, ip_address)
-          Store.hosts.set(IPAddr.new(ip_address).reverse, machine_hostname)
-        end
+        info "adding machine entry: #{machine_hostname} => #{ip_address}"
+        Store.hosts.set(machine_hostname, ip_address)
+        Store.hosts.set(IPAddr.new(ip_address).reverse, machine_hostname, 'ptr')
       end
 
       def private_network_exists?
