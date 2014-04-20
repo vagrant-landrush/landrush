@@ -4,10 +4,6 @@ module Landrush
       @hosts ||= new(Landrush.working_dir.join('hosts.json'))
     end
 
-    def self.config
-      @config ||= new(Landrush.working_dir.join('config.json'))
-    end
-
     attr_accessor :backing_file
 
     def initialize(backing_file)

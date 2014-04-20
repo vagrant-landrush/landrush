@@ -39,7 +39,9 @@ module Landrush
       end
 
       def configure_server
-        Store.config.set('upstream', config.upstream_servers)
+        Landrush.config.transaction do
+          Landrush.config['upstream'] = config.upstream_servers
+        end
       end
 
       def start_server

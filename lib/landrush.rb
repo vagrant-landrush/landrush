@@ -12,6 +12,10 @@ module Landrush
   def self.working_dir=(working_dir)
     @working_dir = Pathname(working_dir).tap(&:mkpath)
   end
+
+  def self.config
+    @config ||= PStore.new(working_dir.join('config.pstore'))
+  end
 end
 
 require 'rubydns'
