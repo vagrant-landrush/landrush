@@ -43,10 +43,6 @@ module Landrush
       (current_config[type] || {})[key]
     end
 
-    def clear!
-      write({})
-    end
-
     protected
 
     def current_config
