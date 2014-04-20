@@ -4,6 +4,8 @@ rescue LoadError
   raise 'The Vagrant landrush plugin must be run within Vagrant.'
 end
 
+require 'pstore'
+
 module Landrush
   def self.working_dir
     @working_dir ||= Pathname(File.expand_path('~/.vagrant.d/data/landrush')).tap(&:mkpath)
