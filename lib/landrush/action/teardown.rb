@@ -16,21 +16,22 @@ module Landrush
         if DependentVMs.none?
           teardown_static_dns
           teardown_server
-        else
-          info "there are #{DependentVMs.count} VMs left, leaving DNS server and static entries"
-          info DependentVMs.list.map { |dvm| " - #{dvm}" }.join("\n")
         end
       end
 
       def teardown_machine_dns
-        info "removing machine entry: #{machine_hostname}"
-        Store.hosts.delete(machine_hostname)
+        if Store.hosts.has? machine_hostname
+          info "removing machine entry: #{machine_hostname}"
+          Store.hosts.delete(machine_hostname)
+        end
       end
 
       def teardown_static_dns
         config.hosts.each do |static_hostname, _|
-          info "removing static entry: #{static_hostname}"
-          Store.hosts.delete static_hostname
+          if Store.hosts.has? static_hostname
+            info "removing static entry: #{static_hostname}"
+            Store.hosts.delete static_hostname
+          end
         end
       end
 

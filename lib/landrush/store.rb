@@ -26,6 +26,14 @@ module Landrush
       write(current_config.reject { |k, _| k == key })
     end
 
+    def has?(key, value = nil)
+      if value.nil?
+        current_config.has_key? key
+      else
+        current_config[key] == value
+      end
+    end
+
     def find(search)
       current_config.keys.detect do |key|
         key.casecmp(search) == 0   ||
