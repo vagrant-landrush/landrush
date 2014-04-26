@@ -23,7 +23,7 @@ module Landrush
     end
 
     def info(msg)
-      @env[:ui].info(msg)
+      @env[:ui].info("[landrush] #{msg}")
     end
 
     def desired_contents; <<-EOS.gsub(/^      /, '')
@@ -61,11 +61,6 @@ module Landrush
     end
 
     def ensure_config_exists!
-      unless osx?
-        puts "Not an OSX machine, so skipping host DNS resolver config."
-        return
-      end
-
       if contents_match?
         info "Host DNS resolver config looks good."
       else
