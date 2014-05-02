@@ -17,6 +17,11 @@ module Landrush
             machine.communicate.stub_command(Landrush::Cap::Linux::ReadHostVisibleIpAddress.command, "1.2.3.4 5.6.7.8 fdb2:2c26:f4e4:0:21c:42ff:febc:ea4f\n")
             machine.guest.capability(:read_host_visible_ip_address).must_equal '5.6.7.8'
           end
+
+          it 'should fail on invalid address' do
+            machine.communicate.stub_command(Landrush::Cap::Linux::ReadHostVisibleIpAddress.command, "hello world\n")
+            expect { machine.guest.capability(:read_host_visible_ip_address) }.to raise_error(IPAddr::InvalidAddressError)
+          end
         end
       end
 
