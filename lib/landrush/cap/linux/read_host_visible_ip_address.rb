@@ -22,13 +22,15 @@ module Landrush
         # TODO: Find a better heuristic for this implementation.
         #
         def self.read_host_visible_ip_address(machine)
-          result  = ""
+          result = ""
           machine.communicate.execute(command) do |type, data|
             result << data if type == :stdout
           end
+          last_line = result.chomp.split("\n").last
 
-          addresses = result.chomp.split("\n").last.split(/\s+/)
-          addresses.last
+          addresses = last_line.split(/\s+/).map { |address| IPAddr.new(address) }
+          addresses = addresses.reject { |address| address.ipv6? }
+          addresses.last.to_s
         end
 
         def self.command

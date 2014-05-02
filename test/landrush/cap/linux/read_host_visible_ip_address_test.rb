@@ -7,8 +7,14 @@ module Landrush
       describe ReadHostVisibleIpAddress do
         describe 'read_host_visible_ip_address' do
           let (:machine) { fake_machine }
+
           it 'should read the last address' do
             machine.communicate.stub_command(Landrush::Cap::Linux::ReadHostVisibleIpAddress.command, "1.2.3.4 5.6.7.8\n")
+            machine.guest.capability(:read_host_visible_ip_address).must_equal '5.6.7.8'
+          end
+
+          it 'should read ignore IPv6 addresses' do
+            machine.communicate.stub_command(Landrush::Cap::Linux::ReadHostVisibleIpAddress.command, "1.2.3.4 5.6.7.8 fdb2:2c26:f4e4:0:21c:42ff:febc:ea4f\n")
             machine.guest.capability(:read_host_visible_ip_address).must_equal '5.6.7.8'
           end
         end
