@@ -27,11 +27,12 @@ module Landrush
             result << data if type == :stdout
           end
 
-          result.chomp.split("\n").last
+          addresses = result.chomp.split("\n").last.split(/\s+/)
+          addresses.last
         end
 
         def self.command
-          %Q(hostname -I | awk -F' ' '{print $NF}')
+          %Q(hostname -I)
         end
       end
     end
