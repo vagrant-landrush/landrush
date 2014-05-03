@@ -24,8 +24,8 @@ module Landrush
       @guest_redirect_dns = UNSET_VALUE
     end
 
-    def enable(enabled=true)
-      @enabled = enabled
+    def enable
+      @enabled = true
     end
 
     def disable
@@ -33,7 +33,7 @@ module Landrush
     end
 
     def enabled?
-      @enabled
+      !!@enabled
     end
 
     def guest_redirect_dns?

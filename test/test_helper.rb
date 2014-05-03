@@ -8,7 +8,7 @@ require 'landrush/cap/linux/read_host_visible_ip_address'
 
 require 'minitest/autorun'
 
-def fake_environment(options={})
+def fake_environment(options = { enabled: true })
   { machine: fake_machine(options), ui: FakeUI }
 end
 
@@ -89,7 +89,7 @@ def fake_machine(options={})
     "#{options.fetch(:ip, '1.2.3.4')}\n"
   )
 
-  machine.config.landrush.enable
+  machine.config.landrush.enabled = options.fetch(:enabled, false)
   machine.config.vm.hostname = options.fetch(:hostname, 'somehost.vagrant.dev')
 
   machine
