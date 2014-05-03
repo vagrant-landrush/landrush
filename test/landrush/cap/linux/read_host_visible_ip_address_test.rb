@@ -20,14 +20,16 @@ module Landrush
 
           it 'should fail on invalid address' do
             machine.communicate.stub_command(Landrush::Cap::Linux::ReadHostVisibleIpAddress.command, "hello world\n")
-            expect { machine.guest.capability(:read_host_visible_ip_address) }.
-              to raise_error(IPAddr::InvalidAddressError)
+            lambda {
+              machine.guest.capability(:read_host_visible_ip_address)
+            }.must_raise(IPAddr::InvalidAddressError)
           end
 
           it 'should fail without address' do
             machine.communicate.stub_command(Landrush::Cap::Linux::ReadHostVisibleIpAddress.command, "\n")
-            expect { machine.guest.capability(:read_host_visible_ip_address) }.
-              to raise_error(RuntimeError, 'Cannot detect IP address, command `hostname -I` returned ``')
+            lambda {
+              machine.guest.capability(:read_host_visible_ip_address)
+            }.must_raise(RuntimeError, 'Cannot detect IP address, command `hostname -I` returned ``')
           end
         end
       end
@@ -35,4 +37,3 @@ module Landrush
     end
   end
 end
-

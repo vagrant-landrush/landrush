@@ -17,5 +17,4 @@ group :development do
     :ref => 'v1.5.1'
 
   gem 'byebug'
-  gem 'rspec'
 end

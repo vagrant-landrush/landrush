@@ -8,8 +8,6 @@ require 'landrush/cap/linux/read_host_visible_ip_address'
 
 require 'minitest/autorun'
 
-require 'rspec/expectations'
-
 def fake_environment(options={})
   { machine: fake_machine(options), ui: FakeUI }
 end
