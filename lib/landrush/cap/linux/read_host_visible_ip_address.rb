@@ -22,16 +22,24 @@ module Landrush
         # TODO: Find a better heuristic for this implementation.
         #
         def self.read_host_visible_ip_address(machine)
-          result  = ""
+          result = ""
           machine.communicate.execute(command) do |type, data|
             result << data if type == :stdout
           end
 
-          result.chomp.split("\n").last
+          last_line = result.chomp.split("\n").last || ''
+          addresses = last_line.split(/\s+/).map { |address| IPAddr.new(address) }
+          addresses = addresses.reject { |address| address.ipv6? }
+
+          if addresses.empty?
+            raise "Cannot detect IP address, command `#{command}` returned `#{result}`"
+          end
+
+          addresses.last.to_s
         end
 
         def self.command
-          %Q(hostname -I | awk -F' ' '{print $NF}')
+          %Q(hostname -I)
         end
       end
     end

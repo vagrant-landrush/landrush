@@ -15,6 +15,7 @@ module Landrush
 end
 
 require 'rubydns'
+require 'ipaddr'
 
 require 'landrush/dependent_vms'
 require 'landrush/plugin'

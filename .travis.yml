@@ -5,3 +5,4 @@ rvm:
 
 before_install:
   - sudo apt-get install dnsutils
+  - rvm @global do gem uninstall bundler -x && gem install bundler -v '~> 1.5.2'  # For Vagrant 1.5
