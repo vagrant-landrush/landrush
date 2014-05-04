@@ -18,7 +18,7 @@ Install under Vagrant (1.1 or later):
 
 Enable the plugin in your `Vagrantfile`:
 
-    config.landrush.enable
+    config.landrush.enabled = true
 
 Bring up a machine that has a hostname set (see the `Vagrantfile` for an example)
 
