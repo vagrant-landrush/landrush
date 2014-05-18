@@ -11,7 +11,7 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "hashicorp/precise64"
 
-  config.landrush.enable
+  config.landrush.enabled = true
 
   config.vm.hostname = "myhost.vagrant.dev"
 
