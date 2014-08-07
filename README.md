@@ -93,7 +93,7 @@ Similar behavior can be achieved on Linux hosts with `dnsmasq`. You can integrat
 
 If you use a TLD other than the default `vagrant.dev`, replace the TLD in the above instructions accordingly. Please be aware that anything ending in '.local' as TLD will not work because the `avahi` daemon reserves this TLD for its own uses.
 
-### Visibility on additional devices
+### Visibility on other Devices (phone)
 
 You might want to resolve Landrush's DNS-entries on *additional* computing devices, like a mobile phone.
 
