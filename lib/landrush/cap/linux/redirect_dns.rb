@@ -4,10 +4,12 @@ module Landrush
       module RedirectDns
         def self.redirect_dns(machine, target={})
           %w[tcp udp].each do |proto|
-            machine.guest.capability(
-              :add_iptables_rule,
-              _redirect_dns_rule(proto, _current(machine), target.fetch(:host), target.fetch(:port))
-            )
+            for dnsserver in _current(machine)
+              machine.guest.capability(
+                :add_iptables_rule,
+                _redirect_dns_rule(proto, dnsserver, target.fetch(:host), target.fetch(:port))
+              )
+            end
           end
         end
 

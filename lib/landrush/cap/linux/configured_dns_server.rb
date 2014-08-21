@@ -6,7 +6,7 @@ module Landrush
           return @dns_server if @dns_server
           machine.communicate.sudo('cat /etc/resolv.conf | grep ^nameserver') do |type, data|
             if type == :stdout
-              @dns_server = data.scan(/\d+\.\d+\.\d+\.\d+/).first
+              @dns_server = data.scan(/\d+\.\d+\.\d+\.\d+/)
             end
           end
           @dns_server
