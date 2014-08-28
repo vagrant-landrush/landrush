@@ -17,4 +17,5 @@ group :development do
     :ref => 'v1.6.1'
 
   gem 'byebug'
+  gem 'mocha'
 end

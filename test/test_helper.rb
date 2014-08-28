@@ -4,9 +4,12 @@ require 'bundler/setup'
 require 'minitest/spec'
 
 require 'landrush'
+require 'landrush/cap/linux/configured_dns_servers'
 require 'landrush/cap/linux/read_host_visible_ip_address'
+require 'landrush/cap/linux/redirect_dns'
 
 require 'minitest/autorun'
+require 'mocha/mini_test'
 
 def fake_environment(options = { enabled: true })
   { machine: fake_machine(options), ui: FakeUI }

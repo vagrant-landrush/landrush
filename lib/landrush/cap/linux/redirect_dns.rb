@@ -3,18 +3,15 @@ module Landrush
     module Linux
       module RedirectDns
         def self.redirect_dns(machine, target={})
+          dns_servers = machine.guest.capability(:configured_dns_servers)
           %w[tcp udp].each do |proto|
-            for dnsserver in _current(machine)
+            dns_servers.each do |dns_server|
               machine.guest.capability(
                 :add_iptables_rule,
-                _redirect_dns_rule(proto, dnsserver, target.fetch(:host), target.fetch(:port))
+                _redirect_dns_rule(proto, dns_server, target.fetch(:host), target.fetch(:port))
               )
             end
           end
-        end
-
-        def self._current(machine)
-          machine.guest.capability(:configured_dns_server)
         end
 
         def self._redirect_dns_rule(protocol, original_server, target_server, target_port)
