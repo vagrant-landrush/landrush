@@ -73,13 +73,6 @@ module Landrush
 
     def validate(machine)
       errors = _detected_errors
-
-      if enabled?
-        unless machine.config.vm.hostname.to_s.length > 0
-          errors << 'you must specify a hostname so we can make a DNS entry for it'
-        end
-      end
-
       { 'landrush' => errors }
     end
   end
