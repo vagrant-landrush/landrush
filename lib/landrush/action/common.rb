@@ -75,8 +75,8 @@ module Landrush
           return data if type == :stdout && data.to_s.length > 0
         end
 
-        # Or default to "guest-vm.local"
-        return "guest-vm.local"
+        # Or default to "guest-vm"
+        return "guest-vm"
       end
 
       def enabled?
