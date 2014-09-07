@@ -20,7 +20,7 @@ Enable the plugin in your `Vagrantfile`:
 
     config.landrush.enabled = true
 
-Bring up a machine that has a hostname set (see the `Vagrantfile` for an example)
+Bring up a machine.
 
     $ vagrant up
 
@@ -29,6 +29,8 @@ And you should be able to get your hostname from your host:
     $ dig -p 10053 @localhost myhost.vagrant.dev
 
 If you shut down your guest, the entries associated with it will be removed.
+
+Landrush assigns your vm's hostname from either the vagrant config (see the `examples/Vagrantfile`) or system's actual hostname by running the `hostname` command. A default of "guest-vm" is assumed if hostname is otherwise not available.
 
 ### Dynamic entries
 
