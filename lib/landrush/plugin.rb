@@ -76,9 +76,9 @@ module Landrush
       Cap::Redhat::InstallIptables
     end
 
-    guest_capability('linux', 'configured_dns_server') do
-      require_relative 'cap/linux/configured_dns_server'
-      Cap::Linux::ConfiguredDnsServer
+    guest_capability('linux', 'configured_dns_servers') do
+      require_relative 'cap/linux/configured_dns_servers'
+      Cap::Linux::ConfiguredDnsServers
     end
 
     guest_capability('linux', 'redirect_dns') do
