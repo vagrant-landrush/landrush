@@ -23,7 +23,7 @@ module Landrush
 
       if defined?(HashiCorp::VagrantVMwarefusion)
         hook.before(HashiCorp::VagrantVMwarefusion::Action::Network, pre_boot_actions)
-        hook.after(HashiCorp::VagrantVMwarefusion::Action::Boot, post_boot_actions)
+        hook.after(HashiCorp::VagrantVMwarefusion::Action::WaitForCommunicator, post_boot_actions)
       end
 
       if defined?(VagrantPlugins::Parallels)
