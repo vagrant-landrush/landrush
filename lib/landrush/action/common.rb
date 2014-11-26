@@ -67,16 +67,11 @@ module Landrush
       end
 
       def read_machine_hostname
-        # Get hostname from vm config.
-        return machine.config.vm.hostname if machine.config.vm.hostname.to_s.length > 0
-
-        # Or gt machine's current hostname.
-        machine.communicate.execute("hostname") do |type, data|
-          return data if type == :stdout && data.to_s.length > 0
+        if machine.config.vm.hostname
+          return machine.config.vm.hostname
         end
 
-        # Or default to "guest-vm"
-        return "guest-vm"
+        "#{Pathname.pwd.basename}.#{config.tld}"
       end
 
       def enabled?
