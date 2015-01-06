@@ -1,4 +1,5 @@
 require 'rubydns'
+require 'rexec/daemon'
 
 module Landrush
   class Server < RExec::Daemon::Base
