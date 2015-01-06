@@ -59,6 +59,10 @@ class Landrush::FakeProvider
 
   def ssh_info
   end
+
+  def state
+    @state ||= Vagrant::MachineState.new('fake-state', 'fake-state','fake-state')
+  end
 end
 
 class Landrush::FakeConfig
