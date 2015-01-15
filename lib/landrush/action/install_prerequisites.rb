@@ -10,7 +10,7 @@ module Landrush
       end
 
       def install_prerequisites
-        unless machine.guest.capability(:iptables_installed)
+        if guest_redirect_dns? && !machine.guest.capability(:iptables_installed)
           info 'iptables not installed, installing it'
           machine.guest.capability(:install_iptables)
         end
@@ -18,5 +18,3 @@ module Landrush
     end
   end
 end
-
-
