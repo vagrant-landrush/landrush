@@ -8,6 +8,12 @@ module Landrush
       answer_line.split.last
     end
 
+    def query_ptr(host)
+      output = `dig ptr -p #{Server.port} @127.0.0.1 #{host}`
+      answer_line = output.split("\n").grep(/^#{Regexp.escape(host)}/).first
+      answer_line.split.last
+    end
+
     describe 'start/stop' do
       it 'starts and stops a daemon' do
         Server.start
@@ -35,6 +41,8 @@ module Landrush
         Store.hosts.set(fake_host, fake_ip)
 
         query(fake_host).must_equal fake_ip
+        query_ptr(fake_host).must_equal fake_ip+'.'
+
       end
 
       it 'also resolves wildcard subdomains to a given machine' do
