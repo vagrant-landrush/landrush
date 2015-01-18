@@ -23,7 +23,7 @@ module Landrush
     end
 
     def delete(key)
-      write(current_config.reject { |k, _| k == key })
+      write(current_config.reject { |k, v| k == key || v == key })
     end
 
     def has?(key, value = nil)
@@ -35,6 +35,7 @@ module Landrush
     end
 
     def find(search)
+      search = (IPAddr.new(search).reverse) if (IPAddr.new(search) rescue nil)
       current_config.keys.detect do |key|
         key.casecmp(search) == 0   ||
           search =~ /#{key}$/i     ||
@@ -45,8 +46,8 @@ module Landrush
     def get(key)
       value = current_config[key]
       redirect = nil
-      if value.is_a? String
-        redirect = find(value)
+      if value.is_a? String and ! (IPAddr.new(value) rescue nil)
+        redirect = find(value) if not current_config[value]
       end
       if value
         if redirect

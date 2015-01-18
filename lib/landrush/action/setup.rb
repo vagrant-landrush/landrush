@@ -55,6 +55,7 @@ module Landrush
           if !Store.hosts.has?(hostname, dns_value)
             info "adding static entry: #{hostname} => #{dns_value}"
             Store.hosts.set hostname, dns_value
+            Store.hosts.set(IPAddr.new(dns_value).reverse, hostname)
           end
         end
       end
@@ -71,6 +72,7 @@ module Landrush
         if !Store.hosts.has?(machine_hostname, ip_address)
           info "adding machine entry: #{machine_hostname} => #{ip_address}"
           Store.hosts.set(machine_hostname, ip_address)
+          Store.hosts.set(IPAddr.new(ip_address).reverse, machine_hostname)
         end
       end
 

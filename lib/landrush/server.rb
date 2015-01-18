@@ -61,6 +61,15 @@ module Landrush
           end
         end
 
+        match(/.*/, IN::PTR) do |transaction|
+          host = Store.hosts.find(transaction.name)
+          if host
+            transaction.respond!(Name.create(Store.hosts.get(host)))
+          else
+            transaction.passthrough!(server.upstream)
+          end
+        end
+
         # Default DNS handler
         otherwise do |transaction|
           transaction.passthrough!(server.upstream)

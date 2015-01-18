@@ -27,7 +27,7 @@ module Landrush
       end
 
       def teardown_static_dns
-        config.hosts.each do |static_hostname, _|
+        config.hosts.each do |static_hostname, dns_value|
           if Store.hosts.has? static_hostname
             info "removing static entry: #{static_hostname}"
             Store.hosts.delete static_hostname
