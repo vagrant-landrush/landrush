@@ -9,7 +9,7 @@ module Landrush
     def execute
       ARGV.shift # flush landrush from ARGV, RExec wants to use it for daemon commands
 
-      command = ARGV.first
+      command = ARGV.first || 'help'
       if DAEMON_COMMANDS.include?(command)
         Server.daemonize
       elsif command == 'dependentvms' || command == 'vms'
@@ -25,6 +25,12 @@ module Landrush
             io.puts "#{value}"
           end
         end
+      elsif command == 'set'
+        host, ip = ARGV[1,2]
+        Landrush::Store.hosts.set(host, ip)
+      elsif command == 'del' || command == 'rm'
+        key = ARGV[1]
+        Landrush::Store.hosts.delete(key)
       elsif command == 'help'
         @env.ui.info(help)
       else
@@ -55,6 +61,11 @@ module Landrush
           list all DNS entries known to landrush
         dependentvms, vms
           list vms currently dependent on the landrush server
+        set { <host> <ip> | <alias> <host> }
+          adds the given host-to-ip or alias-to-hostname mapping.
+          existing host ip addresses will be overwritten
+        rm, del { <host> | <alias> }
+          delete the given hostname or alias from the server
         help
           you're lookin at it!
       EOS
