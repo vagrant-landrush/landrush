@@ -45,6 +45,20 @@ module Landrush
 
       end
 
+      it 'responds properly to configured cname entries' do
+        Server.start
+
+        fake_host = 'boogers.vagrant.dev'
+        fake_cname = 'snot.vagrant.dev'
+        fake_ip = '99.98.97.96'
+
+        Store.hosts.set(fake_host, fake_ip)
+        Store.hosts.set(fake_cname, fake_host)
+
+        query(fake_cname).must_equal fake_host+'.'
+
+      end
+
       it 'also resolves wildcard subdomains to a given machine' do
         Server.start
 
