@@ -12,7 +12,7 @@ module Landrush
       Config
     end
 
-    action_hook 'landrush_setup', :machine_action_up do |hook|
+    landrush_setup = -> (hook) {
       require_relative 'action/common'
       require_relative 'action/setup'
       require_relative 'action/install_prerequisites'
@@ -29,7 +29,10 @@ module Landrush
       if defined?(VagrantPlugins::Parallels)
         hook.before(VagrantPlugins::Parallels::Action::Network, pre_boot_actions)
       end
-    end
+    }
+
+    action_hook 'landrush_setup', :machine_action_up, &landrush_setup
+    action_hook 'landrush_setup', :machine_action_reload, &landrush_setup
 
     def self.pre_boot_actions
       Vagrant::Action::Builder.new.tap do |b|
@@ -44,17 +47,15 @@ module Landrush
       end
     end
 
-    action_hook 'landrush_teardown', :machine_action_halt do |hook|
+    landrush_teardown = -> (hook) {
       require_relative 'action/common'
       require_relative 'action/teardown'
       hook.after(Vagrant::Action::Builtin::GracefulHalt, Action::Teardown)
-    end
+    }
 
-    action_hook 'landrush_teardown', :machine_action_destroy do |hook|
-      require_relative 'action/common'
-      require_relative 'action/teardown'
-      hook.after(Vagrant::Action::Builtin::GracefulHalt, Action::Teardown)
-    end
+    action_hook 'landrush_teardown', :machine_action_halt, &landrush_teardown
+    action_hook 'landrush_teardown', :machine_action_destroy, &landrush_teardown
+    action_hook 'landrush_teardown', :machine_action_reload, &landrush_teardown
 
     guest_capability('debian', 'iptables_installed') do
       require_relative 'cap/debian/iptables_installed'
