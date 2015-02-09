@@ -44,18 +44,7 @@ module Landrush
     end
 
     def get(key)
-      value = current_config[key]
-      redirect = nil
-      if value.is_a? String and ! (IPAddr.new(value) rescue nil)
-        redirect = find(value) if not current_config[value]
-      end
-      if value
-        if redirect
-          get(redirect)
-        else
-          value
-        end
-      end
+      current_config[key]
     end
 
     def clear!
