@@ -33,16 +33,18 @@ After restarting bind you should be able to resolve your VM's entries on your lo
 ## Configure DNS server on your mobile phone
 Set your bind server's IP address as the DNS server on your external device.
 
-How to set the DNS server on iOS:
+**How to set the DNS server on iOS:**
 
 1. Open *Settings* > *Wi-Fi*
 2. Tap the *i*-icon next to your network
 3. Tap the *DNS*-row and edit the value
 
-How to set the DNS server on Android 4:
+**How to set the DNS server on Android:**
 
 1. Open *Settings* > *Wi-Fi*
 2. Tap and hold your network, then chose *Modify network*
 3. Check *Show advanced options*
 4. Under *IP Settings* tap *DHCP / Static* and change the value to *Static*
 5. Change the *DNS 1* value and tap *Save*
+
+Or use the [Dns Changer](https://play.google.com/store/apps/details?id=net.emrekoc.dnschanger) application.
