@@ -85,9 +85,12 @@ have DNS servers that you can easily set as upstreams in the daemon (e.g. DNS re
 
 ### Visibility on the Host
 
-If you're on an OS X host, we use a nice trick to unobtrusively add a secondary DNS server only for specific domains.
+If you're on an OS X host, we use a nice trick to unobtrusively add a secondary DNS server only for specific domains.  
+Landrush adds a file into `/etc/resolver` that points lookups for hostnames ending in your `config.landrush.tld` domain 
+name to its DNS server. (Check out `man 5 resolver` on your Mac OS X host for more information on this file's syntax.)
 
-Similar behavior can be achieved on Linux hosts with `dnsmasq`. You can integrate Landrush with dnsmasq on Ubuntu like so (tested on Ubuntu 13.10):
+Though it's not automatically set up by landrush, similar behavior can be achieved on Linux hosts with `dnsmasq`. You 
+can integrate Landrush with dnsmasq on Ubuntu like so (tested on Ubuntu 13.10):
 
     sudo apt-get install -y resolvconf dnsmasq
     sudo sh -c 'echo "server=/vagrant.dev/127.0.0.1#10053" > /etc/dnsmasq.d/vagrant-landrush'
