@@ -22,8 +22,17 @@ module Landrush
         # TODO: Find a better heuristic for this implementation.
         #
         def self.read_host_visible_ip_address(machine)
-          result = ""
-          machine.communicate.execute(command) do |type, data|
+          landrush_ip = Landrush::Ip.new(machine, '/tmp/landrush-ip')
+
+          if landrush_ip.install
+            cmd = '/tmp/landrush-ip'
+          else
+            # Todo: log landrush_ip.error, warn user that we fell back to hostname -I?
+            cmd = command
+          end
+
+          result = ''
+          machine.communicate.execute(cmd) do |type, data|
             result << data if type == :stdout
           end
 
@@ -32,7 +41,7 @@ module Landrush
           addresses = addresses.reject { |address| address.ipv6? }
 
           if addresses.empty?
-            raise "Cannot detect IP address, command `#{command}` returned `#{result}`"
+            raise "Cannot detect IP address, command `#{cmd}` returned `#{result}`"
           end
 
           addresses.last.to_s

@@ -93,6 +93,7 @@ module Landrush
     end
 
     guest_capability('linux', 'read_host_visible_ip_address') do
+      require_relative 'landrush_ip'
       require_relative 'cap/linux/read_host_visible_ip_address'
       Cap::Linux::ReadHostVisibleIpAddress
     end
