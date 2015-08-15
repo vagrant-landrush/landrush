@@ -26,6 +26,10 @@ module Landrush
 
           if landrush_ip.install
             cmd = '/tmp/landrush-ip'
+
+            unless machine.config.landrush.interface.nil?
+              cmd << " #{machine.config.landrush.interface}"
+            end
           else
             # Todo: log landrush_ip.error, warn user that we fell back to hostname -I?
             cmd = command
