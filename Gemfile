@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 # Can't use `gemspec` to pull in dependencies, because the landrush gem needs
 # to be in the :plugins group for Vagrant to detect and load it in development
 
-gem 'rubydns', '0.9.4'
+gem 'rubydns', '1.0.2'
 gem 'rexec'
 gem 'rake'
 
