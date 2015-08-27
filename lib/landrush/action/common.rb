@@ -3,6 +3,7 @@ module Landrush
     module Common
       SUPPORTED_PROVIDERS = {
         'VagrantPlugins::ProviderVirtualBox::Provider' => :virtualbox,
+        'VagrantPlugins::ProviderLibvirt::Provider'    => :libvirt,
         'HashiCorp::VagrantVMwarefusion::Provider'     => :vmware_fusion,
         'VagrantPlugins::Parallels::Provider'          => :parallels,
         'Landrush::FakeProvider'                       => :fake_provider,
@@ -26,6 +27,10 @@ module Landrush
 
       def virtualbox?
         provider == :virtualbox
+      end
+
+      def libvirt?
+        provider == :libvirt
       end
 
       def vmware?
