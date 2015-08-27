@@ -1,5 +1,8 @@
 ## [Unreleased][unreleased]
 
+### Added
+ - vagrant: support for libvirt provider (#138)
+
 ## [0.18.0] - 2015-01-24
 
 ### Added
