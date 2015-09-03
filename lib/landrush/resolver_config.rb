@@ -18,8 +18,9 @@ module Landrush
       self.class.config_dir
     end
 
-    def initialize(env={})
+    def initialize(env={}, tld)
       @env = env
+      @tld = tld
     end
 
     def info(msg)
@@ -42,7 +43,7 @@ module Landrush
     end
 
     def config_file
-      config_dir.join(@env[:machine].config.landrush.tld)
+      config_dir.join(@tld)
     end
 
     def contents_match?
@@ -50,7 +51,7 @@ module Landrush
     end
 
     def write_config!
-      info "Momentarily using sudo to put the host config in place..."
+      info "Momentarily using sudo to put a TLD config in place..."
       system "#{self.class.sudo} mkdir #{config_dir}" unless config_dir.directory?
       Tempfile.open('vagrant_landrush_host_config') do |f|
         f.write(desired_contents)

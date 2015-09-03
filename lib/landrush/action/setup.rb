@@ -28,7 +28,9 @@ module Landrush
       end
 
       def setup_host_resolver
-        ResolverConfig.new(env).ensure_config_exists!
+        config.tld.each { |tld|
+          ResolverConfig.new(env, tld).ensure_config_exists!
+        }
       end
 
       def add_prerequisite_network_interface
@@ -64,8 +66,15 @@ module Landrush
         ip_address = machine.config.landrush.host_ip_address ||
                      machine.guest.capability(:read_host_visible_ip_address)
 
-        if not machine_hostname.match(config.tld)
-          log :error, "hostname #{machine_hostname} does not match the configured TLD: #{config.tld}"
+        tld_match = false
+        config.tld.each { |tld|
+          if machine_hostname.match(tld)
+            tld_match = true
+            break
+          end
+        }
+        if !tld_match
+          log :error, "hostname #{machine_hostname} does not match any of the configured TLD: #{config.tld}"
           log :error, "You will not be able to access #{machine_hostname} from the host"
         end
 

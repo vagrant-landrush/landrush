@@ -71,7 +71,7 @@ module Landrush
           return machine.config.vm.hostname
         end
 
-        "#{Pathname.pwd.basename}.#{config.tld}"
+        "#{Pathname.pwd.basename}.#{config.tld[0]}"
       end
 
       def enabled?
