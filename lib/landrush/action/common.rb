@@ -74,7 +74,7 @@ module Landrush
       def read_machine_hostname
         return machine.config.vm.hostname if machine.config.vm.hostname
 
-        "#{Pathname.pwd.basename}.#{config.tld}"
+        "#{Pathname.pwd.basename}.#{config.tld_as_array[0]}"
       end
 
       def enabled?

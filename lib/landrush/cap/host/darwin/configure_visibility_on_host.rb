@@ -5,14 +5,16 @@ module Landrush
         class << self
           attr_writer :sudo, :config_dir
 
-          def configure_visibility_on_host(env, _ip, tld)
+          def configure_visibility_on_host(env, _ip, tlds)
             @env = env
-            @tld = tld
-            if contents_match?
-              info 'Host DNS resolver config looks good.'
-            else
-              info 'Need to configure the host.'
-              write_config!
+
+            tlds.each do |tld|
+              if contents_match?(tld)
+                info "Host DNS resolver config for TLD '#{tld}' looks good."
+              else
+                info "Need to create /etc/resolver entry for TLD '#{tld}'"
+                write_config!(tld)
+              end
             end
           end
 
@@ -23,7 +25,11 @@ module Landrush
           end
 
           def config_dir
-            @config_dir ||= Pathname('/etc/resolver')
+            @config_dir ||= '/etc/resolver'
+          end
+
+          def config_file(tld)
+            File.join(config_dir, tld)
           end
 
           def info(msg)
@@ -38,22 +44,19 @@ module Landrush
             EOS
           end
 
-          def config_file
-            config_dir.join(@tld)
+          def contents_match?(tld)
+            config_file = config_file(tld)
+            File.exist?(config_file) && File.read(config_file) == desired_contents
           end
 
-          def contents_match?
-            config_file.exist? && File.read(config_file) == desired_contents
-          end
-
-          def write_config!
+          def write_config!(tld)
             info 'Momentarily using sudo to put the host config in place...'
-            system "#{sudo} mkdir #{config_dir}" unless config_dir.directory?
+            system "#{sudo} mkdir #{config_dir}" unless File.directory?(config_dir)
             Tempfile.open('vagrant_landrush_host_config') do |f|
               f.write(desired_contents)
               f.close
-              system "#{sudo} cp #{f.path} #{config_file}"
-              system "#{sudo} chmod 644 #{config_file}"
+              system "#{sudo} cp #{f.path} #{config_file(tld)}"
+              system "#{sudo} chmod 644 #{config_file(tld)}"
             end
           end
         end

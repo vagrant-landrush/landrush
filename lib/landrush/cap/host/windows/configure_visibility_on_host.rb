@@ -10,9 +10,11 @@ module Landrush
         INTERFACES = 'SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces'.freeze
 
         class << self
-          def configure_visibility_on_host(env, ip, tld)
+          def configure_visibility_on_host(env, ip, tlds)
             @env = env
-            update_network_adapter(ip, tld) if ensure_prerequisites
+            # tlds is an array. See also issue #177. For now we only support single TLD on windows, hence we select the
+            # first element
+            update_network_adapter(ip, tlds[0]) if ensure_prerequisites
           end
 
           # If this registry query succeeds we assume we have Admin rights

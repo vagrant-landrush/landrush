@@ -40,7 +40,7 @@ module Landrush
         Server.start
         return unless machine.config.landrush.host_redirect_dns?
 
-        env[:host].capability(:configure_visibility_on_host, host_ip_address, config.tld)
+        env[:host].capability(:configure_visibility_on_host, host_ip_address, config.tld_as_array)
       end
 
       def record_dependent_vm
@@ -80,9 +80,16 @@ module Landrush
       def record_machine_dns_entry
         ip_address = machine.config.landrush.host_ip_address || host_ip_address
 
-        unless machine_hostname.match(config.tld)
-          log :error, "hostname #{machine_hostname} does not match the configured TLD: #{config.tld}"
-          log :error, "You will not be able to access #{machine_hostname} from the host"
+        tld_match = false
+        config.tld_as_array.each do |tld|
+          if machine_hostname.match(tld)
+            tld_match = true
+            break
+          end
+        end
+        unless tld_match
+          log :error, "hostname #{machine_hostname} does not match any of the configured TLD: #{config.tld_as_array}"
+          log :error, "You will not be able to access #{machine_hostname} from your host"
         end
 
         unless Store.hosts.has?(machine_hostname, ip_address)

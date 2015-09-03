@@ -1,8 +1,8 @@
 module Landrush
   class Config < Vagrant.plugin('2', :config)
     attr_accessor :hosts
-    attr_accessor :enabled
     attr_accessor :tld
+    attr_accessor :enabled
     attr_accessor :upstream_servers
     attr_accessor :host_ip_address
     attr_accessor :guest_redirect_dns
@@ -61,6 +61,10 @@ module Landrush
 
     def host(hostname, ip_address = nil)
       @hosts[hostname] = ip_address
+    end
+
+    def tld_as_array
+      Array(@tld)
     end
 
     def upstream(ip, port = 53, protocol = nil)

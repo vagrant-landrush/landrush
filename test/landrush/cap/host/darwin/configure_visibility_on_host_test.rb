@@ -23,7 +23,7 @@ module Landrush
               # also disable 'sudo'
               ConfigureVisibilityOnHost.stubs(:sudo).returns('')
 
-              ConfigureVisibilityOnHost.configure_visibility_on_host(env, '42.42.42.42', 'vagrant.test')
+              ConfigureVisibilityOnHost.configure_visibility_on_host(env, '42.42.42.42', ['vagrant.test'])
 
               Dir["#{dir}/*"].empty?.must_equal false
               File.exist?(File.join(dir, 'vagrant.test')).must_equal true
@@ -31,7 +31,7 @@ module Landrush
             end
           end
 
-          it 'the config file is named after the configured tld' do
+          it 'multiple tlds can be specified' do
             Dir.mktmpdir('landrush-test-dir-') do |dir|
               # puts "Using #{dir} for testing"
               Dir["#{dir}/*"].empty?.must_equal true
@@ -41,11 +41,15 @@ module Landrush
               # also disable 'sudo'
               ConfigureVisibilityOnHost.stubs(:sudo).returns('')
 
-              ConfigureVisibilityOnHost.configure_visibility_on_host(env, '42.42.42.42', 'foo.bar')
+              tlds = %w[foo.bar acme.com example.com]
 
-              Dir["#{dir}/*"].empty?.must_equal false
-              File.exist?(File.join(dir, 'foo.bar')).must_equal true
-              Pathname(File.join(dir, 'foo.bar')).read.must_equal CONFIG
+              ConfigureVisibilityOnHost.configure_visibility_on_host(env, '42.42.42.42', tlds)
+
+              tlds.each do |tld|
+                Dir["#{dir}/*"].empty?.must_equal false
+                File.exist?(File.join(dir, tld)).must_equal true
+                Pathname(File.join(dir, tld)).read.must_equal CONFIG
+              end
             end
           end
         end

@@ -3,9 +3,11 @@ module Landrush
     module Linux
       class ConfigureVisibilityOnHost
         class << self
-          def configure_visibility_on_host(env, ip, tld)
+          def configure_visibility_on_host(env, ip, tlds)
             env.host.capability(:install_dnsmasq) unless env.host.capability(:dnsmasq_installed)
-            env.host.capability(:create_dnsmasq_config, ip, tld)
+            tlds.each do |tld|
+              env.host.capability(:create_dnsmasq_config, ip, tld)
+            end
             env.host.capability(:restart_dnsmasq)
           rescue Vagrant::Errors::CapabilityNotFound => e
             env.ui.info("Your host was detected as '#{e.extra_data[:host]}' for which the host capability " \
