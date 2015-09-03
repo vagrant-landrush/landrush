@@ -43,7 +43,7 @@ module Landrush
               network_name = get_network_name(old_network_state, new_network_state)
 
               get_dns_for_name(network_name).must_be_nil
-              Landrush::Cap::Windows::ConfigureVisibilityOnHost.configure_visibility_on_host(fake_environment, TEST_IP, 'landrush.test')
+              Landrush::Cap::Windows::ConfigureVisibilityOnHost.configure_visibility_on_host(fake_environment, TEST_IP, ['landrush.test'])
               get_dns_for_name(network_name).must_equal '127.0.0.1'
             rescue StandardError
               delete_test_interface network_description

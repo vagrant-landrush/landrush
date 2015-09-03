@@ -148,15 +148,15 @@ To disable this functionality:
 config.landrush.host_redirect_dns = false
 ....
 
-* OS X
+* macOS
 +
-If you are on an OS X host, we use a nice trick to unobtrusively add a
+If you are on an macOS host, we use a nice trick to unobtrusively add a
 secondary DNS server only for specific domains. During startup Landrush automatically adds
 a file into `/etc/resolver` that points
 lookups for hostnames ending in your `config.landrush.tld` domain to its
-DNS server. (See `man 5 resolver` on your Mac OS X host for more
+DNS server. (See `man 5 resolver` on your host for more
 information on this file's syntax.)
-
++
 * Linux
 +
 Landrush tries to achieve the same behavior on Linux hosts using
@@ -195,8 +195,7 @@ Windows 10 and VirtualBox.
 When running VirtualBox on Windows in combination with Landrush the
 Network Connections
 (`Control Panel\Network and Internet\Network Connections`) looks
-somewhat like this after a successful `vagrant up`: +
- +
+somewhat like this after a successful `vagrant up`:
 +
 image:img/network-connections.png[Network
 Connections,title="Network Connections"] +
@@ -267,5 +266,17 @@ Settings,title="Advanced TCP/IP Settings"] +
 You might want to resolve Landrush's DNS-entries on _additional_
 computing devices, like a mobile phone.
 Please refer to link:ProxyMobile.adoc[mobile instructions] for further details.
+
+[TIP]
+====
+Multiple TLDs can also be provided as an array.
+On Linux and macOS a dnsmasq resp. resolver configuration will be created for each TLD.
+
+....
+config.landrush.tld = ['acme.com', 'example.com']
+config.landrush.host 'www.acme.com', '1.2.3.4'
+config.landrush.host 'www.foo.bar', '2.3.4.5'
+....
+====
 
 You can refer to the link:Troubleshooting.adoc[Troubleshooting guide] if you encounter any problems while using Landrush.
