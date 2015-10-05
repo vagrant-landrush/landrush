@@ -22,7 +22,9 @@ module Landrush
       hook.after(Vagrant::Action::Builtin::WaitForCommunicator, post_boot_actions)
 
       if defined?(VagrantPlugins::ProviderLibvirt)
-        hook.before(VagrantPlugins::ProviderLibvirt::Action::CreateNetworks, pre_boot_actions)
+        # We need to hook the pre-boot actions after all libvirt actions are done
+        # since Landrush uses RExec that forks.
+        hook.after(VagrantPlugins::ProviderLibvirt::Action::SetNameOfDomain, pre_boot_actions)
         hook.after(VagrantPlugins::ProviderLibvirt::Action::WaitTillUp, post_boot_actions)
       end
 
