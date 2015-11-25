@@ -1,5 +1,8 @@
 # Landrush: DNS for Vagrant [![Build Status](https://travis-ci.org/phinze/landrush.png)](https://travis-ci.org/phinze/landrush)
 
+## Warning: This project is currently _unmaintained_ and looking for maintainers! Anybody interested in helping out please contact @phinze.
+
+
 Simple DNS that's visible on both the guest and the host.
 
 Spins up a small DNS server and redirects DNS traffic from your VMs to use it,
