@@ -21,6 +21,11 @@ module Landrush
       hook.before(VagrantPlugins::ProviderVirtualBox::Action::Network, pre_boot_actions)
       hook.after(Vagrant::Action::Builtin::WaitForCommunicator, post_boot_actions)
 
+      if defined?(VagrantPlugins::ProviderLibvirt)
+        hook.after(VagrantPlugins::ProviderLibvirt::Action::CreateNetworks, pre_boot_actions)
+        hook.after(VagrantPlugins::ProviderLibvirt::Action::WaitTillUp, post_boot_actions)
+      end
+
       if defined?(HashiCorp::VagrantVMwarefusion)
         hook.before(HashiCorp::VagrantVMwarefusion::Action::Network, pre_boot_actions)
         hook.after(HashiCorp::VagrantVMwarefusion::Action::WaitForCommunicator, post_boot_actions)

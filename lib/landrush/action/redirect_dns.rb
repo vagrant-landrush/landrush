@@ -22,7 +22,7 @@ module Landrush
         case provider
         when :virtualbox then
           '10.0.2.2'
-        when :vmware_fusion then
+        when :vmware_fusion, :libvirt then
           _gateway_for_ip(machine.guest.capability(:configured_dns_servers).first)
         when :parallels then
           machine.provider.capability(:host_address)
