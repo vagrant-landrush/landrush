@@ -13,6 +13,7 @@ group :plugins do
 end
 
 group :test do
+  gem 'rubocop'
 end
 
 group :development do
