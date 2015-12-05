@@ -10,7 +10,7 @@ module Landrush
           machine.communicate.sudo(command) do |data, type|
             if [:stderr, :stdout].include?(type)
               color = (type == :stdout) ? :green : :red
-              machine.env.ui.info(data.chomp, :color => color, :prefix => false)
+              machine.env.ui.info(data.chomp, color: color, prefix: false)
             end
           end
         end

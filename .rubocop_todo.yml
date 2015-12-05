@@ -153,12 +153,6 @@ Style/GuardClause:
     - 'test/support/fake_resolver_config.rb'
     - 'test/support/test_server_daemon.rb'
 
-# Offense count: 13
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, UseHashRocketsWithSymbolValues.
-Style/HashSyntax:
-  Enabled: false
-
 # Offense count: 4
 # Cop supports --auto-correct.
 # Configuration parameters: MaxLineLength.

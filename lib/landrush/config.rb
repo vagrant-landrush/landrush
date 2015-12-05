@@ -8,11 +8,11 @@ module Landrush
     attr_accessor :guest_redirect_dns
 
     DEFAULTS = {
-      :enabled => false,
-      :tld => 'vagrant.dev',
-      :upstream_servers => [[:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53]],
-      :host_ip_address => nil,
-      :guest_redirect_dns => true
+      enabled: false,
+      tld: 'vagrant.dev',
+      upstream_servers: [[:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53]],
+      host_ip_address: nil,
+      guest_redirect_dns: true
     }
 
     def initialize

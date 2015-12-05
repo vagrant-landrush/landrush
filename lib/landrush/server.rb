@@ -51,7 +51,7 @@ module Landrush
       value = Store.hosts.get(host)
       if (IPAddr.new(value) rescue nil)
         name = transaction.name =~ /#{host}/ ? transaction.name : host
-        transaction.respond!(value, {:ttl => 0, :name => name})
+        transaction.respond!(value, {ttl: 0, name: name})
       else
         transaction.respond!(Name.create(value), resource_class: IN::CNAME, ttl: 0)
         check_a_record(value, transaction)
@@ -60,7 +60,7 @@ module Landrush
 
     def self.run
       server = self
-      RubyDNS::run_server(:listen => interfaces) do
+      RubyDNS::run_server(listen: interfaces) do
         self.logger.level = Logger::INFO
 
         match(/.*/, IN::A) do |transaction|

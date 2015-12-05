@@ -41,7 +41,7 @@ module Landrush
     end
 
     def boom(msg)
-      raise Vagrant::Errors::CLIInvalidOptions, :help => usage(msg)
+      raise Vagrant::Errors::CLIInvalidOptions, help: usage(msg)
     end
 
     def usage(msg); <<-EOS.gsub(/^      /, '')
