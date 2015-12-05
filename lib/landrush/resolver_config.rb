@@ -10,14 +10,6 @@ module Landrush
       @sudo ||= 'sudo'
     end
 
-    def self.config_dir
-      @config_dir ||= Pathname('/etc/resolver')
-    end
-
-    def config_dir
-      self.class.config_dir
-    end
-
     def initialize(env={})
       @env = env
     end
@@ -35,6 +27,10 @@ module Landrush
 
     def osx?
       `uname`.chomp == 'Darwin'
+    end
+
+    def self.config_dir
+      @config_dir ||= Pathname('/etc/resolver')
     end
 
     def config_dir
