@@ -17,7 +17,7 @@ env:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
 
 before_install:
-  - rvm @global do gem uninstall bundler -x && gem install bundler -v '~> 1.5.2'  # For Vagrant 1.5
+  - rvm @global do gem uninstall bundler -x && gem install bundler -v '>= 1.5.2, <= 1.10.5'  # For Vagrant 1.7.4
 
 notifications:
   email:
