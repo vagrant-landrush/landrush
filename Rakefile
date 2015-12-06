@@ -8,8 +8,8 @@ Rake::TestTask.new do |t|
 end
 
 task default: [
-  :test,
-  :rubocop
+  :rubocop,
+  :test
 ]
 
 task :generate_diagrams do
