@@ -88,11 +88,11 @@ have DNS servers that you can easily set as upstreams in the daemon (e.g. DNS re
 
 ### Visibility on the Host
 
-If you're on an OS X host, we use a nice trick to unobtrusively add a secondary DNS server only for specific domains.  
-Landrush adds a file into `/etc/resolver` that points lookups for hostnames ending in your `config.landrush.tld` domain 
+If you're on an OS X host, we use a nice trick to unobtrusively add a secondary DNS server only for specific domains.
+Landrush adds a file into `/etc/resolver` that points lookups for hostnames ending in your `config.landrush.tld` domain
 name to its DNS server. (Check out `man 5 resolver` on your Mac OS X host for more information on this file's syntax.)
 
-Though it's not automatically set up by landrush, similar behavior can be achieved on Linux hosts with `dnsmasq`. You 
+Though it's not automatically set up by landrush, similar behavior can be achieved on Linux hosts with `dnsmasq`. You
 can integrate Landrush with dnsmasq on Ubuntu like so (tested on Ubuntu 13.10):
 
     sudo apt-get install -y resolvconf dnsmasq
@@ -111,7 +111,21 @@ Please refer to [/doc/proxy-mobile](/doc/proxy-mobile) for instructions.
 
 Check out `vagrant landrush` for additional commands to monitor the DNS server daemon.
 
-## Help Out!
+## Development
+
+Install dependencies:
+
+    bundle install
+
+Run the test suite:
+
+    bundle exec rake
+
+Run the vagrant binary with the landrush plugin loaded from your local source code:
+
+    bundle exec vagrant landrush <command>
+
+### Help Out!
 
 This project could use your feedback and help! Please don't hesitate to open issues or submit pull requests. NO HESITATION IS ALLOWED. NONE WHATSOEVER.
 
