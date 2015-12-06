@@ -23,4 +23,5 @@ group :development do
 
   gem 'byebug'
   gem 'mocha'
+  gem 'vagrant-spec', git: 'https://github.com/mitchellh/vagrant-spec.git'
 end
