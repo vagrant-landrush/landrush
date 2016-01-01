@@ -54,24 +54,24 @@ module Landrush
 
     describe "find" do
       it "returns the key that matches the end of the search term" do
-        @store.set('somehost.vagrant.dev', 'here')
+        @store.set('somehost.vagrant.test', 'here')
 
-        @store.find('foo.somehost.vagrant.dev').must_equal 'somehost.vagrant.dev'
-        @store.find('bar.somehost.vagrant.dev').must_equal 'somehost.vagrant.dev'
-        @store.find('foo.otherhost.vagrant.dev').must_equal nil
-        @store.find('host.vagrant.dev').must_equal nil
+        @store.find('foo.somehost.vagrant.test').must_equal 'somehost.vagrant.test'
+        @store.find('bar.somehost.vagrant.test').must_equal 'somehost.vagrant.test'
+        @store.find('foo.otherhost.vagrant.test').must_equal nil
+        @store.find('host.vagrant.test').must_equal nil
       end
 
       it "returns exact matches too" do
-        @store.set('somehost.vagrant.dev', 'here')
-        @store.find('somehost.vagrant.dev').must_equal 'somehost.vagrant.dev'
+        @store.set('somehost.vagrant.test', 'here')
+        @store.find('somehost.vagrant.test').must_equal 'somehost.vagrant.test'
       end
 
       it "returns for prefix searches as well" do
-        @store.set('somehost.vagrant.dev', 'here')
+        @store.set('somehost.vagrant.test', 'here')
 
-        @store.find('somehost').must_equal 'somehost.vagrant.dev'
-        @store.find('somehost.vagrant').must_equal 'somehost.vagrant.dev'
+        @store.find('somehost').must_equal 'somehost.vagrant.test'
+        @store.find('somehost.vagrant').must_equal 'somehost.vagrant.test'
         @store.find('somehost.vagr').must_equal nil
         @store.find('someh').must_equal nil
       end

@@ -28,7 +28,7 @@ In its configuration file forward all queries to your local Landrush and disable
 
 After restarting bind you should be able to resolve your VM's entries on your local default DNS server (port 53):
 
-    $ dig -p 53 @localhost myhost.vagrant.dev
+    $ dig -p 53 @localhost myhost.vagrant.test
 
 ## Configure DNS server on your mobile phone
 Set your bind server's IP address as the DNS server on your external device.

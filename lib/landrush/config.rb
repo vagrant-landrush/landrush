@@ -9,7 +9,7 @@ module Landrush
 
     DEFAULTS = {
       :enabled => false,
-      :tld => 'vagrant.dev',
+      :tld => 'vagrant.test',
       :upstream_servers => [[:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53]],
       :host_ip_address => nil,
       :guest_redirect_dns => true

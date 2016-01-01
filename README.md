@@ -29,7 +29,7 @@ Bring up a machine.
 
 And you should be able to get your hostname from your host:
 
-    $ dig -p 10053 @localhost myhost.vagrant.dev
+    $ dig -p 10053 @localhost myhost.vagrant.test
 
 If you shut down your guest, the entries associated with it will be removed.
 
@@ -55,9 +55,9 @@ This is great for overriding production services for nodes you might be testing 
 
 ### Wildcard Subdomains
 
-For your convenience, any subdomain of a DNS entry known to landrush will resolve to the same IP address as the entry. For example: given `myhost.vagrant.dev -> 1.2.3.4`, both `foo.myhost.vagrant.dev` and `bar.myhost.vagrant.dev` will also resolve to `1.2.3.4`.
+For your convenience, any subdomain of a DNS entry known to landrush will resolve to the same IP address as the entry. For example: given `myhost.vagrant.test -> 1.2.3.4`, both `foo.myhost.vagrant.test` and `bar.myhost.vagrant.test` will also resolve to `1.2.3.4`.
 
-If you would like to configure your guests to be accessible from the host as subdomains of something other than the default `vagrant.dev`, you can use the `config.landrush.tld` option in your Vagrantfile like so:
+If you would like to configure your guests to be accessible from the host as subdomains of something other than the default `vagrant.test`, you can use the `config.landrush.tld` option in your Vagrantfile like so:
 
     config.landrush.tld = 'vm'
 
@@ -96,10 +96,10 @@ Though it's not automatically set up by landrush, similar behavior can be achiev
 can integrate Landrush with dnsmasq on Ubuntu like so (tested on Ubuntu 13.10):
 
     sudo apt-get install -y resolvconf dnsmasq
-    sudo sh -c 'echo "server=/vagrant.dev/127.0.0.1#10053" > /etc/dnsmasq.d/vagrant-landrush'
+    sudo sh -c 'echo "server=/vagrant.test/127.0.0.1#10053" > /etc/dnsmasq.d/vagrant-landrush'
     sudo service dnsmasq restart
 
-If you use a TLD other than the default `vagrant.dev`, replace the TLD in the above instructions accordingly. Please be aware that anything ending in '.local' as TLD will not work because the `avahi` daemon reserves this TLD for its own uses.
+If you use a TLD other than the default `vagrant.test`, replace the TLD in the above instructions accordingly. Please be aware that anything ending in '.local' as TLD will not work because the `avahi` daemon reserves this TLD for its own uses.
 
 ### Visibility on other Devices (phone)
 

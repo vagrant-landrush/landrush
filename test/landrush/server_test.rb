@@ -35,7 +35,7 @@ module Landrush
       it 'responds properly to configured machine entries' do
         Server.start
 
-        fake_host = 'boogers.vagrant.dev'
+        fake_host = 'boogers.vagrant.test'
         fake_ip = '99.98.97.96'
 
         Store.hosts.set(fake_host, fake_ip)
@@ -48,8 +48,8 @@ module Landrush
       it 'responds properly to configured cname entries' do
         Server.start
 
-        fake_host = 'boogers.vagrant.dev'
-        fake_cname = 'snot.vagrant.dev'
+        fake_host = 'boogers.vagrant.test'
+        fake_cname = 'snot.vagrant.test'
         fake_ip = '99.98.97.96'
 
         Store.hosts.set(fake_host, fake_ip)
@@ -62,7 +62,7 @@ module Landrush
       it 'also resolves wildcard subdomains to a given machine' do
         Server.start
 
-        fake_host = 'boogers.vagrant.dev'
+        fake_host = 'boogers.vagrant.test'
         fake_ip = '99.98.97.96'
 
         Store.hosts.set(fake_host, fake_ip)
