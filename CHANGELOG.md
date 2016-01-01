@@ -2,6 +2,7 @@
 
 ### Added
  - vagrant: support for libvirt provider (#138)
+ - Add support for CNAME records (#99)
 
 ## [0.18.0] - 2015-01-24
 
