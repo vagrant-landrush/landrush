@@ -1,6 +1,9 @@
 require 'bundler/gem_tasks'
 require 'rake/testtask'
+require 'rake/clean'
 require 'rubocop/rake_task'
+
+CLOBBER.include('pkg/*')
 
 Rake::TestTask.new do |t|
   t.pattern = 'test/**/*_test.rb'
