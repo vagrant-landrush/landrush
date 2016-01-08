@@ -1,4 +1,5 @@
-*.gem
+.ruby-gemset
+.ruby-version
 *.rbc
 .bundle
 .config
@@ -18,3 +19,6 @@ tags
 
 .vagrant
 .vagrant_dns.json
+
+*.iml
+.idea
