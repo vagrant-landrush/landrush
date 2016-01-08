@@ -3,7 +3,7 @@
 Simple DNS that's visible on both the guest and the host.
 
 Spins up a small DNS server and redirects DNS traffic from your VMs to use it,
-automatically registers/deregisters IP addresseses of guests as they come up
+automatically registers/deregisters IP addresses of guests as they come up
 and down.
 
 ## Installation
