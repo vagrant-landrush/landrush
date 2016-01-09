@@ -12,9 +12,9 @@ At this point, this document is not complete, but as decisions are made they wil
 
 ## Maintainers
 
-* Reto Kaiser (@njam)
-* Eric Sorenson (@ahpook)
-* Josef Strzibny (@strzibny)
-* Florian Holzhauer (@fh)
-* Brian Exelbierd (@bexelbie)
-* Paul Hinze (@phinze)
+* Reto Kaiser ([@njam](http://github.com/njam))
+* Eric Sorenson ([@ahpook](http://github.com/ahpook))
+* Josef Strzibny ([@strzibny](http://github.com/strzibny))
+* Florian Holzhauer ([@fh](http://github.com/fh))
+* Brian Exelbierd ([@bexelbie](http://github.com/bexelbie))
+* Paul Hinze ([@phinze](http://github.com/phinze))
