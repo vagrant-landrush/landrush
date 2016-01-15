@@ -34,7 +34,7 @@ module Landrush
     end
 
     def self.dir
-      Landrush.working_dir.join('dependent_vms').tap(&:mkpath)
+      Server.working_dir.join('dependent_vms').tap(&:mkpath)
     end
   end
 end
