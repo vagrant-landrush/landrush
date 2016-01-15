@@ -44,17 +44,8 @@ module Landrush
 
       def start_server
         return if Server.running?
-        # We need to avoid forking with libvirt provider since the forked process
-        # would try to reuse the libvirt connection and fail.
-        if libvirt?
-          require 'open3'
-          Kernel.puts '[landrush] Starting landrush in background...'
-          _stdout, stderr, status = Open3.capture3('vagrant landrush start')
-          Kernel.puts stderr unless status
-        else
-          info 'starting dns server'
-          Server.start
-        end
+        info 'starting dns server'
+        Server.start
       end
 
       def setup_static_dns

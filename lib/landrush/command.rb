@@ -7,11 +7,11 @@ module Landrush
     end
 
     def execute
-      ARGV.shift # flush landrush from ARGV, RExec wants to use it for daemon commands
+      ARGV.shift # flush landrush from ARGV
 
       command = ARGV.first || 'help'
       if DAEMON_COMMANDS.include?(command)
-        Server.daemonize
+        Server.send(command)
       elsif command == 'dependentvms' || command == 'vms'
         if DependentVMs.any?
           @env.ui.info(DependentVMs.list.map { |dvm| " - #{dvm}" }.join("\n"))
@@ -19,11 +19,8 @@ module Landrush
           @env.ui.info("No dependent VMs")
         end
       elsif command == 'ls' || command == 'list'
-        IO.popen("/usr/bin/pr -2 -t -a", "w") do |io|
-          Landrush::Store.hosts.each do |key, value|
-            io.puts "#{key}"
-            io.puts "#{value}"
-          end
+        Landrush::Store.hosts.each do |key, value|
+          printf "%-30s %s\n", key, value
         end
       elsif command == 'set'
         host, ip = ARGV[1,2]
