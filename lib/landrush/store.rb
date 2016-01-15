@@ -1,11 +1,15 @@
+require 'pathname'
+require 'json'
+
 module Landrush
   class Store
+
     def self.hosts
-      @hosts ||= new(Landrush.working_dir.join('hosts.json'))
+      @hosts ||= new(Server.working_dir.join('hosts.json'))
     end
 
     def self.config
-      @config ||= new(Landrush.working_dir.join('config.json'))
+      @config ||= new(Server.working_dir.join('config.json'))
     end
 
     attr_accessor :backing_file
