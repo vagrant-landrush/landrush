@@ -15,6 +15,8 @@ module FakeResolverConfigHooks
   end
 end
 
-class MiniTest::Spec
-  include FakeResolverConfigHooks
+module MiniTest
+  class Spec
+    include FakeResolverConfigHooks
+  end
 end

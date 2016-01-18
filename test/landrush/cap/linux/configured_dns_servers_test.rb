@@ -19,14 +19,14 @@ describe Landrush::Cap::Linux::ConfiguredDnsServers do
     it 'parses out multiple the resolv.conf dns servers' do
       machine.communicate.stubs(:sudo).yields(:stdout, [
         "nameserver 12.23.34.45",
-        "nameserver    45.34.23.12",
+        "nameserver    45.34.23.12"
       ].join("\n"))
 
       dns_servers = Landrush::Cap::Linux::ConfiguredDnsServers.configured_dns_servers(machine)
 
       dns_servers.must_equal([
         "12.23.34.45",
-        "45.34.23.12",
+        "45.34.23.12"
       ])
     end
   end

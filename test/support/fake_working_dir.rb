@@ -10,7 +10,8 @@ module FakeWorkingDirHooks
   end
 end
 
-class MiniTest::Spec
-  include FakeWorkingDirHooks
+module MiniTest
+  class Spec
+    include FakeWorkingDirHooks
+  end
 end
-

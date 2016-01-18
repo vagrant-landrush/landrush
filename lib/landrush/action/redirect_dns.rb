@@ -9,7 +9,7 @@ module Landrush
         # This is after the middleware stack returns, which, since we're right
         # before the Network action, should mean that all interfaces are good
         # to go.
-        redirect_dns if enabled? and guest_redirect_dns?
+        redirect_dns if enabled? && guest_redirect_dns?
       end
 
       def redirect_dns
