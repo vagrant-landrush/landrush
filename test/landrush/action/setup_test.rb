@@ -14,6 +14,7 @@ module Landrush
       end
 
       it "calls the next app in the chain" do
+        skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
         env = fake_environment
         app = -> (e) { e[:called] = true }
         setup = Setup.new(app, nil)
@@ -24,6 +25,7 @@ module Landrush
       end
 
       it "records the booting host as a dependent VM" do
+        skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
         app = proc {}
         setup = Setup.new(app, nil)
         env = fake_environment
@@ -34,6 +36,7 @@ module Landrush
       end
 
       it "starts the landrush server if it's not already started" do
+        skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
         app = proc {}
         setup = Setup.new(app, nil)
         env = fake_environment
@@ -44,6 +47,7 @@ module Landrush
       end
 
       it "does not attempt to start the server if it's already up" do
+        skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
         app = proc {}
         setup = Setup.new(app, nil)
         env = fake_environment
@@ -58,6 +62,7 @@ module Landrush
       end
 
       it "does nothing if it is not enabled via config" do
+        skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
         app = proc {}
         setup = Setup.new(app, nil)
         env = fake_environment
@@ -69,6 +74,7 @@ module Landrush
       end
 
       it "for single private network IP host visible IP can be retrieved w/o starting the VM" do
+        skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
         app = proc {}
         setup = Setup.new(app, nil)
         env = fake_environment
@@ -79,6 +85,7 @@ module Landrush
       end
 
       it "for multiple private network IPs host visible IP cannot be retrieved w/o starting the VM" do
+        skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
         app = proc {}
         setup = Setup.new(app, nil)
         env = fake_environment
@@ -90,6 +97,7 @@ module Landrush
       end
 
       it "for multiple private network IPs host visible IP cant be retrieved if host_ip_address is set" do
+        skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
         app = proc {}
         setup = Setup.new(app, nil)
         env = fake_environment
@@ -103,6 +111,7 @@ module Landrush
 
       describe 'after boot' do
         it "stores the machine's hostname => ip address" do
+          skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
           app = proc {}
           setup = Setup.new(app, nil)
           env = fake_environment
@@ -113,6 +122,7 @@ module Landrush
         end
 
         it "does nothing if it is not enabled via config" do
+          skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
           app = proc {}
           setup = Setup.new(app, nil)
           env = fake_environment(enabled: false)

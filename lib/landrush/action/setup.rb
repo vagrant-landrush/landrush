@@ -15,24 +15,35 @@ module Landrush
         # This is after the middleware stack returns, which, since we're right
         # before the Network action, should mean that all interfaces are good
         # to go.
-        record_machine_dns_entry if enabled?
-        setup_static_dns if enabled?
+        post_boot_setup if enabled?
       end
 
       def pre_boot_setup
         record_dependent_vm
         add_prerequisite_network_interface
-        setup_host_resolver
         configure_server
         start_server
+      end
+
+      def post_boot_setup
+        record_machine_dns_entry
+        setup_static_dns
+        setup_host_resolver(env)
       end
 
       def record_dependent_vm
         DependentVMs.add(machine_hostname)
       end
 
-      def setup_host_resolver
-        ResolverConfig.new(env).ensure_config_exists!
+      def setup_host_resolver(env)
+        if Vagrant::Util::Platform.windows?
+          network_config = WinNetworkConfig.new(env)
+          if network_config.check_prerequisites
+            network_config.update_network_adapter(host_ip_address, '127.0.0.1', config.tld)
+          end
+        elsif Vagrant::Util::Platform.darwin?
+          ResolverConfig.new(env).ensure_config_exists!
+        end
       end
 
       def add_prerequisite_network_interface
