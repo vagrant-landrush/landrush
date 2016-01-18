@@ -18,4 +18,3 @@ module Landrush
     end
   end
 end
-

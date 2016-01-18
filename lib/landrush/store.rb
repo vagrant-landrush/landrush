@@ -3,7 +3,6 @@ require 'json'
 
 module Landrush
   class Store
-
     def self.hosts
       @hosts ||= new(Server.working_dir.join('hosts.json'))
     end
@@ -32,14 +31,14 @@ module Landrush
 
     def has?(key, value = nil)
       if value.nil?
-        current_config.has_key? key
+        current_config.key? key
       else
         current_config[key] == value
       end
     end
 
     def find(search)
-      search = (IPAddr.new(search).reverse) if (IPAddr.new(search) rescue nil)
+      search = IPAddr.new(search).reverse if (IPAddr.new(search) rescue nil)
       current_config.keys.detect do |key|
         key.casecmp(search) == 0   ||
           search =~ /#{key}$/i     ||

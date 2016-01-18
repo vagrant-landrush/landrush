@@ -32,7 +32,7 @@ module Landrush
           addresses = addresses.reject { |address| address.ipv6? }
 
           if addresses.empty?
-            raise "Cannot detect IP address, command `#{command}` returned `#{result}`"
+            fail "Cannot detect IP address, command `#{command}` returned `#{result}`"
           end
 
           addresses.last.to_s

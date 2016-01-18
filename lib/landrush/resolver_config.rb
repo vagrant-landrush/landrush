@@ -2,7 +2,7 @@ require 'tempfile'
 
 module Landrush
   class ResolverConfig
-    class << self;
+    class << self
       attr_writer :sudo, :config_dir
     end
 
@@ -12,10 +12,6 @@ module Landrush
 
     def self.config_dir
       @config_dir ||= Pathname('/etc/resolver')
-    end
-
-    def config_dir
-      self.class.config_dir
     end
 
     def initialize(env={})
