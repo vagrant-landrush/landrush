@@ -51,7 +51,7 @@ module Landrush
       def setup_static_dns
         config.hosts.each do |hostname, dns_value|
           dns_value ||= machine.guest.capability(:read_host_visible_ip_address)
-          if !Store.hosts.has?(hostname, dns_value)
+          unless Store.hosts.has?(hostname, dns_value)
             info "adding static entry: #{hostname} => #{dns_value}"
             Store.hosts.set hostname, dns_value
             Store.hosts.set(IPAddr.new(dns_value).reverse, hostname)
@@ -63,12 +63,12 @@ module Landrush
         ip_address = machine.config.landrush.host_ip_address ||
                      machine.guest.capability(:read_host_visible_ip_address)
 
-        if not machine_hostname.match(config.tld)
+        unless machine_hostname.match(config.tld)
           log :error, "hostname #{machine_hostname} does not match the configured TLD: #{config.tld}"
           log :error, "You will not be able to access #{machine_hostname} from the host"
         end
 
-        if !Store.hosts.has?(machine_hostname, ip_address)
+        unless Store.hosts.has?(machine_hostname, ip_address)
           info "adding machine entry: #{machine_hostname} => #{ip_address}"
           Store.hosts.set(machine_hostname, ip_address)
           Store.hosts.set(IPAddr.new(ip_address).reverse, machine_hostname)

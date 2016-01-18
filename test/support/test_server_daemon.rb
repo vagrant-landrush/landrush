@@ -1,11 +1,12 @@
 # Set test port so there's nothing colliding
-Landrush::Server.port = 11153
+Landrush::Server.port = 111_53
 
 module SilenceOutput
   def silence
-    orig_out, orig_err = $stdout, $stderr
-    $stdout, $stderr   = StringIO.new, StringIO.new
-
+    orig_out = $stdout
+    orig_err = $stderr
+    $stdout = StringIO.new
+    $stderr = StringIO.new
     yield
   ensure
     $stdout = orig_out
@@ -21,8 +22,10 @@ module SilenceOutput
   end
 end
 
-class Landrush::Server
-  extend SilenceOutput
+module Landrush
+  class Server
+    extend SilenceOutput
+  end
 end
 
 module TestServerHooks
@@ -35,6 +38,8 @@ module TestServerHooks
   end
 end
 
-class MiniTest::Spec
-  include TestServerHooks
+module MiniTest
+  class Spec
+    include TestServerHooks
+  end
 end

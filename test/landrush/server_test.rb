@@ -41,8 +41,7 @@ module Landrush
         Store.hosts.set(fake_host, fake_ip)
 
         query(fake_host).must_equal fake_ip
-        query_ptr(fake_host).must_equal fake_ip+'.'
-
+        query_ptr(fake_host).must_equal fake_ip + '.'
       end
 
       it 'responds properly to configured cname entries' do
@@ -55,8 +54,7 @@ module Landrush
         Store.hosts.set(fake_host, fake_ip)
         Store.hosts.set(fake_cname, fake_host)
 
-        query(fake_cname).must_equal fake_host+'.'
-
+        query(fake_cname).must_equal fake_host + '.'
       end
 
       it 'also resolves wildcard subdomains to a given machine' do

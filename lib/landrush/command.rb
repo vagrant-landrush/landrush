@@ -1,6 +1,6 @@
 module Landrush
   class Command < Vagrant.plugin('2', :command)
-    DAEMON_COMMANDS = %w(start stop restart status)
+    DAEMON_COMMANDS = %w(start stop restart status).freeze
 
     def self.synopsis
       "manages DNS for both guest and host"
@@ -23,7 +23,7 @@ module Landrush
           printf "%-30s %s\n", key, value
         end
       elsif command == 'set'
-        host, ip = ARGV[1,2]
+        host, ip = ARGV[1, 2]
         Landrush::Store.hosts.set(host, ip)
       elsif command == 'del' || command == 'rm'
         key = ARGV[1]
@@ -67,6 +67,5 @@ module Landrush
           you're lookin at it!
       EOS
     end
-
   end
 end

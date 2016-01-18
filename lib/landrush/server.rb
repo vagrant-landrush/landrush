@@ -31,7 +31,7 @@ module Landrush
         # On Windows we need to use the default DNS port, since there seems to be no way to configure it otherwise
         @port ||= 53
       else
-        @port ||= 10053
+        @port ||= 100_53
       end
     end
 
@@ -60,9 +60,9 @@ module Landrush
       ensure_path_exits(log_file)
 
       if OS.windows?
-        pid = spawn('ruby', "#{__FILE__}", "#{port}", "#{working_dir}", :chdir => working_dir.to_path, [:out, :err] => [log_file, "w"], :new_pgroup => true)
+        pid = spawn('ruby', __FILE__, port.to_s, working_dir.to_s, :chdir => working_dir.to_path, [:out, :err] => [log_file, "w"], :new_pgroup => true)
       else
-        pid = spawn('ruby', "#{__FILE__}", "#{port}", "#{working_dir}", :chdir => working_dir.to_path, [:out, :err] => [log_file, "w"], :pgroup => true)
+        pid = spawn('ruby', __FILE__, port.to_s, working_dir.to_s, :chdir => working_dir.to_path, [:out, :err] => [log_file, "w"], :pgroup => true)
       end
       Process.detach pid
 
@@ -132,7 +132,7 @@ module Landrush
       server.working_dir = working_dir
 
       # Start the DNS server
-      RubyDNS::run_server(:listen => interfaces) do
+      RubyDNS.run_server(:listen => interfaces) do
         @logger.level = Logger::INFO
 
         match(/.*/, IN::A) do |transaction|
@@ -169,7 +169,7 @@ module Landrush
 
       if (IPAddr.new(value) rescue nil)
         name = transaction.name =~ /#{host}/ ? transaction.name : host
-        transaction.respond!(value, {:ttl => 0, :name => name})
+        transaction.respond!(value, :ttl => 0, :name => name)
       else
         transaction.respond!(Name.create(value), resource_class: IN::CNAME, ttl: 0)
         check_a_record(value, transaction)
@@ -197,11 +197,11 @@ module Landrush
     end
 
     def self.process_status
-        if File.exist? pid_file
-          return running? ? :running : :unknown
-        else
-          return :stopped
-        end
+      if File.exist? pid_file
+        return running? ? :running : :unknown
+      else
+        return :stopped
+      end
     end
 
     def self.ensure_path_exits(file_name)
@@ -220,7 +220,7 @@ module Landrush
       # Kill/Term loop - if the daemon didn't die easily, shoot
       # it a few more times.
       attempts = 5
-      while running? and attempts > 0
+      while running? && attempts > 0
         sig = (attempts >= 2) ? "KILL" : "TERM"
 
         puts "Sending #{sig} to process #{pid}..."
