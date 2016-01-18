@@ -3,18 +3,12 @@ source 'https://rubygems.org'
 # Can't use `gemspec` to pull in dependencies, because the landrush gem needs
 # to be in the :plugins group for Vagrant to detect and load it in development
 
-gem 'rubydns', '0.8.5'
-gem 'win32-process'
-gem 'json'
+gemspec
 
 # Vagrant's special group
 group :plugins do
   gem 'landrush', path: '.'
   gem 'landrush-ip', '~> 0.2.3'
-end
-
-group :test do
-  gem 'rubocop', '~> 0.38.0'
 end
 
 group :development do
@@ -23,6 +17,7 @@ group :development do
       :ref => 'v1.8.4'
 
   gem 'rake', '~> 10'
+  gem 'rubocop', '~> 0.38.0'
   gem 'byebug'
   gem 'mocha'
   gem 'minitest'

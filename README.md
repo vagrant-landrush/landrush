@@ -1,10 +1,11 @@
 # Landrush: DNS for Vagrant [![Build Status](https://travis-ci.org/vagrant-landrush/landrush.png)](https://travis-ci.org/vagrant-landrush/landrush)
 
-Simple cross-platform DNS that's visible on both the guest and the host.
+Landrush is a simple cross-platform DNS for Vagrant VMs that is visible on both,
+the guest and the host.
 
-Landrush spins up a small DNS server and redirects DNS traffic from your
+It spins up a small DNS server and redirects DNS traffic from your
 VMs to use it, automatically registering/unregistering IP addresses of guests
-as they come up and down.
+as they come up and go down.
 
 **Note**: Windows support is currently considered experimental. If you having
 problems using Landrush on Windows please let us know.
@@ -13,7 +14,7 @@ problems using Landrush on Windows please let us know.
 
 - [Installation](#installation)
 - [Usage](#usage)
-    - [Get started](#get-started)
+    - [Getting started](#getting-started)
     - [Dynamic entries](#dynamic-entries)
     - [Static entries](#static-entries)
     - [Wildcard Subdomains](#wildcard-subdomains)
@@ -40,24 +41,27 @@ Install under Vagrant (1.1 or later):
 <a name="usage"></a>
 ## Usage
 
-<a name="get-started"></a>
-### Get started
+<a name="getting-started"></a>
+### Getting started
 
-Enable the plugin in your `Vagrantfile`:
+1. Enable the plugin in your `Vagrantfile`:
 
-    config.landrush.enabled = true
+        config.landrush.enabled = true
 
-Bring up a machine.
+1. Bring up a machine.
 
-    $ vagrant up
+        $ vagrant up
 
-And you should be able to get your hostname from your host:
+1. You are able to get your VM's hostname resolved on your host:
 
     $ dig -p 10053 @localhost myhost.vagrant.test
 
-If you shut down your guest, the entries associated with it will be removed.
+1. If you shut down your guest, the entries associated with it will be removed.
 
-Landrush assigns your vm's hostname from either the vagrant config (see the `examples/Vagrantfile`) or system's actual hostname by running the `hostname` command. A default of "guest-vm" is assumed if hostname is otherwise not available.
+Landrush retrieves your VM's hostname from either the vagrant config (see the
+[examples/Vagrantfile](examples/Vagrantfile))
+or it uses the system's actual hostname by running the `hostname` command.
+A default of "guest-vm" is assumed if hostname is otherwise not available.
 
 <a name="dynamic-entries"></a>
 ### Dynamic entries
@@ -79,7 +83,7 @@ If you need or want to select an interface explicitly and you know its name, you
 
     config.landrush.host_interface = 'eth0'
 
-Do note that if you specify an interface explicitly, it will have priority over
+Do note that, if you specify an interface explicitly, it will have priority over
 `config.landrush.host_interface_excludes`. In other words, if `config.landrush.host_interface_excludes`
 is set to `[/eth[0-9]*/]`, but `config.landrush.host_interface` is set to `eth0` and `eth0` exists
 as an interface, the IP address of `eth0` is returned. The interface setting takes precedence over
@@ -102,25 +106,35 @@ You can add static host entries to the DNS server in your `Vagrantfile` like so:
 
     config.landrush.host 'myhost.example.com', '1.2.3.4'
 
-This is great for overriding production services for nodes you might be testing locally. For example, perhaps you might want to override the hostname of your puppetmaster to point to a local vagrant box instead.
+This is great for overriding production services for nodes you might be testing locally. For example,
+perhaps you might want to override the hostname of your puppetmaster to point to a local vagrant box
+instead.
 
 <a name="wildcard-subdomains"></a>
 ### Wildcard Subdomains
 
-For your convenience, any subdomain of a DNS entry known to landrush will resolve to the same IP address as the entry. For example: given `myhost.vagrant.test -> 1.2.3.4`, both `foo.myhost.vagrant.test` and `bar.myhost.vagrant.test` will also resolve to `1.2.3.4`.
+For your convenience, any subdomain of a DNS entry known to landrush will resolve to the same IP
+address as the entry. For example: given `myhost.vagrant.test -> 1.2.3.4`, both
+`foo.myhost.vagrant.test` and `bar.myhost.vagrant.test` will also resolve to `1.2.3.4`.
 
-If you would like to configure your guests to be accessible from the host as subdomains of something other than the default `vagrant.test`, you can use the `config.landrush.tld` option in your Vagrantfile like so:
+If you would like to configure your guests to be accessible from the host as subdomains of something
+other than the default `vagrant.test`, you can use the `config.landrush.tld` option in your
+Vagrantfile like so:
 
     config.landrush.tld = 'vm'
 
-Note that from the __host__, you will only be able to access subdomains of your configured TLD by default- so wildcard subdomains only apply to that space. For the __guest__, wildcard subdomains work for anything.
+Note that from the __host__, you will only be able to access subdomains of your configured TLD by
+default- so wildcard subdomains only apply to that space. For the __guest__, wildcard subdomains
+work for anything.
 
 <a name="unmatched-queries"></a>
 ### Unmatched Queries
 
-Any DNS queries that do not match will be passed through to an upstream DNS server, so this will be able to serve as the one-stop shop for your guests' DNS needs.
+Any DNS queries that do not match will be passed through to an upstream DNS server, so this will be
+able to serve as the one-stop shop for your guests' DNS needs.
 
-If you would like to configure your own upstream servers, add upstream entries to your `Vagrantfile` like so:
+If you would like to configure your own upstream servers, add upstream entries to your
+`Vagrantfile` like so:
 
     config.landrush.upstream '10.1.1.10'
     # Set the port to 1001
@@ -143,34 +157,44 @@ have DNS servers that you can easily set as upstreams in the daemon (e.g. DNS re
 <a name="visibility-on-the-host"></a>
 ### Visibility on the Host
 
+Visibility on the host means that the hostname of the VMs can be resolved on the host's DNS system.
+Depending on the OS this might require some manual configuration.
+
 <a name="os-x"></a>
 #### OS X
 
-If you're on an OS X host, we use a nice trick to unobtrusively add a secondary DNS server only for specific domains.
-Landrush adds a file into `/etc/resolver` that points lookups for hostnames ending in your `config.landrush.tld` domain
-name to its DNS server. (Check out `man 5 resolver` on your Mac OS X host for more information on this file's syntax.)
-
+If you're on an OS X host, we use a nice trick to unobtrusively add a secondary DNS server only for
+specific domains. Landrush adds automatically during startup a file into `/etc/resolver`
+that points lookups for hostnames ending in your `config.landrush.tld` domain to its DNS server.
+(Check out `man 5 resolver` on your Mac OS X host for more information on this file's syntax.)
 
 <a name="linux"></a>
 #### Linux
 
-Though it's not automatically set up by landrush, similar behavior can be achieved on Linux hosts with `dnsmasq`. You
-can integrate Landrush with dnsmasq on Ubuntu like so (tested on Ubuntu 13.10):
+Though it's not automatically set up by Landrush, similar behavior can be achieved on Linux hosts
+with `dnsmasq`. You can integrate Landrush with `dnsmasq` on Ubuntu like so (tested on Ubuntu 13.10):
 
     sudo apt-get install -y resolvconf dnsmasq
     sudo sh -c 'echo "server=/vagrant.test/127.0.0.1#10053" > /etc/dnsmasq.d/vagrant-landrush'
     sudo service dnsmasq restart
 
-If you use a TLD other than the default `vagrant.test`, replace the TLD in the above instructions accordingly. Please be aware that anything ending in '.local' as TLD will not work because the `avahi` daemon reserves this TLD for its own uses.
+If you use a TLD other than the default `vagrant.test`, replace the TLD in the above instructions
+accordingly. Please be aware that anything ending in '.local' as TLD will not work because the
+`avahi` daemon reserves this TLD for its own uses.
 
 <a name="windows"></a>
 #### Windows
 
-**Note**: Windows support is currently considered experimental. If you having
-problems using Landrush on Windows please let us know.
+On Windows a secondary DNS server can be configured via the properties of the
+network adapter used by the VM. Landrush will attempt to configure the adapter automatically
+during startup. If this fails, please follow the manual setup instructions below.
 
-On Windows a secondary DNS server can be configured via the properties of a
-network adapter. This will be illustrated in the following using Windows 10 with
+It is recommended to use an elevated command prompt (command prompt with full administrator
+permissions), since admin privileges are needed to make the required changes. Landrush will
+try to elevate your prompt automatically, but this requires to spawn additional processes which in
+turn loose some potentially important log messages.
+
+In the following section manual network configuration is described using Windows 10 and
 VirtualBox.
 
 When running VirtualBox on Windows in combination with Landrush the Network

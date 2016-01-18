@@ -1,6 +1,6 @@
 require 'rubydns'
 require 'ipaddr'
-require "vagrant/util/platform"
+require 'vagrant/util/platform'
 
 require_relative 'store'
 

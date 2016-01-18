@@ -29,10 +29,6 @@ module Landrush
       EOS
     end
 
-    def osx?
-      `uname`.chomp == 'Darwin'
-    end
-
     def config_dir
       self.class.config_dir
     end
@@ -46,7 +42,7 @@ module Landrush
     end
 
     def write_config!
-      info "Momentarily using sudo to put the host config in place..."
+      info 'Momentarily using sudo to put the host config in place...'
       system "#{self.class.sudo} mkdir #{config_dir}" unless config_dir.directory?
       Tempfile.open('vagrant_landrush_host_config') do |f|
         f.write(desired_contents)
@@ -58,9 +54,9 @@ module Landrush
 
     def ensure_config_exists!
       if contents_match?
-        info "Host DNS resolver config looks good."
+        info 'Host DNS resolver config looks good.'
       else
-        info "Need to configure the host."
+        info 'Need to configure the host.'
         write_config!
       end
     end
