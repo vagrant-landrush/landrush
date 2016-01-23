@@ -23,4 +23,5 @@ group :development do
 
   gem 'byebug'
   gem 'mocha'
+  gem 'minitest'
 end
