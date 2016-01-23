@@ -13,7 +13,7 @@ group :plugins do
 end
 
 group :test do
-  gem 'rubocop'
+  gem 'rubocop', '~> 0.36.0'
 end
 
 group :development do
