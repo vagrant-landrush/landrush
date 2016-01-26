@@ -13,13 +13,13 @@ group :plugins do
 end
 
 group :test do
-  gem 'rubocop'
+  gem 'rubocop', '~> 0.36.0'
 end
 
 group :development do
   gem 'vagrant',
     :git => 'git://github.com/mitchellh/vagrant.git',
-    :ref => 'v1.7.4'
+    :ref => 'v1.8.1'
 
   gem 'byebug'
   gem 'mocha'
