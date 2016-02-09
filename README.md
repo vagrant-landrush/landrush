@@ -124,5 +124,5 @@ Run the vagrant binary with the landrush plugin loaded from your local source co
 
 ### Help Out!
 
-This project could use your feedback and help! Please don't hesitate to open issues or submit pull requests. NO HESITATION IS ALLOWED. NONE WHATSOEVER.  See [CONTRIBUTING.md](CONTIRBUTING.md) for more details.
+This project could use your feedback and help! Please don't hesitate to open issues or submit pull requests. NO HESITATION IS ALLOWED. NONE WHATSOEVER.  See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 
