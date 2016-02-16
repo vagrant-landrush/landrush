@@ -20,10 +20,10 @@ module Landrush
         teardown = Teardown.new(app, nil)
         env = fake_environment
 
-        Store.hosts.set('somehost.vagrant.dev', '1.2.3.4')
+        Store.hosts.set('somehost.vagrant.test', '1.2.3.4')
         teardown.call(env)
 
-        Store.hosts.get('somehost.vagrant.dev').must_equal nil
+        Store.hosts.get('somehost.vagrant.test').must_equal nil
       end
 
       it "removes the machine as a dependent VM" do
@@ -31,7 +31,7 @@ module Landrush
         teardown = Teardown.new(app, nil)
         env = fake_environment
 
-        DependentVMs.add('somehost.vagrant.dev')
+        DependentVMs.add('somehost.vagrant.test')
         teardown.call(env)
 
         DependentVMs.list.must_equal []
@@ -52,7 +52,7 @@ module Landrush
         app = Proc.new {}
         teardown = Teardown.new(app, nil)
         env = fake_environment
-        DependentVMs.add('otherhost.vagrant.dev')
+        DependentVMs.add('otherhost.vagrant.test')
 
         Server.start
         teardown.call(env)
@@ -64,13 +64,13 @@ module Landrush
         app = Proc.new {}
         teardown = Teardown.new(app, nil)
         env = fake_environment
-        DependentVMs.add('otherhost.vagrant.dev')
+        DependentVMs.add('otherhost.vagrant.test')
 
-        fake_static_entry(env, 'static.vagrant.dev', '3.4.5.6')
+        fake_static_entry(env, 'static.vagrant.test', '3.4.5.6')
 
         teardown.call(env)
 
-        Store.hosts.get('static.vagrant.dev').must_equal '3.4.5.6'
+        Store.hosts.get('static.vagrant.test').must_equal '3.4.5.6'
       end
 
       it "leaves the server alone if it's not running" do
@@ -86,7 +86,7 @@ module Landrush
       it "does nothing when landrush is disabled" do
         # somewhat unrealistic since this entry shouldn't be there if it was
         # disabled in the first place, but oh well
-        Store.hosts.set('somehost.vagrant.dev', '1.2.3.4')
+        Store.hosts.set('somehost.vagrant.test', '1.2.3.4')
 
         app = Proc.new {}
         teardown = Teardown.new(app, nil)
@@ -96,7 +96,7 @@ module Landrush
 
         teardown.call(env)
 
-        Store.hosts.get('somehost.vagrant.dev').must_equal '1.2.3.4'
+        Store.hosts.get('somehost.vagrant.test').must_equal '1.2.3.4'
       end
     end
   end

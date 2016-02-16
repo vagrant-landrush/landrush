@@ -1,4 +1,4 @@
-# 
+#
 # This serves as a simple example, and it's what I'm using for testing locally.
 #
 # If you're doing development and want to run this locally you can simply
@@ -13,7 +13,7 @@ Vagrant.configure("2") do |config|
 
   config.landrush.enabled = true
 
-  config.vm.hostname = "myhost.vagrant.dev"
+  config.vm.hostname = "myhost.vagrant.test"
 
   config.landrush.host 'static1.example.com', '1.2.3.4'
   config.landrush.host 'static2.example.com', '2.3.4.5'

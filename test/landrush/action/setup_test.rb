@@ -25,7 +25,7 @@ module Landrush
 
         setup.call(env)
 
-        DependentVMs.list.must_equal %w[somehost.vagrant.dev]
+        DependentVMs.list.must_equal %w[somehost.vagrant.test]
       end
 
       it "starts the landrush server if it's not already started" do
@@ -71,7 +71,7 @@ module Landrush
 
           setup.call(env)
 
-          Store.hosts.get('somehost.vagrant.dev').must_equal '1.2.3.4'
+          Store.hosts.get('somehost.vagrant.test').must_equal '1.2.3.4'
         end
 
         it "does nothing if it is not enabled via config" do
@@ -81,7 +81,7 @@ module Landrush
 
           setup.call(env)
 
-          Store.hosts.get('somehost.vagrant.dev').must_equal nil
+          Store.hosts.get('somehost.vagrant.test').must_equal nil
         end
       end
     end

@@ -97,7 +97,7 @@ def fake_machine(options={})
   )
 
   machine.config.landrush.enabled = options.fetch(:enabled, false)
-  machine.config.vm.hostname = options.fetch(:hostname, 'somehost.vagrant.dev')
+  machine.config.vm.hostname = options.fetch(:hostname, 'somehost.vagrant.test')
 
   machine
 end
