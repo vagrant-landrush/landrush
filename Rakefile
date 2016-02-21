@@ -3,6 +3,7 @@ require 'rake'
 require 'rake/testtask'
 require 'rake/clean'
 require 'rubocop/rake_task'
+require 'cucumber/rake/task'
 
 CLOBBER.include('pkg/*')
 
@@ -35,3 +36,5 @@ task :generate_diagrams do
 end
 
 RuboCop::RakeTask.new
+
+Cucumber::Rake::Task.new(:features)
