@@ -1,6 +1,7 @@
 require 'bundler/gem_tasks'
 require 'rake/testtask'
 require 'rubocop/rake_task'
+require 'cucumber/rake/task'
 
 Rake::TestTask.new do |t|
   t.pattern = 'test/**/*_test.rb'
@@ -17,3 +18,5 @@ task :generate_diagrams do
 end
 
 RuboCop::RakeTask.new
+
+Cucumber::Rake::Task.new(:features)

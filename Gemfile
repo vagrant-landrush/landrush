@@ -24,4 +24,7 @@ group :development do
   gem 'byebug'
   gem 'mocha'
   gem 'minitest'
+  gem 'cucumber', '~> 2.1'
+  gem 'aruba', '~> 0.13'
+  gem 'komenda', '~> 0.0.4'
 end
