@@ -2,7 +2,6 @@
 .ruby-version
 *.rbc
 .bundle
-.config
 .yardoc
 InstalledFiles
 _yardoc
@@ -13,11 +12,11 @@ rdoc
 spec/reports
 test/tmp
 test/version_tmp
+build
 tmp
 tags
 
 .vagrant
-.vagrant_dns.json
 
 *.iml
 .idea

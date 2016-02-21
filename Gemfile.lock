@@ -30,17 +30,39 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    aruba (0.14.1)
+      childprocess (~> 0.5.6)
+      contracts (~> 0.9)
+      cucumber (>= 1.3.19)
+      ffi (~> 1.9.10)
+      rspec-expectations (>= 2.99)
+      thor (~> 0.19)
     ast (2.2.0)
     builder (3.2.2)
     byebug (8.2.1)
     childprocess (0.5.9)
       ffi (~> 1.0, >= 1.0.11)
+    contracts (0.13.0)
+    cucumber (2.3.3)
+      builder (>= 2.1.2)
+      cucumber-core (~> 1.4.0)
+      cucumber-wire (~> 0.0.1)
+      diff-lcs (>= 1.1.3)
+      gherkin (~> 3.2.0)
+      multi_json (>= 1.7.5, < 2.0)
+      multi_test (>= 0.1.2)
+    cucumber-core (1.4.0)
+      gherkin (~> 3.2.0)
+    cucumber-wire (0.0.1)
+    diff-lcs (1.2.5)
     domain_name (0.5.25)
       unf (>= 0.0.5, < 1.0.0)
     erubis (2.7.0)
     eventmachine (1.0.8)
+    events (0.9.8)
     ffi (1.9.10)
     ffi (1.9.10-x64-mingw32)
+    gherkin (3.2.0)
     gssapi (1.2.0)
       ffi (>= 1.0.1)
     gyoku (1.3.1)
@@ -51,6 +73,8 @@ GEM
     httpclient (2.7.1)
     i18n (0.7.0)
     json (1.8.3)
+    komenda (0.1.6)
+      events (~> 0.9.8)
     listen (3.0.5)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
@@ -66,6 +90,7 @@ GEM
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     multi_json (1.11.2)
+    multi_test (0.1.2)
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-sftp (2.1.2)
@@ -96,6 +121,10 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
+    rspec-expectations (3.4.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.4.0)
+    rspec-support (3.4.1)
     rubocop (0.38.0)
       parser (>= 2.3.0.6, < 3.0)
       powerpack (~> 0.1)
@@ -107,6 +136,7 @@ GEM
       eventmachine (~> 1.0.0)
     rubyntlm (0.4.0)
     rubyzip (1.1.7)
+    thor (0.19.1)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.1)
@@ -134,8 +164,11 @@ PLATFORMS
   x64-mingw32
 
 DEPENDENCIES
+  aruba (~> 0.13)
   byebug
+  cucumber (~> 2.1)
   json
+  komenda (~> 0.1.6)
   landrush!
   minitest
   mocha

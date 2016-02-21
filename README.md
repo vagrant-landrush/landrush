@@ -225,30 +225,39 @@ Check out `vagrant landrush` for additional commands to monitor the DNS server d
 <a name="development"></a>
 ## Development
 
-Install dependencies:
+* Install dependencies:
 
-    bundle install
+        bundle install
 
-Get a list of all available build tasks:
+* Get a list of all available build tasks:
 
-    bundle exec rake -T
+        bundle exec rake -T
 
-Run the test suite:
+* Run the test suite:
 
-    bundle exec rake test
+        bundle exec rake test
 
-Build the Landrush gem:
+* Build the Landrush gem:
 
-    bundle exec rake install
+        bundle exec rake install
 
-Clean generated files:
+* Clean generated files:
 
-    bundle exec rake clobber
+        bundle exec rake clobber
 
-Run the vagrant binary with the Landrush plugin loaded from your local
+* Run cucumber/aruba acceptance tests:
+
+        bundle exec cucumber
+
+  Note, that the acceptance tests currently only work out of the box on OS X.
+  On Linux one has to manually configure the host visibility for the TLD
+  _landrush-acceptance-test_. See for [Linux](#linux). On Windows the acceptance
+  tests won't work due to a current bug in [Aruba](https://github.com/cucumber/aruba/issues/387).
+
+* Run the vagrant binary with the Landrush plugin loaded from your local
 source code:
 
-    bundle exec vagrant landrush <command>
+        bundle exec vagrant landrush <command>
 
 <a name="roadmap"></a>
 ## RoadMap

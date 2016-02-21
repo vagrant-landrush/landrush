@@ -3,8 +3,15 @@ require 'rake'
 require 'rake/testtask'
 require 'rake/clean'
 require 'rubocop/rake_task'
+require 'cucumber/rake/task'
+require 'fileutils'
 
-CLOBBER.include('pkg/*')
+CLOBBER.include('pkg')
+CLEAN.include('build')
+
+task :init do
+  FileUtils.mkdir_p 'build'
+end
 
 # Default test task
 Rake::TestTask.new do |t|
@@ -35,3 +42,6 @@ task :generate_diagrams do
 end
 
 RuboCop::RakeTask.new
+
+Cucumber::Rake::Task.new(:features)
+task :features => :init
