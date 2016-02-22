@@ -11,7 +11,10 @@ module Landrush
     IN   = Resolv::DNS::Resource::IN
 
     def self.working_dir
-      @working_dir ||= Pathname(File.expand_path('~/.vagrant.d/data/landrush')).tap(&:mkpath)
+      if @working_dir.nil?
+        fail 'The working directory for the server needs to be explicitly set'
+      end
+      @working_dir
     end
 
     def self.working_dir=(working_dir)

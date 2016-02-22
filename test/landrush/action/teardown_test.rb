@@ -5,6 +5,10 @@ require 'landrush/action/teardown'
 module Landrush
   module Action
     describe Teardown do
+      before do
+        Server.working_dir = Landrush::FakeConfig::TEST_LANDRUSH_DATA_DIR
+      end
+
       it "calls the next app in the chain" do
         env = fake_environment
         app = -> (e) { e[:called] = true }

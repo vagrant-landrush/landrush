@@ -12,7 +12,7 @@ require 'minitest/autorun'
 require 'mocha/mini_test'
 
 def fake_environment(options = { enabled: true })
-  { machine: fake_machine(options), ui: FakeUI }
+  { machine: fake_machine(options), ui: FakeUI, home_path: Landrush::FakeConfig::TEST_VAGRANT_DIR }
 end
 
 class RecordingCommunicator
@@ -69,6 +69,9 @@ end
 
 module Landrush
   class FakeConfig
+    TEST_VAGRANT_DIR = '/tmp/vagrant_landrush_test_working_dir'.freeze
+    TEST_LANDRUSH_DATA_DIR = TEST_VAGRANT_DIR + '/data/landrush'.freeze
+
     def landrush
       @landrush_config ||= Landrush::Config.new
     end
@@ -118,11 +121,12 @@ module MiniTest
 end
 
 # order is important on these
+require 'support/create_fake_working_dir'
+
 require 'support/clear_dependent_vms'
 
 require 'support/fake_ui'
 require 'support/test_server_daemon'
 require 'support/fake_resolver_config'
 
-# need to be last; don't want to delete dir out from servers before they clean up
-require 'support/fake_working_dir'
+require 'support/delete_fake_working_dir'

@@ -220,10 +220,22 @@ Check out `vagrant landrush` for additional commands to monitor the DNS server d
 Install dependencies:
 
     bundle install
+    
+Build the gem:
+
+    bundle exec rake install
+    
+Delete build artifacts:
+
+    bundle exec rake clobber
 
 Run the test suite:
 
-    bundle exec rake
+    bundle exec rake test
+    
+Run single test file:
+
+    bundle exec rake test  TEST=<path-to-test>
 
 Run the vagrant binary with the landrush plugin loaded from your local source code:
 

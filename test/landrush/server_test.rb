@@ -2,6 +2,10 @@ require 'test_helper'
 
 module Landrush
   describe Server do
+    before do
+      Server.working_dir = Landrush::FakeConfig::TEST_LANDRUSH_DATA_DIR
+    end
+
     def query(host)
       output = `dig -p #{Server.port} @127.0.0.1 #{host}`
       answer_line = output.split("\n").grep(/^#{Regexp.escape(host)}/).first

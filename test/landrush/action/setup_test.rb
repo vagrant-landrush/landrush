@@ -5,8 +5,14 @@ require 'landrush/action/setup'
 module Landrush
   module Action
     describe Setup do
-      before { ResolverConfig.sudo = ''     }
-      after  { ResolverConfig.sudo = 'sudo' }
+      before do
+        ResolverConfig.sudo = ''
+        Server.working_dir = Landrush::FakeConfig::TEST_LANDRUSH_DATA_DIR
+      end
+
+      after do
+        ResolverConfig.sudo = 'sudo'
+      end
 
       it "calls the next app in the chain" do
         env = fake_environment

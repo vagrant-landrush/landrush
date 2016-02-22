@@ -7,8 +7,10 @@ module Landrush
     end
 
     def execute
-      ARGV.shift # flush landrush from ARGV
+      # Make sure we use the right data directory for Landrush
+      Server.working_dir = File.join(@env.data_dir, 'landrush')
 
+      ARGV.shift # flush landrush from ARGV
       command = ARGV.first || 'help'
       if DAEMON_COMMANDS.include?(command)
         Server.send(command)

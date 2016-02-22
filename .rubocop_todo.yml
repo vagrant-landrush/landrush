@@ -19,6 +19,8 @@ Lint/UnusedMethodArgument:
 # Offense count: 8
 Metrics/AbcSize:
   Max: 36
+  Exclude:
+    - 'lib/landrush/command.rb'
 
 # Offense count: 1
 # Configuration parameters: CountComments.
@@ -38,7 +40,7 @@ Metrics/LineLength:
 # Offense count: 9
 # Configuration parameters: CountComments.
 Metrics/MethodLength:
-  Max: 26
+  Max: 30
 
 # Offense count: 1
 Metrics/PerceivedComplexity:
