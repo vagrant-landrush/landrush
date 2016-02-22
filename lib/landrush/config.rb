@@ -13,7 +13,7 @@ module Landrush
       :upstream_servers => [[:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53]],
       :host_ip_address => nil,
       :guest_redirect_dns => true
-    }
+    }.freeze
 
     def initialize
       @hosts = {}

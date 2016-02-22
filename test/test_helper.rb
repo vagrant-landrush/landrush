@@ -12,7 +12,7 @@ require 'minitest/autorun'
 require 'mocha/mini_test'
 
 def fake_environment(options = { enabled: true })
-  { machine: fake_machine(options), ui: FakeUI }
+  { machine: fake_machine(options), ui: FakeUI, home_path: Landrush::FakeConfig::TEST_VAGRANT_DIR }
 end
 
 class RecordingCommunicator
@@ -33,10 +33,10 @@ class RecordingCommunicator
     responses[command]
   end
 
-  def execute(command, &block)
+  def execute(command)
     commands[:execute] << command
     responses[command].split("\n").each do |line|
-      block.call(:stdout, "#{line}\n")
+      yield(:stdout, "#{line}\n")
     end
   end
 
@@ -50,28 +50,35 @@ class RecordingCommunicator
   end
 end
 
-class Landrush::FakeProvider
-  def initialize(*args)
-  end
+module Landrush
+  class FakeProvider
+    def initialize(*args)
+    end
 
-  def _initialize(*args)
-  end
+    def _initialize(*args)
+    end
 
-  def ssh_info
-  end
+    def ssh_info
+    end
 
-  def state
-    @state ||= Vagrant::MachineState.new('fake-state', 'fake-state','fake-state')
+    def state
+      @state ||= Vagrant::MachineState.new('fake-state', 'fake-state', 'fake-state')
+    end
   end
 end
 
-class Landrush::FakeConfig
-  def landrush
-    @landrush_config ||= Landrush::Config.new
-  end
+module Landrush
+  class FakeConfig
+    TEST_VAGRANT_DIR = '/tmp/vagrant_landrush_test_working_dir'.freeze
+    TEST_LANDRUSH_DATA_DIR = TEST_VAGRANT_DIR + '/data/landrush'.freeze
 
-  def vm
-    VagrantPlugins::Kernel_V2::VMConfig.new
+    def landrush
+      @landrush_config ||= Landrush::Config.new
+    end
+
+    def vm
+      VagrantPlugins::Kernel_V2::VMConfig.new
+    end
   end
 end
 
@@ -107,16 +114,19 @@ def fake_static_entry(env, hostname, ip)
   Landrush::Store.hosts.set(hostname, ip)
 end
 
-class MiniTest::Spec
-  alias_method :hush, :capture_io
+module MiniTest
+  class Spec
+    alias_method :hush, :capture_io
+  end
 end
 
 # order is important on these
+require 'support/create_fake_working_dir'
+
 require 'support/clear_dependent_vms'
 
 require 'support/fake_ui'
 require 'support/test_server_daemon'
 require 'support/fake_resolver_config'
 
-# need to be last; don't want to delete dir out from servers before they clean up
-require 'support/fake_working_dir'
+require 'support/delete_fake_working_dir'

@@ -2,6 +2,10 @@ require 'test_helper'
 
 module Landrush
   describe Server do
+    before do
+      Server.working_dir = Landrush::FakeConfig::TEST_LANDRUSH_DATA_DIR
+    end
+
     def query(host)
       output = `dig -p #{Server.port} @127.0.0.1 #{host}`
       answer_line = output.split("\n").grep(/^#{Regexp.escape(host)}/).first
@@ -41,8 +45,7 @@ module Landrush
         Store.hosts.set(fake_host, fake_ip)
 
         query(fake_host).must_equal fake_ip
-        query_ptr(fake_host).must_equal fake_ip+'.'
-
+        query_ptr(fake_host).must_equal fake_ip + '.'
       end
 
       it 'responds properly to configured cname entries' do
@@ -55,8 +58,7 @@ module Landrush
         Store.hosts.set(fake_host, fake_ip)
         Store.hosts.set(fake_cname, fake_host)
 
-        query(fake_cname).must_equal fake_host+'.'
-
+        query(fake_cname).must_equal fake_host + '.'
       end
 
       it 'also resolves wildcard subdomains to a given machine' do

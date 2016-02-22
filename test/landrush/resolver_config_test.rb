@@ -16,8 +16,6 @@ module Landrush
           port #{Server.port}
         EOF
       end
-
-
     end
   end
 end

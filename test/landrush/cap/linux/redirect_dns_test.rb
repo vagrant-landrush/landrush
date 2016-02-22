@@ -18,7 +18,7 @@ describe Landrush::Cap::Linux::RedirectDns do
       Landrush::Cap::Linux::RedirectDns.redirect_dns(
         machine,
         host: '2.3.4.5',
-        port: '4321',
+        port: '4321'
       )
     end
   end

@@ -4,6 +4,10 @@ module Landrush
       include Common
 
       def call(env)
+        # Make sure we use the right data directory for Landrush
+        # Seems Vagrant only makes home_path available in this case, compared to custom commands where there is also data_dir
+        Server.working_dir = File.join(env[:home_path], 'data', 'landrush')
+
         handle_action_stack(env) do
           teardown if enabled?
         end
@@ -27,7 +31,7 @@ module Landrush
       end
 
       def teardown_static_dns
-        config.hosts.each do |static_hostname, dns_value|
+        config.hosts.each do |static_hostname|
           if Store.hosts.has? static_hostname
             info "removing static entry: #{static_hostname}"
             Store.hosts.delete static_hostname

@@ -5,9 +5,13 @@ require 'landrush/action/teardown'
 module Landrush
   module Action
     describe Teardown do
+      before do
+        Server.working_dir = Landrush::FakeConfig::TEST_LANDRUSH_DATA_DIR
+      end
+
       it "calls the next app in the chain" do
         env = fake_environment
-        app = lambda { |e| e[:called] = true }
+        app = -> (e) { e[:called] = true }
         teardown = Teardown.new(app, nil)
 
         teardown.call(env)
@@ -16,7 +20,7 @@ module Landrush
       end
 
       it "clears the machine's hostname => ip address" do
-        app = Proc.new {}
+        app = proc {}
         teardown = Teardown.new(app, nil)
         env = fake_environment
 
@@ -27,7 +31,7 @@ module Landrush
       end
 
       it "removes the machine as a dependent VM" do
-        app = Proc.new {}
+        app = proc {}
         teardown = Teardown.new(app, nil)
         env = fake_environment
 
@@ -38,7 +42,7 @@ module Landrush
       end
 
       it "stops the landrush server when there are no dependent machines left" do
-        app = Proc.new {}
+        app = proc {}
         teardown = Teardown.new(app, nil)
         env = fake_environment
 
@@ -49,7 +53,7 @@ module Landrush
       end
 
       it "leaves the landrush server when other dependent vms exist" do
-        app = Proc.new {}
+        app = proc {}
         teardown = Teardown.new(app, nil)
         env = fake_environment
         DependentVMs.add('otherhost.vagrant.test')
@@ -61,7 +65,7 @@ module Landrush
       end
 
       it "leaves static entries when other dependent vms exist" do
-        app = Proc.new {}
+        app = proc {}
         teardown = Teardown.new(app, nil)
         env = fake_environment
         DependentVMs.add('otherhost.vagrant.test')
@@ -74,7 +78,7 @@ module Landrush
       end
 
       it "leaves the server alone if it's not running" do
-        app = Proc.new {}
+        app = proc {}
         teardown = Teardown.new(app, nil)
         env = fake_environment
 
@@ -88,7 +92,7 @@ module Landrush
         # disabled in the first place, but oh well
         Store.hosts.set('somehost.vagrant.test', '1.2.3.4')
 
-        app = Proc.new {}
+        app = proc {}
         teardown = Teardown.new(app, nil)
 
         env = fake_environment
@@ -101,4 +105,3 @@ module Landrush
     end
   end
 end
-

@@ -5,6 +5,8 @@ module ClearDependentVms
   end
 end
 
-class MiniTest::Spec
-  include ClearDependentVms
+module MiniTest
+  class Spec
+    include ClearDependentVms
+  end
 end

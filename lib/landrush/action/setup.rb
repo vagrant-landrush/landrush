@@ -4,6 +4,10 @@ module Landrush
       include Common
 
       def call(env)
+        # Make sure we use the right data directory for Landrush
+        # Seems Vagrant only makes home_path available in this case, compared to custom commands where there is also data_dir
+        Server.working_dir = File.join(env[:home_path], 'data', 'landrush')
+
         handle_action_stack(env) do
           pre_boot_setup if enabled?
         end
@@ -44,23 +48,14 @@ module Landrush
 
       def start_server
         return if Server.running?
-        # We need to avoid forking with libvirt provider since the forked process
-        # would try to reuse the libvirt connection and fail.
-        if libvirt?
-          require 'open3'
-          Kernel.puts '[landrush] Starting landrush in background...'
-          _stdout, stderr, status = Open3.capture3('vagrant landrush start')
-          Kernel.puts stderr unless status
-        else
-          info 'starting dns server'
-          Server.start
-        end
+        info 'starting dns server'
+        Server.start
       end
 
       def setup_static_dns
         config.hosts.each do |hostname, dns_value|
           dns_value ||= machine.guest.capability(:read_host_visible_ip_address)
-          if !Store.hosts.has?(hostname, dns_value)
+          unless Store.hosts.has?(hostname, dns_value)
             info "adding static entry: #{hostname} => #{dns_value}"
             Store.hosts.set hostname, dns_value
             Store.hosts.set(IPAddr.new(dns_value).reverse, hostname)
@@ -72,12 +67,12 @@ module Landrush
         ip_address = machine.config.landrush.host_ip_address ||
                      machine.guest.capability(:read_host_visible_ip_address)
 
-        if not machine_hostname.match(config.tld)
+        unless machine_hostname.match(config.tld)
           log :error, "hostname #{machine_hostname} does not match the configured TLD: #{config.tld}"
           log :error, "You will not be able to access #{machine_hostname} from the host"
         end
 
-        if !Store.hosts.has?(machine_hostname, ip_address)
+        unless Store.hosts.has?(machine_hostname, ip_address)
           info "adding machine entry: #{machine_hostname} => #{ip_address}"
           Store.hosts.set(machine_hostname, ip_address)
           Store.hosts.set(IPAddr.new(ip_address).reverse, machine_hostname)

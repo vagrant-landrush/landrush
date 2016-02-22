@@ -5,12 +5,18 @@ require 'landrush/action/setup'
 module Landrush
   module Action
     describe Setup do
-      before { ResolverConfig.sudo = ''     }
-      after  { ResolverConfig.sudo = 'sudo' }
+      before do
+        ResolverConfig.sudo = ''
+        Server.working_dir = Landrush::FakeConfig::TEST_LANDRUSH_DATA_DIR
+      end
+
+      after do
+        ResolverConfig.sudo = 'sudo'
+      end
 
       it "calls the next app in the chain" do
         env = fake_environment
-        app = lambda { |e| e[:called] = true }
+        app = -> (e) { e[:called] = true }
         setup = Setup.new(app, nil)
 
         setup.call(env)
@@ -19,7 +25,7 @@ module Landrush
       end
 
       it "records the booting host as a dependent VM" do
-        app = Proc.new {}
+        app = proc {}
         setup = Setup.new(app, nil)
         env = fake_environment
 
@@ -29,7 +35,7 @@ module Landrush
       end
 
       it "starts the landrush server if it's not already started" do
-        app = Proc.new {}
+        app = proc {}
         setup = Setup.new(app, nil)
         env = fake_environment
 
@@ -39,7 +45,7 @@ module Landrush
       end
 
       it "does not attempt to start the server if it's already up" do
-        app = Proc.new {}
+        app = proc {}
         setup = Setup.new(app, nil)
         env = fake_environment
 
@@ -53,7 +59,7 @@ module Landrush
       end
 
       it "does nothing if it is not enabled via config" do
-        app = Proc.new {}
+        app = proc {}
         setup = Setup.new(app, nil)
         env = fake_environment
 
@@ -65,7 +71,7 @@ module Landrush
 
       describe 'after boot' do
         it "stores the machine's hostname => ip address" do
-          app = Proc.new {}
+          app = proc {}
           setup = Setup.new(app, nil)
           env = fake_environment
 
@@ -75,7 +81,7 @@ module Landrush
         end
 
         it "does nothing if it is not enabled via config" do
-          app = Proc.new {}
+          app = proc {}
           setup = Setup.new(app, nil)
           env = fake_environment(enabled: false)
 

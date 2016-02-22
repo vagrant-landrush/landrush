@@ -22,7 +22,7 @@ module Landrush
     end
 
     def self.list
-      self.map { |path| path.basename.to_s }
+      map { |path| path.basename.to_s }
     end
 
     def self.clear!
@@ -34,7 +34,7 @@ module Landrush
     end
 
     def self.dir
-      Landrush.working_dir.join('dependent_vms').tap(&:mkpath)
+      Server.working_dir.join('dependent_vms').tap(&:mkpath)
     end
   end
 end
