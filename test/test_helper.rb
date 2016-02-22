@@ -33,10 +33,10 @@ class RecordingCommunicator
     responses[command]
   end
 
-  def execute(command, &block)
+  def execute(command)
     commands[:execute] << command
     responses[command].split("\n").each do |line|
-      block.call(:stdout, "#{line}\n")
+      yield(:stdout, "#{line}\n")
     end
   end
 
@@ -50,28 +50,32 @@ class RecordingCommunicator
   end
 end
 
-class Landrush::FakeProvider
-  def initialize(*args)
-  end
+module Landrush
+  class FakeProvider
+    def initialize(*args)
+    end
 
-  def _initialize(*args)
-  end
+    def _initialize(*args)
+    end
 
-  def ssh_info
-  end
+    def ssh_info
+    end
 
-  def state
-    @state ||= Vagrant::MachineState.new('fake-state', 'fake-state','fake-state')
+    def state
+      @state ||= Vagrant::MachineState.new('fake-state', 'fake-state', 'fake-state')
+    end
   end
 end
 
-class Landrush::FakeConfig
-  def landrush
-    @landrush_config ||= Landrush::Config.new
-  end
+module Landrush
+  class FakeConfig
+    def landrush
+      @landrush_config ||= Landrush::Config.new
+    end
 
-  def vm
-    VagrantPlugins::Kernel_V2::VMConfig.new
+    def vm
+      VagrantPlugins::Kernel_V2::VMConfig.new
+    end
   end
 end
 
@@ -107,8 +111,10 @@ def fake_static_entry(env, hostname, ip)
   Landrush::Store.hosts.set(hostname, ip)
 end
 
-class MiniTest::Spec
-  alias_method :hush, :capture_io
+module MiniTest
+  class Spec
+    alias_method :hush, :capture_io
+  end
 end
 
 # order is important on these

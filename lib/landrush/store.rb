@@ -1,11 +1,14 @@
+require 'pathname'
+require 'json'
+
 module Landrush
   class Store
     def self.hosts
-      @hosts ||= new(Landrush.working_dir.join('hosts.json'))
+      @hosts ||= new(Server.working_dir.join('hosts.json'))
     end
 
     def self.config
-      @config ||= new(Landrush.working_dir.join('config.json'))
+      @config ||= new(Server.working_dir.join('config.json'))
     end
 
     attr_accessor :backing_file
@@ -28,14 +31,14 @@ module Landrush
 
     def has?(key, value = nil)
       if value.nil?
-        current_config.has_key? key
+        current_config.key? key
       else
         current_config[key] == value
       end
     end
 
     def find(search)
-      search = (IPAddr.new(search).reverse) if (IPAddr.new(search) rescue nil)
+      search = IPAddr.new(search).reverse if (IPAddr.new(search) rescue nil)
       current_config.keys.detect do |key|
         key.casecmp(search) == 0   ||
           search =~ /#{key}$/i     ||

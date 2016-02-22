@@ -6,8 +6,8 @@ module Landrush
         'VagrantPlugins::ProviderLibvirt::Provider'    => :libvirt,
         'HashiCorp::VagrantVMwarefusion::Provider'     => :vmware_fusion,
         'VagrantPlugins::Parallels::Provider'          => :parallels,
-        'Landrush::FakeProvider'                       => :fake_provider,
-      }
+        'Landrush::FakeProvider'                       => :fake_provider
+      }.freeze
 
       def self.included(base)
         base.send :attr_reader, :app, :env
@@ -42,12 +42,12 @@ module Landrush
       end
 
       def provider
-        provider_name = SUPPORTED_PROVIDERS.fetch(machine.provider.class.name) { |key|
-          raise "The landrush plugin does not support the #{key} provider yet!"
-        }
+        provider_name = SUPPORTED_PROVIDERS.fetch(machine.provider.class.name) do |key|
+          fail "The landrush plugin does not support the #{key} provider yet!"
+        end
 
-        if provider_name == :parallels and Gem::Version.new(VagrantPlugins::Parallels::VERSION) < Gem::Version.new("1.0.3")
-          raise "The landrush plugin supports the Parallels provider v1.0.3 and later. Please, update your 'vagrant-parallels' plugin."
+        if provider_name == :parallels && Gem::Version.new(VagrantPlugins::Parallels::VERSION) < Gem::Version.new("1.0.3")
+          fail "The landrush plugin supports the Parallels provider v1.0.3 and later. Please, update your 'vagrant-parallels' plugin."
         end
 
         provider_name

@@ -2,13 +2,13 @@ require 'test_helper'
 
 module Landrush
   describe Store do
-    before {
+    before do
       @store = Store.new(Tempfile.new(%w[landrush_test_store .json]))
-    }
+    end
 
-    after {
+    after do
       @store.backing_file.unlink
-    }
+    end
 
     describe "set" do
       it "sets the key to the value and makes it available for getting" do

@@ -3,10 +3,9 @@ require 'test_helper'
 module Landrush
   module Cap
     module Linux
-
       describe ReadHostVisibleIpAddress do
         describe 'read_host_visible_ip_address' do
-          let (:machine) { fake_machine }
+          let(:machine) { fake_machine }
 
           it 'should read the last address' do
             machine.communicate.stub_command(Landrush::Cap::Linux::ReadHostVisibleIpAddress.command, "1.2.3.4 5.6.7.8\n")
@@ -20,20 +19,19 @@ module Landrush
 
           it 'should fail on invalid address' do
             machine.communicate.stub_command(Landrush::Cap::Linux::ReadHostVisibleIpAddress.command, "hello world\n")
-            lambda {
+            lambda do
               machine.guest.capability(:read_host_visible_ip_address)
-            }.must_raise(IPAddr::InvalidAddressError)
+            end.must_raise(IPAddr::InvalidAddressError)
           end
 
           it 'should fail without address' do
             machine.communicate.stub_command(Landrush::Cap::Linux::ReadHostVisibleIpAddress.command, "\n")
-            lambda {
+            lambda do
               machine.guest.capability(:read_host_visible_ip_address)
-            }.must_raise(RuntimeError, 'Cannot detect IP address, command `hostname -I` returned ``')
+            end.must_raise(RuntimeError, 'Cannot detect IP address, command `hostname -I` returned ``')
           end
         end
       end
-
     end
   end
 end
