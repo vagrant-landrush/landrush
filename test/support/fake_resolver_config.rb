@@ -3,7 +3,7 @@ require 'tmpdir'
 module FakeResolverConfigHooks
   def setup
     super
-    tempdir = Dir.mktmpdir('landrush_fake_resolver')
+    tempdir = Dir.mktmpdir('vagrant_landrush_fake_resolver-')
     @test_resolver_config_dir = Pathname(tempdir)
     Landrush::ResolverConfig.config_dir = @test_resolver_config_dir
     Landrush::ResolverConfig.sudo       = ''

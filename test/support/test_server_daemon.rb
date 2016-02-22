@@ -2,7 +2,7 @@
 Landrush::Server.port = 111_53
 
 module SilenceOutput
-  def silence
+  def self.silence
     orig_out = $stdout
     orig_err = $stderr
     $stdout = StringIO.new
@@ -13,18 +13,17 @@ module SilenceOutput
     $stderr = orig_err
   end
 
-  def start
-    silence { super }
-  end
-
-  def stop
-    silence { super }
+  def self.included(base)
+    orig_stop_method = base.method(:stop)
+    base.define_singleton_method :stop do
+      SilenceOutput.silence {orig_stop_method.call}
+    end
   end
 end
 
 module Landrush
   class Server
-    extend SilenceOutput
+    include SilenceOutput
   end
 end
 

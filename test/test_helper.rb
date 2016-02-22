@@ -12,7 +12,9 @@ require 'minitest/autorun'
 require 'mocha/mini_test'
 
 def fake_environment(options = { enabled: true })
-  { machine: fake_machine(options), ui: FakeUI }
+  # For the home_path we want the base Vagrant directory
+  vagrant_test_home = Pathname(Landrush::Server.working_dir).parent.parent
+  { machine: fake_machine(options), ui: FakeUI, home_path: vagrant_test_home }
 end
 
 class RecordingCommunicator
@@ -118,11 +120,12 @@ module MiniTest
 end
 
 # order is important on these
+require 'support/create_fake_working_dir'
+
 require 'support/clear_dependent_vms'
 
 require 'support/fake_ui'
 require 'support/test_server_daemon'
 require 'support/fake_resolver_config'
 
-# need to be last; don't want to delete dir out from servers before they clean up
-require 'support/fake_working_dir'
+require 'support/delete_fake_working_dir'

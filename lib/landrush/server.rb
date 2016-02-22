@@ -11,7 +11,16 @@ module Landrush
     IN   = Resolv::DNS::Resource::IN
 
     def self.working_dir
-      @working_dir ||= Pathname(File.expand_path('~/.vagrant.d/data/landrush')).tap(&:mkpath)
+      # TODO, https://github.com/vagrant-landrush/landrush/issues/178
+      # Due to the fact that the whole server is just a bunch of static methods,
+      # there is no initalize method to ensure that the working directory is
+      # set prior to making calls to this method. Things work, since at the appropriate
+      # Vagrant plugin integrtion points (e.g. setup.rb) we set the working dir based
+      # on the enviroment passed to us.
+      if @working_dir.nil?
+        raise 'The Server\s working directory needs to be explicitly set prior to calling this method'
+      end
+      @working_dir
     end
 
     def self.working_dir=(working_dir)
@@ -70,7 +79,7 @@ module Landrush
     end
 
     def self.stop
-      # puts 'Stopping daemon...'
+      puts 'Stopping daemon...'
 
       # Check if the pid file exists...
       unless File.file?(pid_file)

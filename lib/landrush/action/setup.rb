@@ -4,6 +4,10 @@ module Landrush
       include Common
 
       def call(env)
+        # Make sure we use the right data directory for Landrush
+        # Seems Vagrant only makes home_path available in this case, compared to custom commands where there is also data_dir
+        Server.working_dir = File.join(env[:home_path], 'data', 'landrush')
+
         handle_action_stack(env) do
           pre_boot_setup if enabled?
         end
