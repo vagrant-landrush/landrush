@@ -108,6 +108,34 @@ Please refer to [/doc/proxy-mobile](/doc/proxy-mobile) for instructions.
 
 Check out `vagrant landrush` for additional commands to monitor the DNS server daemon.
 
+## RoadMap
+
+The committers met and have set a basic roadmap as of 3 March 2016:
+
+1. 0.19 will be released as soon as possible.  The goal is to make newer
+code commits available and document the release process.
+
+2. Release 0.20 will occur soon.  We would like to try to land two PRs:
+
+  * PR #125 - Multiple TLDs
+  * PR #144 - Cucumber Acceptance Tests
+
+  The release goal is by 1 April 2016
+
+3. Release 0.90 (or 1.0) will occur afterward.  Goals:
+
+  * PR #122 - Enhanced IP/NIC selection
+  * PR #154 Windows support for EventMachine/DNS
+    * We need your help, eventmachine has not proven to be very stable.
+    * Can we find an alternative to RubyDNS?  Should we try something
+      in Go or another contained cross-platform binary?
+    * This would deal with the RubyDNS dependency tree and challenges
+  * PR #160 - Cygwin Fix
+
+4. With Release 0.90 or 1.0 or later
+
+  * PR #62 - Arbitrary record types
+
 ## Development
 
 Install dependencies:
@@ -126,3 +154,4 @@ Run the vagrant binary with the landrush plugin loaded from your local source co
 
 This project could use your feedback and help! Please don't hesitate to open issues or submit pull requests. NO HESITATION IS ALLOWED. NONE WHATSOEVER.  See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 
+The Maintainers try to meet periodically.  [Notes](NOTES.md) are available.
