@@ -27,7 +27,6 @@ module Landrush
     end
 
     def find(search, type = 'a')
-      search = (IPAddr.new(search).reverse) if (IPAddr.new(search) rescue nil)
       (current_config[type] || {}).keys.detect do |key|
         key.casecmp(search) == 0   ||
           search =~ /#{key}$/i     ||
@@ -36,7 +35,13 @@ module Landrush
     end
 
     def get(key, type = 'a')
-      (current_config[type] || {})[key]
+      value = (current_config[type] || {})[key]
+      case type
+      when 'cname'
+        [Resolv::DNS::Name.create(value)]
+      else
+        value
+      end
     end
 
     protected

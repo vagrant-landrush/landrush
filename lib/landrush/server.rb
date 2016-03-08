@@ -3,9 +3,6 @@ require 'rexec/daemon'
 
 module Landrush
   class Server < RExec::Daemon::Base
-    Name = Resolv::DNS::Name
-    IN   = Resolv::DNS::Resource::IN
-
     def self.port
       @port ||= 10053
     end

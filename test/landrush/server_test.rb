@@ -26,7 +26,6 @@ module Landrush
         query("phinze.com").must_match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/)
       end
 
-      focus
       it 'responds properly to configured machine entries' do
         Server.start
 
@@ -35,7 +34,6 @@ module Landrush
         Store.hosts.set(fake_host, '99.98.97.96')
 
         query(fake_host).must_equal "boogers.vagrant.test.\t0\tIN\tA\t99.98.97.96"
-        query(fake_host, 'ptr').must_equal "boogers.vagrant.test.\t0\tIN\tA\t99.98.97.96"
       end
 
       it 'responds properly to configured SRV entries' do
@@ -45,7 +43,7 @@ module Landrush
 
         Store.hosts.set(fake_host, [1, 0, 5060, 'boogers.vagrant.test'], 'srv')
 
-        query(fake_host, 'srv').must_equal "_sip._udp.boogers.vagrant.test. 0 IN\tSRV\t1 0 5060 boogers.vagrant.test."
+        query(fake_host, 'srv').must_equal "_sip._udp.boogers.vagrant.test.\t0 IN\tSRV\t1 0 5060 boogers.vagrant.test."
       end
 
       it 'responds properly to configured cname entries' do
@@ -56,9 +54,9 @@ module Landrush
         fake_ip = '99.98.97.96'
 
         Store.hosts.set(fake_host, fake_ip)
-        Store.hosts.set(fake_cname, fake_host)
+        Store.hosts.set(fake_cname, fake_host, 'cname')
 
-        query(fake_cname).must_equal fake_host+'.'
+        query(fake_cname, 'cname').must_equal "snot.vagrant.test.\t0\tIN\tCNAME\tboogers.vagrant.test."
       end
 
       it 'also resolves wildcard subdomains to a given machine' do

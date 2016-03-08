@@ -64,7 +64,6 @@ module Landrush
           dns_value ||= machine.guest.capability(:read_host_visible_ip_address)
           info "adding static entry: #{hostname} => #{dns_value} as #{type}"
           Store.hosts.set hostname, dns_value, type
-          Store.hosts.set IPAddr.new(dns_value).reverse, hostname, 'ptr'
         end
       end
 
@@ -79,7 +78,6 @@ module Landrush
 
         info "adding machine entry: #{machine_hostname} => #{ip_address}"
         Store.hosts.set(machine_hostname, ip_address)
-        Store.hosts.set(IPAddr.new(ip_address).reverse, machine_hostname, 'ptr')
       end
 
       def private_network_exists?
