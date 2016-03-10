@@ -1,4 +1,4 @@
-## [Unreleased][unreleased]
+## [0.19.0] - 2016-03-10
 - Added: Support for libvirt provider (#138)
 - Added: support for CNAME records (#99)
 - Breaking: Changing default TLD from `vagrant.dev` to `vagrant.test` (#118)
