@@ -25,6 +25,24 @@ they will be added to this document.
 2. Merging committer should update the changelog in the unreleased
    section.  Using the github web UI is sufficient
 
+## Releasing
+
+Prereqs:
+
+* Push access to the `landrush` GitHub repository
+* Rubygems owner of the `landrush` gem
+
+Steps:
+
+1. Update `lib/version.rb` with version number.
+2. Update `CHANGELOG.md` header with version number and current date.
+3. Make release commit: `git add lib/version.rb CHANGELOG.md; git commit -m 'cut vX.Y.Z'`
+4. Make release tag: `git tag -m vX.Y.Z vX.Y.Z`
+5. Push release commit: `git push origin master`
+6. Build release: `rake build`
+7. Push released gem: `gem push pkg/landrush-X.Y.Z.gem`
+8. Update CHANGELOG to add an "Unreleased" section, commit as "clean up after vX.Y.Z".
+
 ## Maintainers
 
 * Reto Kaiser ([@njam](http://github.com/njam))
