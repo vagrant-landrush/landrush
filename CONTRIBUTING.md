@@ -34,9 +34,9 @@ Prereqs:
 
 Steps:
 
-1. Update `lib/version.rb` with version number.
+1. Update `lib/landrush/version.rb` with version number.
 2. Update `CHANGELOG.md` header with version number and current date.
-3. Make release commit: `git add lib/version.rb CHANGELOG.md; git commit -m 'cut vX.Y.Z'`
+3. Make release commit: `git add lib/landrush/version.rb CHANGELOG.md; git commit -m 'cut vX.Y.Z'`
 4. Make release tag: `git tag -m vX.Y.Z vX.Y.Z`
 5. Push release commit: `git push origin master`
 6. Build release: `rake build`
