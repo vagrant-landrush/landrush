@@ -1,22 +1,19 @@
 ## [Unreleased][unreleased]
 
-## [0.18.0] - 2015-01-24
+## [0.19.0] - 2016-03-10
+- Added: Support for libvirt provider (#138)
+- Added: support for CNAME records (#99)
+- Breaking: Changing default TLD from `vagrant.dev` to `vagrant.test` (#118)
 
-### Added
- - vagrant: support for `vagrant reload` (#101)
+## [0.18.0] - 2015-01-24
+- Added: support for `vagrant reload` (#101)
 
 ## [0.17.0] - 2015-01-18
-
-### Added
- - cli: `add` / `rm|del` subcommands (#96)
-
-### Fixed
- - cli: default to showing help when no command is specified
+- Added: cli `add` / `rm|del` subcommands (#96)
+- Fixed: cli: default to showing help when no command is specified
 
 ## [0.16.0] - 2015-01-18
-
-### Added
- - dns: support for IN::PTR records (#98)
+- Added: Support for IN::PTR records (#98)
 
 [unreleased]: https://github.com/phinze/landrush/compare/v0.18.0...HEAD
 [0.18.0]: https://github.com/phinze/landrush/compare/v0.17.0...v0.18.0

@@ -4,9 +4,12 @@ module Landrush
       include Common
 
       def call(env)
-        handle_action_stack(env) do
-          redirect_dns if enabled? and guest_redirect_dns?
-        end
+        handle_action_stack(env) {}
+
+        # This is after the middleware stack returns, which, since we're right
+        # before the Network action, should mean that all interfaces are good
+        # to go.
+        redirect_dns if enabled? and guest_redirect_dns?
       end
 
       def redirect_dns
@@ -22,7 +25,7 @@ module Landrush
         case provider
         when :virtualbox then
           '10.0.2.2'
-        when :vmware_fusion then
+        when :vmware_fusion, :libvirt then
           _gateway_for_ip(machine.guest.capability(:configured_dns_servers).first)
         when :parallels then
           machine.provider.capability(:host_address)
