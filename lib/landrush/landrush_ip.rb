@@ -2,7 +2,6 @@ require 'vagrant/util/retryable'
 
 module Landrush
   class Ip
-    include Landrush::Action::Common
     include Vagrant::Util::Retryable
 
     #
@@ -29,7 +28,6 @@ module Landrush
     end
 
     def info(msg)
-      # This isn't the correct way, but I'm not sure what the correct pattern is!
       @machine.env.ui.info "[landrush-ip] #{msg}"
     end
 
@@ -44,7 +42,7 @@ module Landrush
     # This binary is available for all platforms and behaves the same on all of them.
     #
     # By default, it behaves the same as hostname -I does on UNIX systems; it dumps every interface's IP.
-    # It however also allows us to filter out a specific interface.
+    # It however also allows us to filter out a specific interface or to exclude some.
     #
     def install(platform = nil, arch = nil)
       # Check what platform we're on
@@ -164,9 +162,8 @@ module Landrush
 
           info "Using #{release_url}"
           Vagrant::Util::Downloader.new(release_url, host_path).download!
-
-          comm.upload(host_path, @path)
-          comm.sudo("chown -R #{ssh_info[:username]} #{@path}", error_check: false)
+          comm.upload(host_path, '/tmp/landrush-ip')
+          comm.sudo("mv /tmp/landrush-ip #{@path}")
           comm.sudo("chmod +x #{@path}", error_check: false)
         ensure
           host_path.delete if host_path.file?

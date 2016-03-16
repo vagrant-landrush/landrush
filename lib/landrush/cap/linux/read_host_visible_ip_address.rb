@@ -22,16 +22,22 @@ module Landrush
         # TODO: Find a better heuristic for this implementation.
         #
         def self.read_host_visible_ip_address(machine)
-          landrush_ip = Landrush::Ip.new(machine, '/tmp/landrush-ip')
+          landrush_ip = Landrush::Ip.new(machine, '/usr/local/bin/landrush-ip')
 
           if landrush_ip.install
-            cmd = '/tmp/landrush-ip'
+            cmd = '/usr/local/bin/landrush-ip'
+
+            unless machine.config.landrush.exclude.nil?
+              [*machine.config.landrush.exclude].each do |iface|
+                cmd << " -exclude '#{iface}'"
+              end
+            end
 
             unless machine.config.landrush.interface.nil?
               cmd << " #{machine.config.landrush.interface}"
             end
           else
-            # Todo: log landrush_ip.error, warn user that we fell back to hostname -I?
+            machine.env.ui.warn('Warning, unable to install landrush-ip on guest, falling back to `hostname -I`')
             cmd = command
           end
 
@@ -52,7 +58,7 @@ module Landrush
         end
 
         def self.command
-          %Q(hostname -I)
+          'hostname -I'
         end
       end
     end

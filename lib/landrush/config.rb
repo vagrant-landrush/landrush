@@ -7,6 +7,7 @@ module Landrush
     attr_accessor :host_ip_address
     attr_accessor :guest_redirect_dns
     attr_accessor :interface
+    attr_accessor :exclude
 
     DEFAULTS = {
       :enabled => false,
@@ -14,7 +15,8 @@ module Landrush
       :upstream_servers => [[:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53]],
       :host_ip_address => nil,
       :guest_redirect_dns => true,
-      :interface => nil
+      :interface => nil,
+      :exclude => %w(lo[0-9]* docker[0-9]+ tun[0-9]+)
     }
 
     def initialize
@@ -25,6 +27,7 @@ module Landrush
       @host_ip_address = UNSET_VALUE
       @guest_redirect_dns = UNSET_VALUE
       @interface = UNSET_VALUE
+      @exclude = UNSET_VALUE
     end
 
     def enable
