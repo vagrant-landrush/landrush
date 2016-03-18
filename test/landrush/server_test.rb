@@ -2,16 +2,10 @@ require 'test_helper'
 
 module Landrush
   describe Server do
-    def query(host)
-      output = `dig -p #{Server.port} @127.0.0.1 #{host}`
+    def query(host, type = 'a')
+      output = `dig -p #{Server.port} @127.0.0.1 #{host} #{type}`
       answer_line = output.split("\n").grep(/^#{Regexp.escape(host)}/).first
-      answer_line.split.last
-    end
-
-    def query_ptr(host)
-      output = `dig ptr -p #{Server.port} @127.0.0.1 #{host}`
-      answer_line = output.split("\n").grep(/^#{Regexp.escape(host)}/).first
-      answer_line.split.last
+      answer_line || fail("No record for host #{host}")
     end
 
     describe 'start/stop' do
@@ -36,13 +30,20 @@ module Landrush
         Server.start
 
         fake_host = 'boogers.vagrant.test'
-        fake_ip = '99.98.97.96'
 
-        Store.hosts.set(fake_host, fake_ip)
+        Store.hosts.set(fake_host, '99.98.97.96')
 
-        query(fake_host).must_equal fake_ip
-        query_ptr(fake_host).must_equal fake_ip+'.'
+        query(fake_host).must_equal "boogers.vagrant.test.\t0\tIN\tA\t99.98.97.96"
+      end
 
+      it 'responds properly to configured SRV entries' do
+        Server.start
+
+        fake_host = '_sip._udp.boogers.vagrant.test'
+
+        Store.hosts.set(fake_host, [1, 0, 5060, 'boogers.vagrant.test'], 'srv')
+
+        query(fake_host, 'srv').must_equal "_sip._udp.boogers.vagrant.test.\t0 IN\tSRV\t1 0 5060 boogers.vagrant.test."
       end
 
       it 'responds properly to configured cname entries' do
@@ -53,10 +54,9 @@ module Landrush
         fake_ip = '99.98.97.96'
 
         Store.hosts.set(fake_host, fake_ip)
-        Store.hosts.set(fake_cname, fake_host)
+        Store.hosts.set(fake_cname, fake_host, 'cname')
 
-        query(fake_cname).must_equal fake_host+'.'
-
+        query(fake_cname, 'cname').must_equal "snot.vagrant.test.\t0\tIN\tCNAME\tboogers.vagrant.test."
       end
 
       it 'also resolves wildcard subdomains to a given machine' do

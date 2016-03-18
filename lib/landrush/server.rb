@@ -3,9 +3,6 @@ require 'rexec/daemon'
 
 module Landrush
   class Server < RExec::Daemon::Base
-    Name = Resolv::DNS::Name
-    IN   = Resolv::DNS::Resource::IN
-
     def self.port
       @port ||= 10053
     end
@@ -15,8 +12,9 @@ module Landrush
     end
 
     def self.upstream_servers
-      # Doing collect to cast protocol to symbol because JSON store doesn't know about symbols
-      @upstream_servers ||= Store.config.get('upstream').collect {|i| [i[0].to_sym, i[1], i[2]]}
+      Landrush.config.transaction do
+        @upstream_servers ||= Landrush.config['upstream']
+      end
     end
 
     def self.interfaces
@@ -47,35 +45,16 @@ module Landrush
       super
     end
 
-    def self.check_a_record (host, transaction)
-      value = Store.hosts.get(host)
-      if (IPAddr.new(value) rescue nil)
-        name = transaction.name =~ /#{host}/ ? transaction.name : host
-        transaction.respond!(value, {:ttl => 0, :name => name})
-      else
-        transaction.respond!(Name.create(value), resource_class: IN::CNAME, ttl: 0)
-        check_a_record(value, transaction)
-      end
-    end
-
     def self.run
       server = self
       RubyDNS::run_server(:listen => interfaces) do
         self.logger.level = Logger::INFO
 
-        match(/.*/, IN::A) do |transaction|
-          host = Store.hosts.find(transaction.name)
+        match(/.*/) do |transaction|
+          type = transaction.resource_class.name.split('::').last.downcase
+          host = Store.hosts.find(transaction.name, type)
           if host
-            server.check_a_record(host, transaction)
-          else
-            transaction.passthrough!(server.upstream)
-          end
-        end
-
-        match(/.*/, IN::PTR) do |transaction|
-          host = Store.hosts.find(transaction.name)
-          if host
-            transaction.respond!(Name.create(Store.hosts.get(host)))
+            transaction.respond!(*Store.hosts.get(host, type), ttl: 0)
           else
             transaction.passthrough!(server.upstream)
           end

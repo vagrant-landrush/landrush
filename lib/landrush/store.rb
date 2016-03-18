@@ -4,51 +4,44 @@ module Landrush
       @hosts ||= new(Landrush.working_dir.join('hosts.json'))
     end
 
-    def self.config
-      @config ||= new(Landrush.working_dir.join('config.json'))
-    end
-
     attr_accessor :backing_file
 
     def initialize(backing_file)
       @backing_file = Pathname(backing_file)
     end
 
-    def set(key, value)
-      write(current_config.merge(key => value))
+    def set(key, value, type = 'a')
+      config = current_config
+      config[type] = (config[type] || {}).merge(key => value)
+      write(config)
     end
 
     def each(*args, &block)
       current_config.each(*args, &block)
     end
 
-    def delete(key)
-      write(current_config.reject { |k, v| k == key || v == key })
+    def delete(key, type = 'a')
+      config = current_config
+      config[type] = (config[type] || {}).reject { |k, v| k == key || v == key }
+      write(config)
     end
 
-    def has?(key, value = nil)
-      if value.nil?
-        current_config.has_key? key
-      else
-        current_config[key] == value
-      end
-    end
-
-    def find(search)
-      search = (IPAddr.new(search).reverse) if (IPAddr.new(search) rescue nil)
-      current_config.keys.detect do |key|
+    def find(search, type = 'a')
+      (current_config[type] || {}).keys.detect do |key|
         key.casecmp(search) == 0   ||
           search =~ /#{key}$/i     ||
           key    =~ /^#{search}\./i
       end
     end
 
-    def get(key)
-      current_config[key]
-    end
-
-    def clear!
-      write({})
+    def get(key, type = 'a')
+      value = (current_config[type] || {})[key]
+      case type
+      when 'cname'
+        [Resolv::DNS::Name.create(value)]
+      else
+        value
+      end
     end
 
     protected

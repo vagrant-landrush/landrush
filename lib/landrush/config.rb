@@ -40,8 +40,8 @@ module Landrush
       @guest_redirect_dns
     end
 
-    def host(hostname, ip_address=nil)
-      @hosts[hostname] = ip_address
+    def host(hostname, record=nil, type='a')
+      @hosts[hostname] = [record, type]
     end
 
     def upstream(ip, port=53, protocol=nil)

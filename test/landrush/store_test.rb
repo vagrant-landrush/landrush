@@ -23,6 +23,14 @@ module Landrush
 
         @store.get('foo').must_equal 'qux'
       end
+
+      it "allows setting records for another class" do
+        @store.set('foo', [1, 0, 5060, 'somehost.vagrant.dev'], 'srv')
+
+        @store.get('foo', 'srv').must_equal [1, 0, 5060, 'somehost.vagrant.dev']
+        @store.get('foo', Resolv::DNS::Resource::IN::A).must_equal nil
+        @store.get('foo').must_equal nil
+      end
     end
 
     describe "get" do
@@ -50,6 +58,16 @@ module Landrush
 
         @store.get('now').must_equal nil # you don't!
       end
+
+      it "removes keys of another class" do
+        @store.set('now', 'you see me', 'srv')
+
+        @store.get('now', 'srv').must_equal 'you see me'
+
+        @store.delete('now', 'srv')
+
+        @store.get('now', 'srv').must_equal nil
+      end
     end
 
     describe "find" do
@@ -74,6 +92,31 @@ module Landrush
         @store.find('somehost.vagrant').must_equal 'somehost.vagrant.test'
         @store.find('somehost.vagr').must_equal nil
         @store.find('someh').must_equal nil
+      end
+
+      describe "for another class" do
+        it "returns the key that matches the end of the search term" do
+          @store.set('somehost.vagrant.dev', 'here', 'srv')
+
+          @store.find('foo.somehost.vagrant.dev', 'srv').must_equal 'somehost.vagrant.dev'
+          @store.find('bar.somehost.vagrant.dev', 'srv').must_equal 'somehost.vagrant.dev'
+          @store.find('foo.otherhost.vagrant.dev', 'srv').must_equal nil
+          @store.find('host.vagrant.dev', 'srv').must_equal nil
+        end
+
+        it "returns exact matches too" do
+          @store.set('somehost.vagrant.dev', 'here', 'srv')
+          @store.find('somehost.vagrant.dev', 'srv').must_equal 'somehost.vagrant.dev'
+        end
+
+        it "returns for prefix searches as well" do
+          @store.set('somehost.vagrant.dev', 'here', 'srv')
+
+          @store.find('somehost', 'srv').must_equal 'somehost.vagrant.dev'
+          @store.find('somehost.vagrant', 'srv').must_equal 'somehost.vagrant.dev'
+          @store.find('somehost.vagr', 'srv').must_equal nil
+          @store.find('someh', 'srv').must_equal nil
+        end
       end
     end
   end

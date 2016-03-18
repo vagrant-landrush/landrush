@@ -47,6 +47,7 @@ If you are using a multi-machine `Vagrantfile`, configure this inside each of yo
 You can add static host entries to the DNS server in your `Vagrantfile` like so:
 
     config.landrush.host 'myhost.example.com', '1.2.3.4'
+    config.landrush.host '_sip._udp.example.com', [1, 0, 5060, 'myhost.example.com'], 'srv'
 
 This is great for overriding production services for nodes you might be testing locally. For example, perhaps you might want to override the hostname of your puppetmaster to point to a local vagrant box instead.
 
