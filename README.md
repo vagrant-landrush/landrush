@@ -58,6 +58,10 @@ If you would like to configure your guests to be accessible from the host as sub
 
     config.landrush.tld = 'vm'
 
+Multiple TLD can also be provided as an array. On OS X, a resolver configuration will be created for each TLD.
+
+    config.landrush.tld = ['vm', 'dev']
+
 Note that from the __host__, you will only be able to access subdomains of your configured TLD by default- so wildcard subdomains only apply to that space. For the __guest__, wildcard subdomains work for anything.
 
 ### Unmatched Queries

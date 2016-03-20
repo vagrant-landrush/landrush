@@ -36,6 +36,10 @@ module Landrush
       !!@enabled
     end
 
+    def tld
+      Array(@tld)
+    end
+
     def guest_redirect_dns?
       @guest_redirect_dns
     end
