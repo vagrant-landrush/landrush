@@ -146,6 +146,10 @@ Run the test suite:
 
     bundle exec rake
 
+Run cucumber/aruba acceptance tests:
+
+    bundle exec cucumber
+
 Run the vagrant binary with the landrush plugin loaded from your local source code:
 
     bundle exec vagrant landrush <command>
