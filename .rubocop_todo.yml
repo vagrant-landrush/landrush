@@ -155,6 +155,7 @@ Style/RescueModifier:
   Exclude:
     - 'lib/landrush/server.rb'
     - 'lib/landrush/store.rb'
+    - 'test/landrush/server_test.rb'
 
 # Offense count: 6
 # Cop supports --auto-correct.

@@ -1,17 +1,16 @@
 require 'test_helper'
+require 'resolv'
 
 module Landrush
   describe Server do
     def query(host)
-      output = `dig -p #{Server.port} @127.0.0.1 #{host}`
-      answer_line = output.split("\n").grep(/^#{Regexp.escape(host)}/).first
-      answer_line.split.last
+      Resolv::DNS.open(:nameserver_port => [["127.0.0.1", Server.port]]) do |r|
+        r.getaddress(host).to_s
+      end
     end
 
-    def query_ptr(host)
-      output = `dig ptr -p #{Server.port} @127.0.0.1 #{host}`
-      answer_line = output.split("\n").grep(/^#{Regexp.escape(host)}/).first
-      answer_line.split.last
+    def wait_for_port
+      sleep 1 until (TCPSocket.open('127.0.0.1', Server.port) rescue nil)
     end
 
     describe 'start/stop' do
@@ -24,10 +23,14 @@ module Landrush
       end
 
       # FIXME: This test requires network access.
-      #        Which is not airplane hacking friendly. >:p
+      #       Which is not airplane hacking friendly. >:p
       it 'can be queried for upstream entries' do
-        skip("needs network, and I am on an airplane without wifi")
+        # skip("needs network, and I am on an airplane without wifi")
+        Store.config.set('upstream', [[:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53]])
+
         Server.start
+
+        wait_for_port
 
         query("phinze.com").must_match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/)
       end
@@ -40,8 +43,9 @@ module Landrush
 
         Store.hosts.set(fake_host, fake_ip)
 
+        wait_for_port
+
         query(fake_host).must_equal fake_ip
-        query_ptr(fake_host).must_equal fake_ip + '.'
       end
 
       it 'responds properly to configured cname entries' do
@@ -54,7 +58,9 @@ module Landrush
         Store.hosts.set(fake_host, fake_ip)
         Store.hosts.set(fake_cname, fake_host)
 
-        query(fake_cname).must_equal fake_host + '.'
+        wait_for_port
+
+        query(fake_cname).must_equal fake_ip
       end
 
       it 'also resolves wildcard subdomains to a given machine' do
@@ -64,6 +70,8 @@ module Landrush
         fake_ip = '99.98.97.96'
 
         Store.hosts.set(fake_host, fake_ip)
+
+        wait_for_port
 
         query("green.#{fake_host}").must_match(fake_ip)
         query("blue.#{fake_host}").must_match(fake_ip)

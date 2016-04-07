@@ -1,13 +1,28 @@
 require 'bundler/gem_tasks'
+require 'rake'
 require 'rake/testtask'
 require 'rake/clean'
 require 'rubocop/rake_task'
 
 CLOBBER.include('pkg/*')
 
+# Default test task
 Rake::TestTask.new do |t|
   t.pattern = 'test/**/*_test.rb'
   t.libs << 'test'
+end
+
+targets = []
+Dir.glob('./test/**/*_test.rb').each do |test_file|
+  targets << test_file
+end
+
+targets.each do |target|
+  target_name = 'test-' + File.basename(target).chomp('_test.rb')
+  Rake::TestTask.new(target_name.to_sym) do |t|
+    t.pattern = target.to_s
+    t.libs << 'test'
+  end
 end
 
 task default: [

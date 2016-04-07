@@ -3,11 +3,12 @@ require 'test_helper'
 module Landrush
   describe Store do
     before do
-      @store = Store.new(Tempfile.new(%w[landrush_test_store .json]))
+      @temp_file = Tempfile.new(%w[landrush_test_store .json])
+      @store = Store.new(@temp_file)
     end
 
     after do
-      @store.backing_file.unlink
+      @temp_file.unlink
     end
 
     describe "set" do

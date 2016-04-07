@@ -1,7 +1,8 @@
 module FakeWorkingDirHooks
   def setup
     super
-    Landrush::Server.working_dir = '/tmp/vagrant_landrush_test_working_dir'
+    tempdir = Dir.mktmpdir('vagrant_landrush_test_working_dir-')
+    Landrush::Server.working_dir = tempdir
   end
 
   def teardown

@@ -70,7 +70,7 @@ module Landrush
     end
 
     def self.stop
-      puts 'Stopping daemon...'
+      # puts 'Stopping daemon...'
 
       # Check if the pid file exists...
       unless File.file?(pid_file)
