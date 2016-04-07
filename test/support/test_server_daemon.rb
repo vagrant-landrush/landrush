@@ -35,6 +35,7 @@ module TestServerHooks
     if Landrush::Server.running?
       Landrush::Server.stop
     end
+    Landrush::Store.reset
   end
 end
 

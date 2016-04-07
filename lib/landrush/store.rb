@@ -11,6 +11,11 @@ module Landrush
       @config ||= new(Server.working_dir.join('config.json'))
     end
 
+    def self.reset
+      @config = nil
+      @hosts = nil
+    end
+
     attr_accessor :backing_file
 
     def initialize(backing_file)
