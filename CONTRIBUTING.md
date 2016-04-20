@@ -45,10 +45,10 @@ Steps:
 
 ## Maintainers
 
-Brian Exelbierd (@bexelbie)
-Eric Sorenson (@ahpook)
-Florian Holzhauer (@fh)
-Hardy Ferentschik (@hferentschik)
-Josef Strzibny (@strzibny)
-Paul Hinze (@phinze)
-Reto Kaiser (@njam)
+* Brian Exelbierd (@bexelbie)
+* Eric Sorenson (@ahpook)
+* Florian Holzhauer (@fh)
+* Hardy Ferentschik (@hferentschik)
+* Josef Strzibny (@strzibny)
+* Paul Hinze (@phinze)
+* Reto Kaiser (@njam)
