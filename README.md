@@ -245,6 +245,10 @@ Clean generated files:
 
     bundle exec rake clobber
 
+Run cucumber/aruba acceptance tests:
+
+    bundle exec cucumber
+
 Run the vagrant binary with the Landrush plugin loaded from your local
 source code:
 
