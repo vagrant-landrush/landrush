@@ -1,5 +1,6 @@
 ## [Unreleased][unreleased]
 
+- Added: Acceptance CI tests ([#136](https://github.com/vagrant-landrush/landrush/issues/136))
 - Fixed: Making sure that the right Vagrant data dir is used ([#172](https://github.com/vagrant-landrush/landrush/pull/172))
 - Added: Getting Landrush to work on Windows ([#170](https://github.com/vagrant-landrush/landrush/pull/170))
 
