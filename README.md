@@ -26,7 +26,6 @@ problems using Landrush on Windows please let us know.
         - [Other Devices \(phone\)](#other-devices-phone)
     - [Additional CLI commands](#additional-cli-commands)
 - [Development](#development)
-- [RoadMap](#roadmap)
 - [Help Out!](#help-out)
 
 <!-- /MarkdownTOC -->
@@ -227,32 +226,36 @@ Check out `vagrant landrush` for additional commands to monitor the DNS server d
 
 * Install dependencies:
 
-        bundle install
+        $ bundle install
 
 * Get a list of all available build tasks:
 
-        bundle exec rake -T
+        $ bundle exec rake -T
 
 * Run the test suite:
 
-        bundle exec rake test
+        $ bundle exec rake test
 
-* Build the Landrush gem:
+* Run a single test file:
 
-        bundle exec rake install
-
-* Clean generated files:
-
-        bundle exec rake clobber
+        $ bundle exec rake test TEST=<path to test file>
 
 * Run cucumber/aruba acceptance tests:
 
-        bundle exec cucumber
+        $ bundle exec cucumber
 
   Note, that the acceptance tests currently only work out of the box on OS X.
   On Linux one has to manually configure the host visibility for the TLD
   _landrush-acceptance-test_. See for [Linux](#linux). On Windows the acceptance
   tests won't work due to a current bug in [Aruba](https://github.com/cucumber/aruba/issues/387).
+
+* Build the Landrush gem:
+
+        $ bundle exec rake install
+
+* Clean all generated files:
+
+        $ bundle exec rake clean clobber
 
 * Run the vagrant binary with the Landrush plugin loaded from your local
 source code:

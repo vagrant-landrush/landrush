@@ -12,25 +12,18 @@ CLEAN.include('build')
 task :init do
   FileUtils.mkdir_p 'build'
 end
+task :features => :init
 
 # Default test task
+desc 'Run all unit tests'
 Rake::TestTask.new do |t|
   t.pattern = 'test/**/*_test.rb'
   t.libs << 'test'
 end
 
-targets = []
-Dir.glob('./test/**/*_test.rb').each do |test_file|
-  targets << test_file
-end
-
-targets.each do |target|
-  target_name = 'test-' + File.basename(target).chomp('_test.rb')
-  Rake::TestTask.new(target_name.to_sym) do |t|
-    t.pattern = target.to_s
-    t.libs << 'test'
-  end
-end
+# Cucumber acceptance test task
+Cucumber::Rake::Task.new(:features)
+task :features => :init
 
 task default: [
   :rubocop,
@@ -43,5 +36,4 @@ end
 
 RuboCop::RakeTask.new
 
-Cucumber::Rake::Task.new(:features)
-task :features => :init
+
