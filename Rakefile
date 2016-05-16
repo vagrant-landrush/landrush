@@ -35,5 +35,3 @@ task :generate_diagrams do
 end
 
 RuboCop::RakeTask.new
-
-
