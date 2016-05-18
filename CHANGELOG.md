@@ -1,8 +1,8 @@
-## [Unreleased][unreleased]
+## [1.0.0] - 2016-05-18
 
 - Added: Acceptance CI tests ([#136](https://github.com/vagrant-landrush/landrush/issues/136))
-- Fixed: Making sure that the right Vagrant data dir is used ([#172](https://github.com/vagrant-landrush/landrush/pull/172))
-- Added: Getting Landrush to work on Windows ([#170](https://github.com/vagrant-landrush/landrush/pull/170))
+- Fixed: Making sure that the right Vagrant data dir is used ([#157](https://github.com/vagrant-landrush/landrush/issues/157))
+- Added: Getting Landrush to work on Windows ([#16](https://github.com/vagrant-landrush/landrush/issues/16))
 
 ## [0.19.0] - 2016-03-10
 - Added: Support for libvirt provider (#138)
