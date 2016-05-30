@@ -5,11 +5,24 @@ require 'minitest/spec'
 
 require 'landrush'
 require 'landrush/cap/linux/configured_dns_servers'
-require 'landrush/cap/linux/read_host_visible_ip_address'
 require 'landrush/cap/linux/redirect_dns'
+require 'landrush/cap/all/read_host_visible_ip_address'
 
 require 'minitest/autorun'
 require 'mocha/mini_test'
+
+# Make sure to keep the numbering sequential here
+# Putting include/exclude out of order is kind of the point though ;)
+def fake_addresses
+  [
+    { 'name' => 'exclude1', 'ipv4' => '172.28.128.1', 'ipv6' => '::1' },
+    { 'name' => 'include1', 'ipv4' => '172.28.128.2', 'ipv6' => '::2' },
+    { 'name' => 'include2', 'ipv4' => '172.28.128.3', 'ipv6' => '::3' },
+    { 'name' => 'include3', 'ipv4' => '172.28.128.4', 'ipv6' => '::4' },
+    { 'name' => 'exclude2', 'ipv4' => '172.28.128.5', 'ipv6' => '::5' },
+    { 'name' => 'exclude3', 'ipv4' => '172.28.128.6', 'ipv6' => '::6' }
+  ]
+end
 
 def fake_environment(options = { enabled: true })
   { machine: fake_machine(options), ui: FakeUI }
@@ -91,13 +104,13 @@ def fake_machine(options={})
   )
 
   machine.instance_variable_set("@communicator", RecordingCommunicator.new)
-  machine.communicate.stub_command(
-    Landrush::Cap::Linux::ReadHostVisibleIpAddress.command,
-    "#{options.fetch(:ip, '1.2.3.4')}\n"
-  )
 
   machine.config.landrush.enabled = options.fetch(:enabled, false)
+  machine.config.landrush.interface = nil
+  machine.config.landrush.exclude = [/exclude[0-9]+/]
   machine.config.vm.hostname = options.fetch(:hostname, 'somehost.vagrant.test')
+
+  machine.guest.stubs(:capability).with(:read_host_visible_ip_address).returns("#{options.fetch(:ip, '1.2.3.4')}")
 
   machine
 end

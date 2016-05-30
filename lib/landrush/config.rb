@@ -16,7 +16,7 @@ module Landrush
       :host_ip_address => nil,
       :guest_redirect_dns => true,
       :interface => nil,
-      :exclude => %w(lo[0-9]* docker[0-9]+ tun[0-9]+)
+      :exclude => [/lo[0-9]*/, /docker[0-9]+/, /tun[0-9]+/]
     }
 
     def initialize
