@@ -39,7 +39,7 @@ module Landrush
         end
 
         def self.command
-          %Q(hostname -I)
+          %Q(hostname -I 2>/dev/null || /sbin/ip ad | sed -ne 's/^\\W*inet \\([0-9.]*\\).* global .*$/\\1/p' 2>/dev/null)
         end
       end
     end
