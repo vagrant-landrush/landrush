@@ -64,7 +64,17 @@ Landrush assigns your vm's hostname from either the vagrant config (see the `exa
 
 Every time a VM is started, its IP address is automatically detected and a DNS record is created that maps the hostname to its IP.
 
-If for any reason the auto-detection detects no IP address or the wrong IP address, or you want to override it, you can do like so:
+If for any reason the auto-detection detects no IP address or the wrong IP address you can control how it looks for it.
+
+You can start by excluding interfaces matching an array of regex patterns (the value shown here is the default):
+
+    config.landrush.exclude = [/lo[0-9]*/, /docker[0-9]+/, /tun[0-9]+/]
+
+Or, if you know which interface you need the IP of you can specify that too (default is none):
+
+    config.landrush.interface = 'eth0'
+
+If all else fails, you can override it entirely:
 
     config.landrush.host_ip_address = '1.2.3.4'
 

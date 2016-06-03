@@ -75,6 +75,7 @@ GEM
     json (1.8.3)
     komenda (0.1.6)
       events (~> 0.9.8)
+    landrush-ip (0.2.1)
     listen (3.0.5)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
@@ -170,9 +171,13 @@ DEPENDENCIES
   json
   komenda (~> 0.1.6)
   landrush!
+  landrush-ip (~> 0.2.1)
   minitest
   mocha
   rake
   rubocop (~> 0.38.0)
   rubydns (= 0.8.5)
   vagrant!
+
+BUNDLED WITH
+   1.10.2
