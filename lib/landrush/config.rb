@@ -6,22 +6,28 @@ module Landrush
     attr_accessor :upstream_servers
     attr_accessor :host_ip_address
     attr_accessor :guest_redirect_dns
+    attr_accessor :host_interface
+    attr_accessor :host_interface_excludes
 
     DEFAULTS = {
-      :enabled => false,
-      :tld => 'vagrant.test',
-      :upstream_servers => [[:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53]],
-      :host_ip_address => nil,
-      :guest_redirect_dns => true
+      :enabled                 => false,
+      :tld                     => 'vagrant.test',
+      :upstream_servers        => [[:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53]],
+      :host_ip_address         => nil,
+      :guest_redirect_dns      => true,
+      :host_interface          => nil,
+      :host_interface_excludes => [/lo[0-9]*/, /docker[0-9]+/, /tun[0-9]+/]
     }.freeze
 
     def initialize
-      @hosts = {}
-      @enabled = UNSET_VALUE
-      @tld = UNSET_VALUE
-      @upstream_servers = UNSET_VALUE
-      @host_ip_address = UNSET_VALUE
-      @guest_redirect_dns = UNSET_VALUE
+      @hosts                   = {}
+      @enabled                 = UNSET_VALUE
+      @tld                     = UNSET_VALUE
+      @upstream_servers        = UNSET_VALUE
+      @host_ip_address         = UNSET_VALUE
+      @guest_redirect_dns      = UNSET_VALUE
+      @host_interface          = UNSET_VALUE
+      @host_interface_excludes = UNSET_VALUE
     end
 
     def enable
