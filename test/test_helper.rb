@@ -116,7 +116,7 @@ def fake_machine(options={})
   machine.config.landrush.exclude = [/exclude[0-9]+/]
   machine.config.vm.hostname = options.fetch(:hostname, 'somehost.vagrant.test')
 
-  machine.guest.stubs(:capability).with(:read_host_visible_ip_address).returns("#{options.fetch(:ip, '1.2.3.4')}")
+  machine.guest.stubs(:capability).with(:read_host_visible_ip_address).returns(options.fetch(:ip, '1.2.3.4'))
 
   machine
 end
