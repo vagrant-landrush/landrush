@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
     server as well. See the README for more documentation.
   DESCRIP
   spec.summary       = %q{a vagrant plugin providing consistent DNS visible on host and guests}
-  spec.homepage      = 'https://github.com/phinze/landrush'
+  spec.homepage      = 'https://github.com/vagrant-landrush/landrush'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files`.split($/)
