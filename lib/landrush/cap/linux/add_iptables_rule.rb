@@ -3,7 +3,7 @@ module Landrush
     module Linux
       module AddIptablesRule
         def self.add_iptables_rule(machine, rule)
-          _run(machine, %Q(iptables -C #{rule} 2> /dev/null || iptables -A #{rule}))
+          _run(machine, %Q(/sbin/iptables -C #{rule} || /sbin/iptables -A #{rule}))
         end
 
         def self._run(machine, command)
