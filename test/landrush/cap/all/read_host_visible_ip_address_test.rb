@@ -29,8 +29,8 @@ module Landrush
 
           # Step 1: nothing excluded, nothing explicitly selected
           it 'should return the last address' do
-            machine.config.landrush.interface = nil
-            machine.config.landrush.exclude   = []
+            machine.config.landrush.host_interface          = nil
+            machine.config.landrush.host_interface_excludes = []
 
             expected = addresses.last['ipv4']
 
@@ -40,8 +40,8 @@ module Landrush
 
           # Test exclusion mechanics; it should select the las
           it 'should ignore interfaces that are excluded and select the last not excluded interface' do
-            machine.config.landrush.interface = nil
-            machine.config.landrush.exclude   = [/exclude[0-9]+/]
+            machine.config.landrush.host_interface          = nil
+            machine.config.landrush.host_interface_excludes = [/exclude[0-9]+/]
 
             expected = addresses.detect { |a| a['name'] == 'include3' }
             expected = expected['ipv4']
@@ -51,8 +51,8 @@ module Landrush
 
           # Explicitly select one; this supersedes the exclusion mechanic
           it 'should select the desired interface' do
-            machine.config.landrush.interface = 'include1'
-            machine.config.landrush.exclude   = [/exclude[0-9]+/]
+            machine.config.landrush.host_interface          = 'include1'
+            machine.config.landrush.host_interface_excludes = [/exclude[0-9]+/]
 
             expected = addresses.detect { |a| a['name'] == 'include1' }
             expected = expected['ipv4']
@@ -62,8 +62,8 @@ module Landrush
 
           # Now make sure it returns the last not excluded interface when the desired interface does not exist
           it 'should return the last not excluded interface if the desired interface does not exist' do
-            machine.config.landrush.interface = 'dummy'
-            machine.config.landrush.exclude   = [/exclude[0-9]+/]
+            machine.config.landrush.host_interface          = 'dummy'
+            machine.config.landrush.host_interface_excludes = [/exclude[0-9]+/]
 
             expected = addresses.detect { |a| a['name'] == 'include3' }
             expected = expected['ipv4']
@@ -73,8 +73,8 @@ module Landrush
 
           # Now make sure it returns the last interface overall when nothing is excluded
           it 'should return the last interface if the desired interface does not exist' do
-            machine.config.landrush.interface = 'dummy'
-            machine.config.landrush.exclude   = []
+            machine.config.landrush.host_interface          = 'dummy'
+            machine.config.landrush.host_interface_excludes = []
 
             expected = addresses.last['ipv4']
 

@@ -112,8 +112,8 @@ def fake_machine(options={})
   machine.instance_variable_set("@communicator", RecordingCommunicator.new)
 
   machine.config.landrush.enabled = options.fetch(:enabled, false)
-  machine.config.landrush.interface = nil
-  machine.config.landrush.exclude = [/exclude[0-9]+/]
+  machine.config.landrush.host_interface = nil
+  machine.config.landrush.host_interface_excludes = [/exclude[0-9]+/]
   machine.config.vm.hostname = options.fetch(:hostname, 'somehost.vagrant.test')
 
   machine.guest.stubs(:capability).with(:read_host_visible_ip_address).returns(options.fetch(:ip, '1.2.3.4'))

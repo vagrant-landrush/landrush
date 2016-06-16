@@ -63,22 +63,30 @@ Landrush assigns your vm's hostname from either the vagrant config (see the `exa
 ### Dynamic entries
 
 Every time a VM is started, its IP address is automatically detected and a DNS record is created that maps the hostname to its IP.
+ The detection works by picking the last valid IP found, minus any excluded interfaces.
+ 
+Excluded interfaces are as an array of regular expressions; the value shown here is the default if nothing is defined explicitly in your `Vagrantfile`:
 
-If for any reason the auto-detection detects no IP address or the wrong IP address you can control how it looks for it.
+    config.landrush.host_interface_excludes = [/lo[0-9]*/, /docker[0-9]+/, /tun[0-9]+/]
 
-You can start by excluding interfaces matching an array of regex patterns (the value shown here is the default):
+If this is not sufficient and Landrush fails to detect the correct IP address (or none at all),
+ you can extend this exclusion range to exclude more interfaces.
 
-    config.landrush.exclude = [/lo[0-9]*/, /docker[0-9]+/, /tun[0-9]+/]
+If you need or want to select an interface explicitly and you know its name, you can also tell Landrush to grab that interface's IP address explicitly:
 
-Or, if you know which interface you need the IP of you can specify that too (default is none):
+    config.landrush.host_interface = 'eth0'
 
-    config.landrush.interface = 'eth0'
+Do note that if you specify an interface explicitly, it will be used before `config.landrush.host_interface_excludes` comes into play.
+ In other words, if the exclude is set to `[/eth[0-9]*/]`, interface is set to `eth0'` and `eth0` exists as an interface, it will return its IP address rather than excluding it.
+ The interface setting takes precedence over the exclude setting.
+ If the interface does not exist, the regular heuristics will apply and Landrush will pick the last non-excluded IP found.
 
 If all else fails, you can override it entirely:
 
     config.landrush.host_ip_address = '1.2.3.4'
 
-If you are using a multi-machine `Vagrantfile`, configure this inside each of your `config.vm.define` sections.
+This setting will override both the exclude and interface settings completely.
+ If you are using a multi-machine `Vagrantfile`, configure this inside each of your `config.vm.define` sections.
 
 <a name="static-entries"></a>
 ### Static entries

@@ -3,8 +3,8 @@ module Landrush
     module All
       module ReadHostVisibleIpAddress
         def self.filter_addresses(addresses)
-          unless @machine.config.landrush.exclude.nil?
-            re = Regexp.union(@machine.config.landrush.exclude)
+          unless @machine.config.landrush.host_interface_excludes.nil?
+            re = Regexp.union(@machine.config.landrush.host_interface_excludes)
 
             addresses = addresses.select do |addr|
               !addr['name'].match(re)
@@ -23,10 +23,10 @@ module Landrush
           # Short circuit this one first: if an explicit interface is defined, look for it and return it if found.
           # Technically, we could do a single loop, but execution time is not vital here.
           # This allows us to be more accurate, especially with logging what's going on.
-          unless machine.config.landrush.interface.nil?
-            addr = addresses.detect { |a| a['name'] == machine.config.landrush.interface }
+          unless machine.config.landrush.host_interface.nil?
+            addr = addresses.detect { |a| a['name'] == machine.config.landrush.host_interface }
 
-            machine.env.ui.warn "[landrush] Unable to find interface #{machine.config.landrush.interface}" if addr.nil?
+            machine.env.ui.warn "[landrush] Unable to find interface #{machine.config.landrush.host_interface}" if addr.nil?
           end
 
           if addr.nil?
