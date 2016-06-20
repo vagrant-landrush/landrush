@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 # to be in the :plugins group for Vagrant to detect and load it in development
 
 gem 'rubydns', '0.8.5'
-gem 'rake'
+gem 'win32-process'
 gem 'json'
 
 # Vagrant's special group
@@ -20,8 +20,9 @@ end
 group :development do
   gem 'vagrant',
       :git => 'git://github.com/mitchellh/vagrant.git',
-      :ref => 'v1.8.1'
+      :ref => 'v1.8.4'
 
+  gem 'rake', '~> 10'
   gem 'byebug'
   gem 'mocha'
   gem 'minitest'

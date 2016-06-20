@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative '../../../test_helper'
 
 describe Landrush::Cap::Linux::RedirectDns do
   let(:machine) { fake_machine }

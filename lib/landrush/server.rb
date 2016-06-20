@@ -1,12 +1,11 @@
 require 'rubydns'
 require 'ipaddr'
+require "vagrant/util/platform"
+
 require_relative 'store'
-require_relative 'os'
 
 module Landrush
   class Server
-    include Landrush::OS
-
     Name = Resolv::DNS::Name
     IN   = Resolv::DNS::Resource::IN
 
@@ -31,12 +30,12 @@ module Landrush
       File.join(working_dir, 'log')
     end
 
-    def self.log_file
+    def self.log_file_path
       File.join(log_directory, 'landrush.log')
     end
 
     def self.port
-      if OS.windows?
+      if Vagrant::Util::Platform.windows?
         # On Windows we need to use the default DNS port, since there seems to be no way to configure it otherwise
         @port ||= 53
       else
@@ -66,14 +65,19 @@ module Landrush
 
     # Used to start the Landrush DNS server as a child process using ChildProcess gem
     def self.start
-      ensure_path_exits(log_file)
-
-      if OS.windows?
-        pid = spawn('ruby', __FILE__, port.to_s, working_dir.to_s, :chdir => working_dir.to_path, [:out, :err] => [log_file, "w"], :new_pgroup => true)
+      if Vagrant::Util::Platform.windows?
+        # Need to handle Windows differently. Kernel.spawn fails to work, if the shell creating the process is closed.
+        # See https://github.com/vagrant-landrush/landrush/issues/199
+        info = Process.create(:command_line => "ruby #{__FILE__} #{port} #{working_dir}",
+                              :creation_flags => Process::DETACHED_PROCESS,
+                              :process_inherit => false,
+                              :thread_inherit => true,
+                              :cwd => working_dir.to_path)
+        pid = info.process_id
       else
-        pid = spawn('ruby', __FILE__, port.to_s, working_dir.to_s, :chdir => working_dir.to_path, [:out, :err] => [log_file, "w"], :pgroup => true)
+        pid = spawn('ruby', __FILE__, port.to_s, working_dir.to_s, :chdir => working_dir.to_path, :pgroup => true)
+        Process.detach pid
       end
-      Process.detach pid
 
       write_pid(pid)
     end
@@ -119,7 +123,16 @@ module Landrush
     def self.running?
       pid = read_pid
       return false if pid.nil?
-      !!Process.kill(0, pid) rescue false
+      if Vagrant::Util::Platform.windows?
+        begin
+          Process.get_exitcode(pid).nil?
+        # Need to handle this explicitly since this error gets thrown in case we call get_exitcode with a stale pid
+        rescue SystemCallError => e
+          raise e unless e.class.name.start_with?('Errno::ENXIO')
+        end
+      else
+        !!Process.kill(0, pid) rescue false
+      end
     end
 
     def self.status
@@ -131,7 +144,7 @@ module Landrush
         else
           puts 'Daemon status: unknown'
           puts "#{pid_file} exists, but process is not running"
-          puts "Check log file: #{log_file}"
+          puts "Check log file: #{log_file_path}"
       end
     end
 
@@ -140,10 +153,14 @@ module Landrush
       server.port = port
       server.working_dir = working_dir
 
-      # Start the DNS server
-      RubyDNS.run_server(:listen => interfaces) do
-        @logger.level = Logger::INFO
+      ensure_path_exits(log_file_path)
+      log_file = File.open(log_file_path, 'w')
+      log_file.sync = true
+      @logger = Logger.new(log_file)
+      @logger.level = Logger::INFO
 
+      # Start the DNS server
+      run_dns_server(:listen => interfaces, :logger => @logger) do
         match(/.*/, IN::A) do |transaction|
           host = Store.hosts.find(transaction.name)
           if host
@@ -168,6 +185,20 @@ module Landrush
           transaction.passthrough!(server.upstream)
         end
       end
+    end
+
+    def self.run_dns_server(options = {}, &block)
+      server = RubyDNS::RuleBasedServer.new(options, &block)
+
+      EventMachine.run do
+        trap("INT") do
+          EventMachine.stop
+        end
+
+        server.run(options)
+      end
+
+      server.fire(:stop)
     end
 
     def self.check_a_record(host, transaction)
@@ -221,16 +252,11 @@ module Landrush
     end
 
     def self.terminate_process(pid)
-      Process.kill("INT", pid)
-      sleep 0.1
-
-      sleep 1 if running?
-
       # Kill/Term loop - if the daemon didn't die easily, shoot
       # it a few more times.
       attempts = 5
       while running? && attempts > 0
-        sig = (attempts >= 2) ? "KILL" : "TERM"
+        sig = (attempts >= 2) ? 'KILL' : 'TERM'
 
         puts "Sending #{sig} to process #{pid}..."
         Process.kill(sig, pid)

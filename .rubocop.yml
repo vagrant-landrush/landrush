@@ -4,3 +4,4 @@ AllCops:
   Exclude:
     - 'build/**/*'
     - 'vendor/**/*'
+    - 'tmp/**/*'

@@ -249,6 +249,21 @@ Check out `vagrant landrush` for additional commands to monitor the DNS server d
 <a name="development"></a>
 ## Development
 
+The following should get you started to develop on the Landrush code base. As a prerequisite you
+will need a Ruby 2.0 environment. We recommend to use [RVM](https://rvm.io/) to create an isolated
+development environment. On Windows the [RubyInstaller for Windows](http://rubyinstaller.org/) is
+probably the easiest way to get started. In this case you will need the
+[DevKit](http://rubyinstaller.org/add-ons/devkit/) as well.
+
+Once you have a working Ruby environment it is time to [fork](https://help.github.com/articles/fork-a-repo/)
+the repository (refer to the [CONTRIBUTING.md](CONTRIBUTING.md) guide for more info].
+
+The following are the most important commands you will need for development:
+
+* Install [Bundler](http://bundler.io/):
+
+        $ gem install bundler
+
 * Install dependencies:
 
         $ bundle install

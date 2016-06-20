@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative '../../test_helper'
 require 'landrush/action/common'
 require 'landrush/action/teardown'
 

@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative '../test_helper'
 
 describe 'Landrush::Config' do
   it "supports enabling via accessor style" do

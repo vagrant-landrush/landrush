@@ -133,12 +133,12 @@ module MiniTest
 end
 
 # order is important on these
-require 'support/create_fake_working_dir'
+require_relative 'support/create_fake_working_dir'
 
-require 'support/clear_dependent_vms'
+require_relative 'support/clear_dependent_vms'
 
-require 'support/fake_ui'
-require 'support/test_server_daemon'
-require 'support/fake_resolver_config'
+require_relative 'support/fake_ui'
+require_relative 'support/test_server_daemon'
+require_relative 'support/fake_resolver_config'
 
-require 'support/delete_fake_working_dir'
+require_relative 'support/delete_fake_working_dir'

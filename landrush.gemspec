@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'rubydns', '0.8.5'
+  spec.add_dependency 'win32-process'
 end
