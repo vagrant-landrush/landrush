@@ -68,6 +68,39 @@ module Landrush
         DependentVMs.list.must_equal []
       end
 
+      it "for single private network IP host visible IP can be retrieved w/o starting the VM" do
+        app = proc {}
+        setup = Setup.new(app, nil)
+        env = fake_environment
+        env[:machine].config.vm.network :private_network, ip: '42.42.42.42'
+
+        setup.call(env)
+        setup.static_private_network_ip.must_equal '42.42.42.42'
+      end
+
+      it "for multiple private network IPs host visible IP cannot be retrieved w/o starting the VM" do
+        app = proc {}
+        setup = Setup.new(app, nil)
+        env = fake_environment
+        env[:machine].config.vm.network :private_network, ip: '42.42.42.41'
+        env[:machine].config.vm.network :private_network, ip: '42.42.42.42'
+
+        setup.call(env)
+        setup.static_private_network_ip.must_be_nil
+      end
+
+      it "for multiple private network IPs host visible IP cant be retrieved if host_ip_address is set" do
+        app = proc {}
+        setup = Setup.new(app, nil)
+        env = fake_environment
+
+        env[:machine].config.vm.network :private_network, ip: '42.42.42.41'
+        env[:machine].config.vm.network :private_network, ip: '42.42.42.42'
+        env[:machine].config.landrush.host_ip_address = '42.42.42.42'
+        setup.call(env)
+        setup.static_private_network_ip.must_equal '42.42.42.42'
+      end
+
       describe 'after boot' do
         it "stores the machine's hostname => ip address" do
           app = proc {}
