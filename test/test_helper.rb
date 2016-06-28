@@ -7,6 +7,7 @@ require 'landrush'
 require 'landrush/cap/linux/configured_dns_servers'
 require 'landrush/cap/linux/redirect_dns'
 require 'landrush/cap/all/read_host_visible_ip_address'
+require 'landrush/win_network_config'
 
 require 'minitest/autorun'
 require 'mocha/mini_test'
