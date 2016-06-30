@@ -58,7 +58,9 @@ module Landrush
           unless Store.hosts.has?(hostname, dns_value)
             info "adding static entry: #{hostname} => #{dns_value}"
             Store.hosts.set hostname, dns_value
-            Store.hosts.set(IPAddr.new(dns_value).reverse, hostname)
+            if !(IPAddr.new(dns_value) rescue nil).nil?
+              Store.hosts.set(IPAddr.new(dns_value).reverse, hostname)
+            end
           end
         end
       end
