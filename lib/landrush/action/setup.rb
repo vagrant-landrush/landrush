@@ -64,7 +64,7 @@ module Landrush
           end
         end
       end
-      
+
       def static_dns_ip_address(dns_value)
         return IPAddr.new(dns_value)
       rescue StandardError
