@@ -58,11 +58,17 @@ module Landrush
           unless Store.hosts.has?(hostname, dns_value)
             info "adding static entry: #{hostname} => #{dns_value}"
             Store.hosts.set hostname, dns_value
-            if !(IPAddr.new(dns_value) rescue nil).nil?
+            unless static_dns_ip_address(dns_value).nil?
               Store.hosts.set(IPAddr.new(dns_value).reverse, hostname)
             end
           end
         end
+      end
+      
+      def static_dns_ip_address(dns_value)
+        return IPAddr.new(dns_value)
+      rescue StandardError
+        return nil
       end
 
       def record_machine_dns_entry
