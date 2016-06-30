@@ -8,7 +8,6 @@ gemspec
 # Vagrant's special group
 group :plugins do
   gem 'landrush', path: '.'
-  gem 'landrush-ip', '~> 0.2.3'
 end
 
 group :development do
