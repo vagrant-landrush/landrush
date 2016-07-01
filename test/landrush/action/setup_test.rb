@@ -81,19 +81,7 @@ module Landrush
         env[:machine].config.vm.network :private_network, ip: '42.42.42.42'
 
         setup.call(env)
-        setup.static_private_network_ip.must_equal '42.42.42.42'
-      end
-
-      it "for multiple private network IPs host visible IP cannot be retrieved w/o starting the VM" do
-        skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
-        app = proc {}
-        setup = Setup.new(app, nil)
-        env = fake_environment
-        env[:machine].config.vm.network :private_network, ip: '42.42.42.41'
-        env[:machine].config.vm.network :private_network, ip: '42.42.42.42'
-
-        setup.call(env)
-        setup.static_private_network_ip.must_be_nil
+        Store.hosts.get('somehost.vagrant.test').must_equal '42.42.42.42'
       end
 
       it "for multiple private network IPs host visible IP cant be retrieved if host_ip_address is set" do
@@ -106,7 +94,19 @@ module Landrush
         env[:machine].config.vm.network :private_network, ip: '42.42.42.42'
         env[:machine].config.landrush.host_ip_address = '42.42.42.42'
         setup.call(env)
-        setup.static_private_network_ip.must_equal '42.42.42.42'
+        Store.hosts.get('somehost.vagrant.test').must_equal '42.42.42.42'
+      end
+
+      it "is possible to add cnames via the config.landrush.host configuration option" do
+        skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
+        app = proc {}
+        setup = Setup.new(app, nil)
+        env = fake_environment
+
+        env[:machine].config.landrush.host 'foo', 'bar'
+        setup.call(env)
+
+        Store.hosts.get('foo').must_equal 'bar'
       end
 
       describe 'after boot' do

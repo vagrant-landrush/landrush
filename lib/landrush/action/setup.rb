@@ -18,6 +18,12 @@ module Landrush
         post_boot_setup if enabled?
       end
 
+      def host_ip_address
+        static_private_network_ip || machine.guest.capability(:read_host_visible_ip_address)
+      end
+
+      private
+
       def pre_boot_setup
         record_dependent_vm
         add_prerequisite_network_interface
@@ -67,19 +73,19 @@ module Landrush
         config.hosts.each do |hostname, dns_value|
           dns_value ||= host_ip_address
           unless Store.hosts.has?(hostname, dns_value)
-            info "adding static entry: #{hostname} => #{dns_value}"
+            info "adding static DNS entry: #{hostname} => #{dns_value}"
             Store.hosts.set hostname, dns_value
-            unless static_dns_ip_address(dns_value).nil?
-              Store.hosts.set(IPAddr.new(dns_value).reverse, hostname)
+            if ip_address?(dns_value)
+              reverse_dns = IPAddr.new(dns_value).reverse
+              info "adding static reverse DNS entry: #{reverse_dns} => #{dns_value}"
+              Store.hosts.set(reverse_dns, hostname)
             end
           end
         end
       end
 
-      def static_dns_ip_address(dns_value)
-        return IPAddr.new(dns_value)
-      rescue StandardError
-        return nil
+      def ip_address?(value)
+        !(value =~ Resolv::IPv4::Regex).nil?
       end
 
       def record_machine_dns_entry
@@ -95,10 +101,6 @@ module Landrush
           Store.hosts.set(machine_hostname, ip_address)
           Store.hosts.set(IPAddr.new(ip_address).reverse, machine_hostname)
         end
-      end
-
-      def host_ip_address
-        static_private_network_ip || machine.guest.capability(:read_host_visible_ip_address)
       end
 
       def private_network_exists?

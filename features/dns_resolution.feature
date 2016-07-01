@@ -20,6 +20,15 @@ Feature: dns_resolution
     And the hostname "my-host.landrush-acceptance-test" should resolve to "10.10.10.123" on the host
     And the hostname "my-host.landrush-acceptance-test" should resolve to "10.10.10.123" on the guest
 
+    When I successfully run `bundle exec vagrant landrush set my-static-host.landrush-acceptance-test 42.42.42.42`
+    Then the hostname "my-static-host.landrush-acceptance-test" should resolve to "42.42.42.42" on the internal DNS server
+    And the hostname "my-static-host.landrush-acceptance-test" should resolve to "42.42.42.42" on the host
+    And the hostname "my-static-host.landrush-acceptance-test" should resolve to "42.42.42.42" on the guest
+
+    When I successfully run `bundle exec vagrant landrush set my-static-cname-host.landrush-acceptance-test my-static-host.landrush-acceptance-test`
+    Then the hostname "my-static-cname-host.landrush-acceptance-test" should resolve to "42.42.42.42" on the internal DNS server
+    And the hostname "my-static-cname-host.landrush-acceptance-test" should resolve to "42.42.42.42" on the host
+
     Examples:
       | box             | provider   |
       | debian/jessie64 | virtualbox |

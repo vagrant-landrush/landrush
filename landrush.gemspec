@@ -30,6 +30,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'rubydns', '0.8.5'
   spec.add_dependency 'win32-process'
-  spec.add_dependency 'json'
   spec.add_dependency 'landrush-ip', '~> 0.2.3'
 end
