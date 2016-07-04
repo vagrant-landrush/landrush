@@ -354,14 +354,15 @@ The following are the most important commands you will need for development:
 
         $ bundle exec rake clean clobber
 
-* Run the vagrant binary with the Landrush plugin loaded from your local
-source code:
+* Run the vagrant binary with the Landrush plugin loaded from your local source code:
 
         bundle exec vagrant landrush <command>
 
 <a name="help-out"></a>
 ## Help Out!
 
-This project could use your feedback and help! Please don't hesitate to open issues or submit pull requests. NO HESITATION IS ALLOWED. NONE WHATSOEVER.  See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
+This project could use your feedback and help! Please don't hesitate to open issues or submit pull
+requests. NO HESITATION IS ALLOWED. NONE WHATSOEVER. See [CONTRIBUTING.md](CONTRIBUTING.md) for
+more details.
 
 The Maintainers try to meet periodically.  [Notes](NOTES.md) are available.
