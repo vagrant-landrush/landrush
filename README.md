@@ -91,9 +91,11 @@ when no explicit value for `config.landrush.host_interface_excludes` is specifie
 
     config.landrush.host_interface_excludes = [/lo[0-9]*/, /docker[0-9]+/, /tun[0-9]+/]
 
-If Landrush fails to detect the correct IP address (or none at all), you can extend this exclusion range to exclude more interfaces.
+If Landrush fails to detect the correct IP address (or none at all), you can extend this exclusion
+range to exclude more interfaces.
 
-If you need or want to select an interface explicitly and you know its name, you can also tell Landrush to grab that interface's IP address explicitly:
+If you need or want to select an interface explicitly and you know its name, you can also tell
+Landrush to grab that interface's IP address explicitly:
 
     config.landrush.host_interface = 'eth0'
 
@@ -159,14 +161,17 @@ If you would like to configure your own upstream servers, add upstream entries t
 <a name="visibility-on-the-guest"></a>
 ### Visibility on the Guest
 
-Linux guests should automatically have their DNS traffic redirected via `iptables` rules to the Landrush DNS server. File an issue if this does not work for you.
+Linux guests should automatically have their DNS traffic redirected via `iptables` rules to the
+Landrush DNS server. File an issue if this does not work for you.
 
 To disable this functionality:
 
     config.landrush.guest_redirect_dns = false
 
-You may want to do this if you are already proxying all your DNS requests through your host (e.g. using VirtualBox's natdnshostresolver1 option) and you
-have DNS servers that you can easily set as upstreams in the daemon (e.g. DNS requests that go through the host's VPN connection).
+You may want to do this if you are already proxying all your DNS requests through your host
+(e.g. using VirtualBox's natdnshostresolver1 option) and you
+have DNS servers that you can easily set as upstreams in the daemon (e.g. DNS requests that go
+through the host's VPN connection).
 
 <a name="visibility-on-the-host"></a>
 ### Visibility on the Host
@@ -312,8 +317,9 @@ development environment. On Windows the [RubyInstaller for Windows](http://rubyi
 probably the easiest way to get started. In this case you will need the
 [DevKit](http://rubyinstaller.org/add-ons/devkit/) as well.
 
-Once you have a working Ruby environment it is time to [fork](https://help.github.com/articles/fork-a-repo/)
-the repository (refer to the [CONTRIBUTING.md](CONTRIBUTING.md) guide for more info].
+Once you have a working Ruby environment it is time to
+[fork](https://help.github.com/articles/fork-a-repo/) the repository
+(refer to the [CONTRIBUTING.md](CONTRIBUTING.md) guide for more info].
 
 The following are the most important commands you will need for development:
 
@@ -339,12 +345,16 @@ The following are the most important commands you will need for development:
 
 * Run cucumber/aruba acceptance tests:
 
-        $ bundle exec cucumber
+        $ bundle exec rake features
 
   Note, that the acceptance tests currently only work out of the box on OS X.
   On Linux one has to manually configure the host visibility for the TLD
   _landrush-acceptance-test_. See for [Linux](#linux). On Windows the acceptance
   tests won't work due to a current bug in [Aruba](https://github.com/cucumber/aruba/issues/387).
+
+* Run a single cucumber/aruba acceptance tests:
+
+        $ bundle exec rake features FEATURE=features/<feature-filename>.feature
 
 * Build the Landrush gem:
 
@@ -353,6 +363,10 @@ The following are the most important commands you will need for development:
 * Clean all generated files:
 
         $ bundle exec rake clean clobber
+
+* Deploy to RubyGems:
+
+        $ bundle exec rake release
 
 * Run the vagrant binary with the Landrush plugin loaded from your local source code:
 
