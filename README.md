@@ -26,6 +26,8 @@ problems using Landrush on Windows please let us know.
         - [Windows](#windows)
         - [Other Devices \(phone\)](#other-devices-phone)
     - [Additional CLI commands](#additional-cli-commands)
+- [Miscellaneous Tricks and Tips](#miscellaneous-tricks-and-tips)
+    - [How to avoid providing sudo password on OS X](#how-to-avoid-providing-sudo-password-on-os-x)
 - [Development](#development)
 - [Help Out!](#help-out)
 
@@ -58,10 +60,22 @@ Install under Vagrant (1.1 or later):
 
 1. If you shut down your guest, the entries associated with it will be removed.
 
-Landrush retrieves your VM's hostname from either the vagrant config (see the
-[examples/Vagrantfile](examples/Vagrantfile))
+Landrush retrieves your VM's hostname from either the vagrant config
 or it uses the system's actual hostname by running the `hostname` command.
 A default of "guest-vm" is assumed if hostname is otherwise not available.
+
+A Landrush example configuration could look like this:
+
+    Vagrant.configure("2") do |config|
+      config.vm.box = "hashicorp/precise64"
+
+      config.landrush.enabled = true
+
+      config.vm.hostname = "myhost.vagrant.test"
+
+      config.landrush.host 'static1.example.com', '1.2.3.4'
+      config.landrush.host 'static2.example.com', '2.3.4.5'
+    end
 
 <a name="dynamic-entries"></a>
 ### Dynamic entries
@@ -269,6 +283,25 @@ Please refer to [/doc/proxy-mobile](/doc/proxy-mobile) for instructions.
 
 Check out `vagrant landrush` for additional commands to monitor the DNS server daemon.
 
+
+<a name="miscellaneous-tricks-and-tips"></a>
+## Miscellaneous Tricks and Tips
+
+<a name="how-to-avoid-providing-sudo-password-on-os-x"></a>
+### How to avoid providing sudo password on OS X
+
+When using Landrush on OS X, Landrush will try to create a file in `/etc/resolver` to make the guest
+VM visible via DNS on the host (see [OS X](#os-x) in the [visibility on host](#visibility-on-the-host)
+section). To create this file sudo permissions are needed and Landrush will ask you for your sudo
+password. This can be avoided by adding the following entries to the bottom of the sudoer
+configuration. Make sure to edit your `/etc/sudoers` configuration via `sudo visudo`:
+
+    # Begin Landrush config
+    Cmnd_Alias VAGRANT_LANDRUSH_HOST_MKDIR = /bin/mkdir /etc/resolver/*
+    Cmnd_Alias VAGRANT_LANDRUSH_HOST_CP = /bin/cp /*/vagrant_landrush_host_config* /etc/resolver/*
+    Cmnd_Alias VAGRANT_LANDRUSH_HOST_CHMOD = /bin/chmod 644 /etc/resolver/*
+    %admin ALL=(ALL) NOPASSWD: VAGRANT_LANDRUSH_HOST_MKDIR, VAGRANT_LANDRUSH_HOST_CP, VAGRANT_LANDRUSH_HOST_CHMOD
+    # End Landrush config
 
 <a name="development"></a>
 ## Development
