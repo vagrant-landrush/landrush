@@ -177,7 +177,12 @@ through the host's VPN connection).
 ### Visibility on the Host
 
 Visibility on the host means that the hostname of the VMs can be resolved on the host's DNS system.
-Depending on the OS this might require some manual configuration.
+Landrush will attempt an automatic configuration of the host, but depending on the OS manual 
+configuration might be required as well.
+
+To disable this functionality:
+
+    config.landrush.host_redirect_dns = false
 
 <a name="os-x"></a>
 #### OS X

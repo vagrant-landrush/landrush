@@ -63,43 +63,53 @@ module Landrush
     action_hook 'landrush_teardown', :machine_action_reload, &landrush_teardown
 
     guest_capability('debian', 'iptables_installed') do
-      require_relative 'cap/debian/iptables_installed'
+      require_relative 'cap/guest/debian/iptables_installed'
       Cap::Debian::IptablesInstalled
     end
 
     guest_capability('debian', 'install_iptables') do
-      require_relative 'cap/debian/install_iptables'
+      require_relative 'cap/guest/debian/install_iptables'
       Cap::Debian::InstallIptables
     end
 
     guest_capability('redhat', 'iptables_installed') do
-      require_relative 'cap/redhat/iptables_installed'
+      require_relative 'cap/guest/redhat/iptables_installed'
       Cap::Redhat::IptablesInstalled
     end
 
     guest_capability('redhat', 'install_iptables') do
-      require_relative 'cap/redhat/install_iptables'
+      require_relative 'cap/guest/redhat/install_iptables'
       Cap::Redhat::InstallIptables
     end
 
     guest_capability('linux', 'configured_dns_servers') do
-      require_relative 'cap/linux/configured_dns_servers'
+      require_relative 'cap/guest/linux/configured_dns_servers'
       Cap::Linux::ConfiguredDnsServers
     end
 
     guest_capability('linux', 'redirect_dns') do
-      require_relative 'cap/linux/redirect_dns'
+      require_relative 'cap/guest/linux/redirect_dns'
       Cap::Linux::RedirectDns
     end
 
     guest_capability('linux', 'add_iptables_rule') do
-      require_relative 'cap/linux/add_iptables_rule'
+      require_relative 'cap/guest/linux/add_iptables_rule'
       Cap::Linux::AddIptablesRule
     end
 
     guest_capability('linux', 'read_host_visible_ip_address') do
-      require_relative 'cap/all/read_host_visible_ip_address'
+      require_relative 'cap/guest/all/read_host_visible_ip_address'
       Cap::All::ReadHostVisibleIpAddress
+    end
+
+    host_capability('darwin', 'configure_visibility_on_host') do
+      require_relative 'cap/host/darwin/configure_visibility_on_host'
+      Cap::Darwin::ConfigureVisibilityOnHost
+    end
+
+    host_capability('windows', 'configure_visibility_on_host') do
+      require_relative 'cap/host/windows/configure_visibility_on_host'
+      Cap::Windows::ConfigureVisibilityOnHost
     end
   end
 end

@@ -8,26 +8,29 @@ module Landrush
     attr_accessor :guest_redirect_dns
     attr_accessor :host_interface
     attr_accessor :host_interface_excludes
+    attr_accessor :host_redirect_dns
 
     DEFAULTS = {
-      :enabled                 => false,
-      :tld                     => 'vagrant.test',
-      :upstream_servers        => [[:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53]],
-      :host_ip_address         => nil,
-      :guest_redirect_dns      => true,
-      :host_interface          => nil,
-      :host_interface_excludes => [/lo[0-9]*/, /docker[0-9]+/, /tun[0-9]+/]
+      :enabled                   => false,
+      :tld                       => 'vagrant.test',
+      :upstream_servers          => [[:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53]],
+      :host_ip_address           => nil,
+      :guest_redirect_dns        => true,
+      :host_interface            => nil,
+      :host_interface_excludes   => [/lo[0-9]*/, /docker[0-9]+/, /tun[0-9]+/],
+      :host_redirect_dns         => true
     }.freeze
 
     def initialize
-      @hosts                   = {}
-      @enabled                 = UNSET_VALUE
-      @tld                     = UNSET_VALUE
-      @upstream_servers        = UNSET_VALUE
-      @host_ip_address         = UNSET_VALUE
-      @guest_redirect_dns      = UNSET_VALUE
-      @host_interface          = UNSET_VALUE
-      @host_interface_excludes = UNSET_VALUE
+      @hosts                     = {}
+      @enabled                   = UNSET_VALUE
+      @tld                       = UNSET_VALUE
+      @upstream_servers          = UNSET_VALUE
+      @host_ip_address           = UNSET_VALUE
+      @guest_redirect_dns        = UNSET_VALUE
+      @host_interface            = UNSET_VALUE
+      @host_interface_excludes   = UNSET_VALUE
+      @host_redirect_dns         = UNSET_VALUE
     end
 
     def enable
@@ -44,6 +47,10 @@ module Landrush
 
     def guest_redirect_dns?
       @guest_redirect_dns
+    end
+
+    def host_redirect_dns?
+      @host_redirect_dns
     end
 
     def host(hostname, ip_address=nil)

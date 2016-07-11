@@ -1,4 +1,4 @@
-require_relative '../../../test_helper'
+require_relative '../../../../test_helper'
 
 describe Landrush::Cap::Linux::ConfiguredDnsServers do
   let(:machine) { fake_machine }

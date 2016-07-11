@@ -34,22 +34,12 @@ module Landrush
       def post_boot_setup
         record_machine_dns_entry
         setup_static_dns
-        setup_host_resolver(env)
+        return unless machine.config.landrush.host_redirect_dns?
+        env[:host].capability(:configure_visibility_on_host, host_ip_address, config.tld)
       end
 
       def record_dependent_vm
         DependentVMs.add(machine_hostname)
-      end
-
-      def setup_host_resolver(env)
-        if Vagrant::Util::Platform.windows?
-          network_config = WinNetworkConfig.new(env)
-          if network_config.ensure_prerequisites
-            network_config.update_network_adapter(host_ip_address, '127.0.0.1', config.tld)
-          end
-        elsif Vagrant::Util::Platform.darwin?
-          ResolverConfig.new(env).ensure_config_exists!
-        end
       end
 
       def add_prerequisite_network_interface

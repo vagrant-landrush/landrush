@@ -12,8 +12,6 @@ require 'rubydns'
 
 require 'landrush/dependent_vms'
 require 'landrush/plugin'
-require 'landrush/resolver_config'
-require 'landrush/win_network_config'
 require 'landrush/server'
 require 'landrush/store'
 require 'landrush/version'

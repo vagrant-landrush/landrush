@@ -4,10 +4,11 @@ require 'bundler/setup'
 require 'minitest/spec'
 
 require 'landrush'
-require 'landrush/cap/linux/configured_dns_servers'
-require 'landrush/cap/linux/redirect_dns'
-require 'landrush/cap/all/read_host_visible_ip_address'
-require 'landrush/win_network_config'
+require 'landrush/cap/guest/linux/configured_dns_servers'
+require 'landrush/cap/guest/linux/redirect_dns'
+require 'landrush/cap/guest/all/read_host_visible_ip_address'
+require 'landrush/cap/host/darwin/configure_visibility_on_host'
+require 'landrush/cap/host/windows/configure_visibility_on_host'
 require 'landrush/util/retry'
 
 require 'minitest/autorun'
@@ -17,19 +18,33 @@ require 'mocha/mini_test'
 # Putting include/exclude out of order is kind of the point though ;)
 def fake_addresses
   [
-    { 'name' => 'exclude1', 'ipv4' => '172.28.128.1', 'ipv6' => '::1' },
-    { 'name' => 'include1', 'ipv4' => '172.28.128.2', 'ipv6' => '::2' },
-    { 'name' => 'include2', 'ipv4' => '172.28.128.3', 'ipv6' => '::3' },
-    { 'name' => 'include3', 'ipv4' => '172.28.128.4', 'ipv6' => '::4' },
-    { 'name' => 'exclude2', 'ipv4' => '172.28.128.5', 'ipv6' => '::5' },
-    { 'name' => 'exclude3', 'ipv4' => '172.28.128.6', 'ipv6' => '::6' }
+    {'name' => 'exclude1', 'ipv4' => '172.28.128.1', 'ipv6' => '::1'},
+    {'name' => 'include1', 'ipv4' => '172.28.128.2', 'ipv6' => '::2'},
+    {'name' => 'include2', 'ipv4' => '172.28.128.3', 'ipv6' => '::3'},
+    {'name' => 'include3', 'ipv4' => '172.28.128.4', 'ipv6' => '::4'},
+    {'name' => 'exclude2', 'ipv4' => '172.28.128.5', 'ipv6' => '::5'},
+    {'name' => 'exclude3', 'ipv4' => '172.28.128.6', 'ipv6' => '::6'}
   ]
 end
 
-def fake_environment(options = { enabled: true })
+def fake_environment(options = {enabled: true})
   # For the home_path we want the base Vagrant directory
   vagrant_test_home = Pathname(Landrush::Server.working_dir).parent.parent
-  { machine: fake_machine(options), ui: FakeUI, home_path: vagrant_test_home }
+  env = Vagrant::Environment.new
+  {machine: fake_machine(options), host: env.host, ui: FakeUI.new, home_path: vagrant_test_home}
+end
+
+class FakeUI
+  attr_reader :received_info_messages
+
+  def initialize
+    @received_info_messages = []
+  end
+
+  def info(*args)
+    # puts "#{args}"
+    @received_info_messages << args[0]
+  end
 end
 
 class RecordingCommunicator
@@ -136,11 +151,6 @@ end
 
 # order is important on these
 require_relative 'support/create_fake_working_dir'
-
 require_relative 'support/clear_dependent_vms'
-
-require_relative 'support/fake_ui'
 require_relative 'support/test_server_daemon'
-require_relative 'support/fake_resolver_config'
-
 require_relative 'support/delete_fake_working_dir'

@@ -5,3 +5,4 @@ AllCops:
     - 'build/**/*'
     - 'vendor/**/*'
     - 'tmp/**/*'
+

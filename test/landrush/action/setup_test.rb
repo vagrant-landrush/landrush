@@ -5,17 +5,13 @@ require 'landrush/action/setup'
 module Landrush
   module Action
     describe Setup do
+      let(:env) { fake_environment }
+      let(:app) { proc {} }
       before do
-        ResolverConfig.sudo = ''
-      end
-
-      after do
-        ResolverConfig.sudo = 'sudo'
+        env[:machine].config.landrush.host_redirect_dns = false
       end
 
       it "calls the next app in the chain" do
-        skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
-        env = fake_environment
         app = -> (e) { e[:called] = true }
         setup = Setup.new(app, nil)
 
@@ -25,10 +21,7 @@ module Landrush
       end
 
       it "records the booting host as a dependent VM" do
-        skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
-        app = proc {}
         setup = Setup.new(app, nil)
-        env = fake_environment
 
         setup.call(env)
 
@@ -36,10 +29,7 @@ module Landrush
       end
 
       it "starts the landrush server if it's not already started" do
-        skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
-        app = proc {}
         setup = Setup.new(app, nil)
-        env = fake_environment
 
         setup.call(env)
 
@@ -47,10 +37,7 @@ module Landrush
       end
 
       it "does not attempt to start the server if it's already up" do
-        skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
-        app = proc {}
         setup = Setup.new(app, nil)
-        env = fake_environment
 
         Server.start
         original_pid = Server.pid
@@ -62,10 +49,7 @@ module Landrush
       end
 
       it "does nothing if it is not enabled via config" do
-        skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
-        app = proc {}
         setup = Setup.new(app, nil)
-        env = fake_environment
 
         env[:machine].config.landrush.disable
         setup.call(env)
@@ -74,10 +58,7 @@ module Landrush
       end
 
       it "for single private network IP host visible IP can be retrieved w/o starting the VM" do
-        skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
-        app = proc {}
         setup = Setup.new(app, nil)
-        env = fake_environment
         env[:machine].config.vm.network :private_network, ip: '42.42.42.42'
 
         setup.call(env)
@@ -85,10 +66,7 @@ module Landrush
       end
 
       it "for multiple private network IPs host visible IP cant be retrieved if host_ip_address is set" do
-        skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
-        app = proc {}
         setup = Setup.new(app, nil)
-        env = fake_environment
 
         env[:machine].config.vm.network :private_network, ip: '42.42.42.41'
         env[:machine].config.vm.network :private_network, ip: '42.42.42.42'
@@ -98,10 +76,7 @@ module Landrush
       end
 
       it "is possible to add cnames via the config.landrush.host configuration option" do
-        skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
-        app = proc {}
         setup = Setup.new(app, nil)
-        env = fake_environment
 
         env[:machine].config.landrush.host 'foo', 'bar'
         setup.call(env)
@@ -111,10 +86,7 @@ module Landrush
 
       describe 'after boot' do
         it "stores the machine's hostname => ip address" do
-          skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
-          app = proc {}
           setup = Setup.new(app, nil)
-          env = fake_environment
 
           setup.call(env)
 
@@ -122,11 +94,9 @@ module Landrush
         end
 
         it "does nothing if it is not enabled via config" do
-          skip('Not working on Windows, since it will also do the network config') if Vagrant::Util::Platform.windows?
-          app = proc {}
           setup = Setup.new(app, nil)
-          env = fake_environment(enabled: false)
 
+          env = fake_environment(enabled: false)
           setup.call(env)
 
           Store.hosts.get('somehost.vagrant.test').must_equal nil

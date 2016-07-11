@@ -89,7 +89,6 @@ Style/GuardClause:
   Exclude:
     - 'lib/landrush/action/teardown.rb'
     - 'lib/landrush/server.rb'
-    - 'test/support/fake_resolver_config.rb'
     - 'test/support/test_server_daemon.rb'
 
 # Offense count: 13
@@ -107,7 +106,6 @@ Style/IfUnlessModifier:
     - 'lib/landrush/action/common.rb'
     - 'lib/landrush/config.rb'
     - 'lib/landrush/server.rb'
-    - 'test/support/fake_resolver_config.rb'
     - 'test/support/test_server_daemon.rb'
 
 # Offense count: 4
@@ -116,13 +114,6 @@ Style/IfUnlessModifier:
 # SupportedStyles: special_inside_parentheses, consistent, align_brackets
 Style/IndentArray:
   EnforcedStyle: consistent
-
-
-# Offense count: 5
-# Cop supports --auto-correct.
-Style/MutableConstant:
-  Exclude:
-    - 'issues/vbox/Vagrantfile'
 
 # Offense count: 1
 # Cop supports --auto-correct.
@@ -138,7 +129,7 @@ Style/Next:
 Style/PercentLiteralDelimiters:
   Exclude:
     - 'landrush.gemspec'
-    - 'lib/landrush/cap/linux/redirect_dns.rb'
+    - 'lib/landrush/cap/guest/linux/redirect_dns.rb'
     - 'test/landrush/action/setup_test.rb'
     - 'test/landrush/store_test.rb'
 
@@ -148,7 +139,7 @@ Style/PercentLiteralDelimiters:
 # SupportedStyles: lower_case_q, upper_case_q
 Style/PercentQLiterals:
   Exclude:
-    - 'lib/landrush/cap/linux/read_host_visible_ip_address.rb'
+    - 'lib/landrush/cap/guest/linux/read_host_visible_ip_address.rb'
 
 
 # Offense count: 7
@@ -200,7 +191,7 @@ Style/StringLiterals:
 # IgnoredMethods: respond_to
 Style/SymbolProc:
   Exclude:
-    - 'lib/landrush/cap/linux/read_host_visible_ip_address.rb'
+    - 'lib/landrush/cap/guest/linux/read_host_visible_ip_address.rb'
 
 # Offense count: 2
 # Cop supports --auto-correct.
@@ -216,5 +207,5 @@ Style/TrivialAccessors:
 Style/UnneededPercentQ:
   Exclude:
     - 'landrush.gemspec'
-    - 'lib/landrush/cap/linux/add_iptables_rule.rb'
-    - 'lib/landrush/cap/linux/read_host_visible_ip_address.rb'
+    - 'lib/landrush/cap/guest/linux/add_iptables_rule.rb'
+    - 'lib/landrush/cap/guest/linux/read_host_visible_ip_address.rb'
