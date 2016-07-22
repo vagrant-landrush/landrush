@@ -111,5 +111,55 @@ module Landrush
       require_relative 'cap/host/windows/configure_visibility_on_host'
       Cap::Windows::ConfigureVisibilityOnHost
     end
+
+    host_capability('linux', 'configure_visibility_on_host') do
+      require_relative 'cap/host/linux/configure_visibility_on_host'
+      Cap::Linux::ConfigureVisibilityOnHost
+    end
+
+    host_capability('linux', 'create_dnsmasq_config') do
+      require_relative 'cap/host/linux/create_dnsmasq_config'
+      Cap::Linux::CreateDnsmasqConfig
+    end
+
+    host 'debian', 'linux' do
+      require_relative 'cap/host/debian/host'
+      Cap::Debian::DebianHost
+    end
+
+    host 'ubuntu', 'debian' do
+      require_relative 'cap/host/ubuntu/host'
+      Cap::Ubuntu::UbuntuHost
+    end
+
+    host_capability('debian', 'dnsmasq_installed') do
+      require_relative 'cap/host/debian/dnsmasq_installed'
+      Landrush::Cap::Debian::DnsmasqInstalled
+    end
+
+    host_capability('debian', 'install_dnsmasq') do
+      require_relative 'cap/host/debian/install_dnsmasq'
+      Cap::Debian::InstallDnsmasq
+    end
+
+    host_capability('debian', 'restart_dnsmasq') do
+      require_relative 'cap/host/debian/restart_dnsmasq'
+      Cap::Debian::RestartDnsmasq
+    end
+
+    host_capability('redhat', 'dnsmasq_installed') do
+      require_relative 'cap/host/redhat/dnsmasq_installed'
+      Cap::Redhat::DnsmasqInstalled
+    end
+
+    host_capability('redhat', 'install_dnsmasq') do
+      require_relative 'cap/host/redhat/install_dnsmasq'
+      Cap::Redhat::InstallDnsmasq
+    end
+
+    host_capability('redhat', 'restart_dnsmasq') do
+      require_relative 'cap/host/redhat/restart_dnsmasq'
+      Cap::Redhat::RestartDnsmasq
+    end
   end
 end

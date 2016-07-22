@@ -55,15 +55,6 @@ module Landrush
               system "#{sudo} chmod 644 #{config_file}"
             end
           end
-
-          def ensure_config_exists!
-            if contents_match?
-              info 'Host DNS resolver config looks good.'
-            else
-              info 'Need to configure the host.'
-              write_config!
-            end
-          end
         end
       end
     end

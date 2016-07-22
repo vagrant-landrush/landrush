@@ -177,7 +177,7 @@ through the host's VPN connection).
 ### Visibility on the Host
 
 Visibility on the host means that the hostname of the VMs can be resolved on the host's DNS system.
-Landrush will attempt an automatic configuration of the host, but depending on the OS manual 
+Landrush will attempt an automatic configuration of the host, but depending on the OS, manual
 configuration might be required as well.
 
 To disable this functionality:
@@ -195,8 +195,11 @@ that points lookups for hostnames ending in your `config.landrush.tld` domain to
 <a name="linux"></a>
 #### Linux
 
-Though it's not automatically set up by Landrush, similar behavior can be achieved on Linux hosts
-with `dnsmasq`. You can integrate Landrush with `dnsmasq` on Ubuntu like so (tested on Ubuntu 13.10):
+Landrush tries to achieve the same behavior on Linux hosts using
+`dnsmasq`. For some Linux distributions this happens automatically (you might
+have to provide your _sudo_ password). If Landrush does not know how to install and
+start `dnsmasq` on your favorite Linux distribution, you can adjust the following
+example from Ubuntu:
 
     sudo apt-get install -y resolvconf dnsmasq
     sudo sh -c 'echo "server=/vagrant.test/127.0.0.1#10053" > /etc/dnsmasq.d/vagrant-landrush'

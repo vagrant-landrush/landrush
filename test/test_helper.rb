@@ -9,6 +9,7 @@ require 'landrush/cap/guest/linux/redirect_dns'
 require 'landrush/cap/guest/all/read_host_visible_ip_address'
 require 'landrush/cap/host/darwin/configure_visibility_on_host'
 require 'landrush/cap/host/windows/configure_visibility_on_host'
+require 'landrush/cap/host/linux/configure_visibility_on_host'
 require 'landrush/util/retry'
 
 require 'minitest/autorun'
