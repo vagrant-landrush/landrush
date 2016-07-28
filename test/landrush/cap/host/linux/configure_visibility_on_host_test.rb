@@ -22,7 +22,7 @@ module Landrush
             skip('Only supported on Linux') unless Vagrant::Util::Platform.linux?
             File.exist?(TEST_CONFIG).must_equal false
 
-            Landrush::Cap::Linux::ConfigureVisibilityOnHost.configure_visibility_on_host(fake_environment, TEST_IP, TEST_TLD)
+            Landrush::Cap::Linux::ConfigureVisibilityOnHost.configure_visibility_on_host(Vagrant::Environment.new, TEST_IP, TEST_TLD)
 
             File.exist?(TEST_CONFIG).must_equal true
             Pathname(TEST_CONFIG).read.must_equal CONFIG

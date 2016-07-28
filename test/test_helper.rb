@@ -31,8 +31,7 @@ end
 def fake_environment(options = {enabled: true})
   # For the home_path we want the base Vagrant directory
   vagrant_test_home = Pathname(Landrush::Server.working_dir).parent.parent
-  env = Vagrant::Environment.new
-  {machine: fake_machine(options), host: env.host, ui: FakeUI.new, home_path: vagrant_test_home}
+  {machine: fake_machine(options), ui: FakeUI.new, home_path: vagrant_test_home}
 end
 
 class FakeUI
