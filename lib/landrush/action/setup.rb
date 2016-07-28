@@ -100,7 +100,7 @@ module Landrush
       # machine.config.vm.networks is an array of two elements. The first containing the type as symbol, the second is a
       # hash containing other config data which varies between types
       def static_private_network_ip
-        # select all staticlly defined private network ip
+        # select all statically defined private network ip
         private_networks = machine.config.vm.networks.select {|network| :private_network == network[0] && !network[1][:ip].nil?}
                                   .map {|network| network[1][:ip]}
         if machine.config.landrush.host_ip_address.nil?

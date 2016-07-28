@@ -23,7 +23,7 @@ module Landrush
               # also disable 'sudo'
               ConfigureVisibilityOnHost.stubs(:sudo).returns('')
 
-              ConfigureVisibilityOnHost.configure_visibility_on_host(env)
+              ConfigureVisibilityOnHost.configure_visibility_on_host(env, '42.42.42.42', 'vagrant.test')
 
               Dir["#{dir}/*"].empty?.must_equal false
               File.exist?(File.join(dir, 'vagrant.test')).must_equal true
@@ -41,8 +41,7 @@ module Landrush
               # also disable 'sudo'
               ConfigureVisibilityOnHost.stubs(:sudo).returns('')
 
-              env.vagrantfile.config.landrush.tld = 'foo.bar'
-              ConfigureVisibilityOnHost.configure_visibility_on_host(env)
+              ConfigureVisibilityOnHost.configure_visibility_on_host(env, '42.42.42.42', 'foo.bar')
 
               Dir["#{dir}/*"].empty?.must_equal false
               File.exist?(File.join(dir, 'foo.bar')).must_equal true

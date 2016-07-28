@@ -5,8 +5,9 @@ module Landrush
         class << self
           attr_writer :sudo, :config_dir
 
-          def configure_visibility_on_host(env, *_args)
+          def configure_visibility_on_host(env, _ip, tld)
             @env = env
+            @tld = tld
             if contents_match?
               info 'Host DNS resolver config looks good.'
             else
@@ -38,7 +39,7 @@ module Landrush
           end
 
           def config_file
-            config_dir.join(@env.vagrantfile.config.landrush.tld)
+            config_dir.join(@tld)
           end
 
           def contents_match?
