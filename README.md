@@ -28,6 +28,7 @@ problems using Landrush on Windows please let us know.
     - [Additional CLI commands](#additional-cli-commands)
 - [Miscellaneous Tricks and Tips](#miscellaneous-tricks-and-tips)
     - [How to avoid providing sudo password on OS X](#how-to-avoid-providing-sudo-password-on-os-x)
+    - [Guest is unable to access the Internet](#guest-is-unable-to-access-the-internet)
 - [Development](#development)
 - [Help Out!](#help-out)
 
@@ -146,8 +147,9 @@ work for anything.
 <a name="unmatched-queries"></a>
 ### Unmatched Queries
 
-Any DNS queries that do not match will be passed through to an upstream DNS server, so this will be
-able to serve as the one-stop shop for your guests' DNS needs.
+Any DNS queries that do not match any of Landrush'es configuration data, will be passed
+through to an upstream DNS server. Per default Landrush uses Google's DNS server with the
+IP _8.8.8.8_.
 
 If you would like to configure your own upstream servers, add upstream entries to your
 `Vagrantfile` like so:
@@ -315,6 +317,20 @@ configuration. Make sure to edit your `/etc/sudoers` configuration via `sudo vis
     Cmnd_Alias VAGRANT_LANDRUSH_HOST_CHMOD = /bin/chmod 644 /etc/resolver/*
     %admin ALL=(ALL) NOPASSWD: VAGRANT_LANDRUSH_HOST_MKDIR, VAGRANT_LANDRUSH_HOST_CP, VAGRANT_LANDRUSH_HOST_CHMOD
     # End Landrush config
+
+<a name="guest-is-unable-to-access-the-internet"></a>
+### Guest is unable to access the Internet
+
+In some network configuration the access to outside DNS servers is restricted
+(firewalls, VPN, etc). Since unmatched DNS queries are per default passed through to
+Google's DNS servers, this can lead to the fact that the guest cannot access anything
+in the outside world.
+If you are having problem with the guest's DNS, verify that you can access Google's
+DNS server under _8.8.8.8_. If it does not work, you will need to set a custom
+upstream DNS server. Check your network configuration on the host or ask your network
+administrator about the right DNS server address to use. You can set the custom
+DNS server via the _config.landrush.upstream_ option (see section about
+[unmatched queries](#unmatched-queries)).
 
 <a name="development"></a>
 ## Development
