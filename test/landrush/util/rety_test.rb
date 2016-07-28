@@ -1,20 +1,12 @@
 require_relative '../../test_helper'
 
-class DummyClass
-  include Landrush::Util::Retry
-end
-
 module Landrush
   module Util
     describe Retry do
-      before do
-        @dummy = DummyClass.new
-      end
-
       describe 'retry' do
         it 'retries the provided block up to the specified count' do
           retries = 0
-          result = @dummy.retry(tries: 2) do
+          result = Retry.retry(tries: 2) do
             retries += 1
             false
           end
@@ -24,7 +16,7 @@ module Landrush
 
         it 'does not retry if \'true\' is returned' do
           retries = 0
-          result = @dummy.retry(tries: 2) do
+          result = Retry.retry(tries: 2) do
             retries += 1
             true
           end
@@ -35,7 +27,7 @@ module Landrush
         it 'does sleep between executions if requested' do
           retries = 0
           t1 = Time.now
-          result = @dummy.retry(tries: 1, sleep: 1) do
+          result = Retry.retry(tries: 1, sleep: 1) do
             retries += 1
             false
           end

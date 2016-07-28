@@ -31,14 +31,14 @@ module Landrush
 
             unless wired_autoconfig_service_running?
               info('starting \'Wired AutoConfig\' service')
-              if self.class.admin_mode?
+              if admin_mode?
                 `net start dot3svc`
               else
                 require 'win32ole'
                 shell = WIN32OLE.new('Shell.Application')
                 shell.ShellExecute('net', 'start dot3svc', nil, 'runas', 1)
               end
-              service_has_started = self.retry(tries: 5, sleep: 1) do
+              service_has_started = Landrush::Util::Retry.retry(tries: 5, sleep: 1) do
                 wired_autoconfig_service_running?
               end
               unless service_has_started
@@ -144,7 +144,7 @@ module Landrush
           end
 
           def info(msg)
-            @env[:ui].info("[landrush] #{msg}") unless @env.nil?
+            @env.ui.info("[landrush] #{msg}") unless @env.nil?
           end
 
           def wired_autoconfig_service_running?

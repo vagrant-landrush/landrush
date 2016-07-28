@@ -1,7 +1,7 @@
 module Landrush
   module Util
-    module Retry
-      def retry(opts=nil)
+    class Retry
+      def self.retry(opts=nil)
         opts = {tries: 1}.merge(opts || {})
         n = 0
         while n < opts[:tries]
