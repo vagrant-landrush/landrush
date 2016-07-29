@@ -54,24 +54,26 @@ module Landrush
           def update_network_adapter(ip, tld)
             # Need to defer loading to ensure cross OS compatibility
             require 'win32/registry'
-            ensure_admin_privileges(__FILE__.to_s, ip, tld)
-
-            network_name = get_network_name(ip)
-            if network_name.nil?
-              info("unable to determine network interface for #{ip}. DNS on host cannot be configured. Try manual configuration.")
-              return
+            if admin_mode?
+              network_name = get_network_name(ip)
+              if network_name.nil?
+                info("unable to determine network interface for #{ip}. DNS on host cannot be configured. Try manual configuration.")
+                return
+              else
+                info("adding Landrush'es DNS server to network '#{network_name}' using DNS IP '#{ip}'' and search domain '#{tld}'")
+              end
+              network_guid = get_guid(network_name)
+              if network_guid.nil?
+                info("unable to determine network GUID for #{ip}. DNS on host cannot be configured. Try manual configuration.")
+                return
+              end
+              interface_path = INTERFACES + "\\{#{network_guid}}"
+              Win32::Registry::HKEY_LOCAL_MACHINE.open(interface_path, Win32::Registry::KEY_ALL_ACCESS) do |reg|
+                reg['NameServer'] = '127.0.0.1'
+                reg['Domain'] = tld
+              end
             else
-              info("adding Landrush'es DNS server to network '#{network_name}' using DNS IP '#{ip}'' and search domain '#{tld}'")
-            end
-            network_guid = get_guid(network_name)
-            if network_guid.nil?
-              info("unable to determine network GUID for #{ip}. DNS on host cannot be configured. Try manual configuration.")
-              return
-            end
-            interface_path = INTERFACES + "\\{#{network_guid}}"
-            Win32::Registry::HKEY_LOCAL_MACHINE.open(interface_path, Win32::Registry::KEY_ALL_ACCESS) do |reg|
-              reg['NameServer'] = '127.0.0.1'
-              reg['Domain'] = tld
+              run_with_admin_privileges(__FILE__.to_s, ip, tld)
             end
           end
 
@@ -133,14 +135,10 @@ module Landrush
 
           # Makes sure that we have admin privileges and if nor starts a new shell with the required
           # privileges
-          def ensure_admin_privileges(file, *args)
-            unless admin_mode?
-              require 'win32ole'
-              shell = WIN32OLE.new('Shell.Application')
-              shell.ShellExecute('ruby', "#{file} #{args.join(' ')}", nil, 'runas', 1)
-              # need to exit current execution, changes will occur in new environment
-              exit
-            end
+          def run_with_admin_privileges(file, *args)
+            require 'win32ole'
+            shell = WIN32OLE.new('Shell.Application')
+            shell.ShellExecute('ruby', "#{file} #{args.join(' ')}", nil, 'runas', 1)
           end
 
           def info(msg)
