@@ -65,6 +65,7 @@ module Landrush
 
     # Used to start the Landrush DNS server as a child process using ChildProcess gem
     def self.start
+      ensure_ruby_on_path
       if Vagrant::Util::Platform.windows?
         # Need to handle Windows differently. Kernel.spawn fails to work, if the shell creating the process is closed.
         # See https://github.com/vagrant-landrush/landrush/issues/199
@@ -266,8 +267,19 @@ module Landrush
       end
     end
 
+    # On a machine with just Vagrant installed there might be no other Ruby except the
+    # one bundled with Vagrant. Let's make sure the embedded bin directory containing
+    # the Ruby executable is added to the PATH.
+    def self.ensure_ruby_on_path
+      vagrant_binary = Vagrant::Util::Which.which('vagrant')
+      vagrant_binary = File.realpath(vagrant_binary) if File.symlink?(vagrant_binary)
+      # in a Vagrant installation the Ruby executable is in ../embedded/bin relative to the vagrant executable
+      embedded_bin_dir = File.join(File.dirname(File.dirname(vagrant_binary)), 'embedded', 'bin')
+      ENV['PATH'] = embedded_bin_dir + File::PATH_SEPARATOR + ENV['PATH'] if File.exist?(embedded_bin_dir)
+    end
+
     private_class_method :write_pid, :read_pid, :delete_pid_file, :pid_file, :process_status, :ensure_path_exits,
-                         :terminate_process
+                         :terminate_process, :ensure_ruby_on_path
   end
 end
 
