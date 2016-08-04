@@ -48,7 +48,7 @@ module Landrush
 
           def write_config!
             info 'Momentarily using sudo to put the host config in place...'
-            system "#{self.class.sudo} mkdir #{config_dir}" unless config_dir.directory?
+            system "#{sudo} mkdir #{config_dir}" unless config_dir.directory?
             Tempfile.open('vagrant_landrush_host_config') do |f|
               f.write(desired_contents)
               f.close
