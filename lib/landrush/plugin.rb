@@ -18,19 +18,24 @@ module Landrush
       require_relative 'action/install_prerequisites'
       require_relative 'action/redirect_dns'
 
+      # Hooks for VirtualBox and HyperV providers
       hook.before(VagrantPlugins::ProviderVirtualBox::Action::Network, pre_boot_actions)
+      hook.before(VagrantPlugins::HyperV::Action::WaitForIPAddress, pre_boot_actions)
       hook.after(Vagrant::Action::Builtin::WaitForCommunicator, post_boot_actions)
 
+      # Hooks for Libvirt provider
       if defined?(VagrantPlugins::ProviderLibvirt)
         hook.after(VagrantPlugins::ProviderLibvirt::Action::CreateNetworks, pre_boot_actions)
         hook.after(VagrantPlugins::ProviderLibvirt::Action::WaitTillUp, post_boot_actions)
       end
 
+      # Hooks for VMWarefusion provider
       if defined?(HashiCorp::VagrantVMwarefusion)
         hook.before(HashiCorp::VagrantVMwarefusion::Action::Network, pre_boot_actions)
         hook.after(HashiCorp::VagrantVMwarefusion::Action::WaitForCommunicator, post_boot_actions)
       end
 
+      # Hooks for Parallels provider
       if defined?(VagrantPlugins::Parallels)
         hook.before(VagrantPlugins::Parallels::Action::Network, pre_boot_actions)
       end
