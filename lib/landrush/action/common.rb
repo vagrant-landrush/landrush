@@ -6,6 +6,7 @@ module Landrush
         'VagrantPlugins::ProviderLibvirt::Provider'    => :libvirt,
         'HashiCorp::VagrantVMwarefusion::Provider'     => :vmware_fusion,
         'VagrantPlugins::Parallels::Provider'          => :parallels,
+        'VagrantPlugins::HyperV::Provider'             => :hyperv,
         'Landrush::FakeProvider'                       => :fake_provider
       }.freeze
 
