@@ -17,6 +17,8 @@ module Landrush
         def self.read_host_visible_ip_address(machine)
           @machine = machine
 
+          @machine.guest.capability(:landrush_ip_install) unless @machine.guest.capability(:landrush_ip_installed)
+
           addr      = nil
           addresses = machine.guest.capability(:landrush_ip_get)
 

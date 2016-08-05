@@ -14,6 +14,7 @@ module Landrush
         before do
           # TODO: Is there a way to only unstub it for read_host_visible_ip_address?
           machine.guest.unstub(:capability)
+          machine.guest.stubs(:capability).with(:landrush_ip_installed).returns(true)
           machine.guest.stubs(:capability).with(:landrush_ip_get).returns(fake_addresses)
         end
 

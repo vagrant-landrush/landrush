@@ -21,6 +21,7 @@ Metrics/AbcSize:
   Max: 36
   Exclude:
     - 'lib/landrush/command.rb'
+    - 'lib/landrush/cap/guest/all/read_host_visible_ip_address.rb'
 
 # Offense count: 1
 # Configuration parameters: CountComments.
