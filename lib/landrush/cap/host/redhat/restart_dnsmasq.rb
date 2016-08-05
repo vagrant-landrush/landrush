@@ -4,9 +4,9 @@ module Landrush
       module RestartDnsmasq
         class << self
           SED_COMMAND = <<-EOF.gsub(/^ +/, '')
-          sudo sed -i.orig '/nameserver/i\\
-          nameserver 127.0.0.1 # Added by landrush, a vagrant plugin
-
+          sudo sed -i.orig '1 i\
+          # Added by landrush, a vagrant plugin \\
+          nameserver 127.0.0.1 \\
           ' /etc/resolv.conf
           EOF
 
