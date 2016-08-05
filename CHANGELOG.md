@@ -1,3 +1,25 @@
+## [1.1.0] - 2016-08-05
+
+- Issue [#234](https://github.com/vagrant-landrush/landrush/issues/234) - sed command in RestartDnsmasq for redhat hosts does insert 127.0.0.1
+- Issue [#231](https://github.com/vagrant-landrush/landrush/issues/231) - Make sure that there is alway a ruby binary on the path
+- Issue [#233](https://github.com/vagrant-landrush/landrush/issues/233) - Wrong sudo command in ConfigureVisibilityOnHost for OS X bug
+- Issue [#229](https://github.com/vagrant-landrush/landrush/issues/229) - ConfigureVisibilityOnHost exist main execution when not in admin mode
+- Issue [#226](https://github.com/vagrant-landrush/landrush/issues/226) - Landrush::Cap::Linux::ConfigureVisibilityOnHost accesses capabilties the wrong way
+- Issue [#225](https://github.com/vagrant-landrush/landrush/issues/225) - Windows host configuration fails starting the Wired AutoConfig service
+- Issue [#223](https://github.com/vagrant-landrush/landrush/issues/223) - The wrong TLD is used for the darwin host capabiltiy configure_visibility_on_host bug
+- Issue [#215](https://github.com/vagrant-landrush/landrush/issues/215) - Document issues with upstream DNS server configuration in VPN settings documentation
+- Issue [#211](https://github.com/vagrant-landrush/landrush/issues/211) - Provide automatic host visibility configuration on Linux feature
+- Issue [#202](https://github.com/vagrant-landrush/landrush/issues/202) - Landrush kill not working in Windows environment
+- Issue [#209](https://github.com/vagrant-landrush/landrush/issues/209) - Remove issues directory
+- Issue [#190](https://github.com/vagrant-landrush/landrush/issues/190) - Add `sudoers` rules to README to support passwordless provisioning
+- Issue [#176](https://github.com/vagrant-landrush/landrush/issues/176) - Can't create cname in Vagrantfile
+- Issue [#171](https://github.com/vagrant-landrush/landrush/issues/171) - Provide automatic host visibility configuration on Windows
+- Issue [#201](https://github.com/vagrant-landrush/landrush/issues/201) - Upgrade to Vagrant 1.8.4 as development version build
+- Issue [#189](https://github.com/vagrant-landrush/landrush/issues/189) - Improve IP determination by using config information guest-ip-detection
+- Issue [#199](https://github.com/vagrant-landrush/landrush/issues/199) - Switch to win32-process for creating sub processes on Windows bug
+- Issue [#114](https://github.com/vagrant-landrush/landrush/issues/114) - Make IP determination platform-agnostic and a bit more flexible enhancement guest-ip-detection
+- Issue [#196](https://github.com/vagrant-landrush/landrush/issues/196) - gem spec refers to old repo
+
 ## [1.0.0] - 2016-05-18
 
 - Added: Acceptance CI tests ([#136](https://github.com/vagrant-landrush/landrush/issues/136))
@@ -19,6 +41,7 @@
 ## [0.16.0] - 2015-01-18
 - Added: Support for IN::PTR records (#98)
 
+[1.1.0]: https://github.com/phinze/landrush/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/phinze/landrush/compare/v0.19.0...v1.0.0
 [0.19.0]: https://github.com/phinze/landrush/compare/v0.18.0...v0.19.0
 [0.18.0]: https://github.com/phinze/landrush/compare/v0.17.0...v0.18.0
