@@ -274,7 +274,13 @@ module Landrush
       vagrant_binary = Vagrant::Util::Which.which('vagrant')
       vagrant_binary = File.realpath(vagrant_binary) if File.symlink?(vagrant_binary)
       # in a Vagrant installation the Ruby executable is in ../embedded/bin relative to the vagrant executable
-      embedded_bin_dir = File.join(File.dirname(File.dirname(vagrant_binary)), 'embedded', 'bin')
+      # we don't use File.join here, since even on Cygwin we want a Windows path - see https://github.com/vagrant-landrush/landrush/issues/237
+      if Vagrant::Util::Platform.windows?
+        separator = '\\'
+      else
+        separator = '/'
+      end
+      embedded_bin_dir = File.dirname(File.dirname(vagrant_binary)) + separator + 'embedded' + separator + 'bin'
       ENV['PATH'] = embedded_bin_dir + File::PATH_SEPARATOR + ENV['PATH'] if File.exist?(embedded_bin_dir)
     end
 
