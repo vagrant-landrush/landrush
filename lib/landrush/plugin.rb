@@ -60,7 +60,7 @@ module Landrush
     landrush_teardown = lambda do |hook|
       require_relative 'action/common'
       require_relative 'action/teardown'
-      hook.after(Vagrant::Action::Builtin::GracefulHalt, Action::Teardown)
+      hook.append(Action::Teardown)
     end
 
     action_hook 'landrush_teardown', :machine_action_halt, &landrush_teardown
