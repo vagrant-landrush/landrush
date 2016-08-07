@@ -1,3 +1,10 @@
+## [1.1.1] - 2016-08-07
+
+- Issue [#241](https://github.com/vagrant-landrush/landrush/issues/241) - Action::Teardown is not called for providers other than VirtualBox
+- Issue [#239](https://github.com/vagrant-landrush/landrush/issues/239) - Add support for HyperV 
+- Issue [#237](https://github.com/vagrant-landrush/landrush/issues/237) - Landrush::Server.ensure_ruby_on_path should not be using File.join
+- Issue [#236](https://github.com/vagrant-landrush/landrush/issues/236) - Explicitly call landrush_ip_installed and landrush_ip_install 
+
 ## [1.1.0] - 2016-08-05
 
 - Issue [#234](https://github.com/vagrant-landrush/landrush/issues/234) - sed command in RestartDnsmasq for redhat hosts does insert 127.0.0.1
@@ -41,6 +48,7 @@
 ## [0.16.0] - 2015-01-18
 - Added: Support for IN::PTR records (#98)
 
+[1.1.1]: https://github.com/phinze/landrush/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/phinze/landrush/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/phinze/landrush/compare/v0.19.0...v1.0.0
 [0.19.0]: https://github.com/phinze/landrush/compare/v0.18.0...v0.19.0
