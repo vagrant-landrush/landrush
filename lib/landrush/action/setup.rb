@@ -19,7 +19,11 @@ module Landrush
       end
 
       def host_ip_address
-        static_private_network_ip || machine.guest.capability(:read_host_visible_ip_address)
+        if private_network_ips.include? machine.config.landrush.host_ip_address
+          machine.config.landrush.host_ip_address
+        else
+          machine.guest.capability(:read_host_visible_ip_address)
+        end
       end
 
       private
@@ -97,19 +101,12 @@ module Landrush
         machine.config.vm.networks.any? { |type, _| type == :private_network }
       end
 
-      # machine.config.vm.networks is an array of two elements. The first containing the type as symbol, the second is a
-      # hash containing other config data which varies between types
-      def static_private_network_ip
-        # select all statically defined private network ip
-        private_networks = machine.config.vm.networks.select {|network| :private_network == network[0] && !network[1][:ip].nil?}
-                                  .map {|network| network[1][:ip]}
-        if machine.config.landrush.host_ip_address.nil?
-          private_networks[0] if private_networks.length == 1
-        elsif private_networks.include? machine.config.landrush.host_ip_address
-          machine.config.landrush.host_ip_address
-        end
-        # If there is more than one private network or there is no match between config.landrush.host_ip_address
-        # and the discovered addresses we will pass on to read_host_visible_ip_address capability
+      # @return [Array<String] IPv4 addresses of all private networks
+      def private_network_ips
+        # machine.config.vm.networks is an array of two elements. The first containing the type as symbol, the second is a
+        # hash containing other config data which varies between types
+        machine.config.vm.networks.select { |network| :private_network == network[0] && !network[1][:ip].nil? }
+               .map { |network| network[1][:ip] }
       end
     end
   end

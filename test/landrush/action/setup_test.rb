@@ -57,14 +57,6 @@ module Landrush
         DependentVMs.list.must_equal []
       end
 
-      it "for single private network IP host visible IP can be retrieved w/o starting the VM" do
-        setup = Setup.new(app, nil)
-        env[:machine].config.vm.network :private_network, ip: '42.42.42.42'
-
-        setup.call(env)
-        Store.hosts.get('somehost.vagrant.test').must_equal '42.42.42.42'
-      end
-
       it "for multiple private network IPs host visible IP cant be retrieved if host_ip_address is set" do
         setup = Setup.new(app, nil)
 
