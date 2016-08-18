@@ -1,3 +1,5 @@
+## Unreleased
+
 ## [1.1.1] - 2016-08-07
 
 - Issue [#241](https://github.com/vagrant-landrush/landrush/issues/241) - Action::Teardown is not called for providers other than VirtualBox
