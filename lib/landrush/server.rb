@@ -67,8 +67,24 @@ module Landrush
     def self.start
       ensure_ruby_on_path
       if Vagrant::Util::Platform.windows?
-        # Need to handle Windows differently. Kernel.spawn fails to work, if the shell creating the process is closed.
+        # Need to handle Windows differently. Kernel.spawn fails to work, if
+        # the shell creating the process is closed.
         # See https://github.com/vagrant-landrush/landrush/issues/199
+        #
+        # Note to the Future: Windows does not have a
+        # file handle inheritance issue like Linux and Mac (see:
+        # https://github.com/vagrant-landrush/landrush/issues/249)
+        #
+        # On windows, if no filehandle is passed then no files get
+        # inherited by default, but if any filehandle is passed to
+        # a spawned process then all files that are
+        # set as inheritable will get inherited. In another project this
+        # created a problem (see:
+        # https://github.com/dustymabe/vagrant-sshfs/issues/41).
+        #
+        # Today we don't pass any filehandles, so it isn't a problem.
+        # Future self, make sure this doesn't become a problem.
+
         info = Process.create(:command_line => "ruby #{__FILE__} #{port} #{working_dir}",
                               :creation_flags => Process::DETACHED_PROCESS,
                               :process_inherit => false,
@@ -76,7 +92,14 @@ module Landrush
                               :cwd => working_dir.to_path)
         pid = info.process_id
       else
-        pid = spawn('ruby', __FILE__, port.to_s, working_dir.to_s, :chdir => working_dir.to_path, :pgroup => true)
+        # Fix https://github.com/vagrant-landrush/landrush/issues/249)
+        # by turning of filehandle inheritance with :close_others => true
+        # and by explicitly closing STDIN, STDOUT, and STDERR
+
+        pid = spawn('ruby', __FILE__, port.to_s, working_dir.to_s,
+                    :in => :close, :out => :close, :err => :close,
+                    :close_others => true, :chdir => working_dir.to_path,
+                    :pgroup => true)
         Process.detach pid
       end
 
