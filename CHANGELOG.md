@@ -1,6 +1,7 @@
 ## Unreleased
 
 - Issue [#249](https://github.com/vagrant-landrush/landrush/issues/249) - Spawned DNS server holds vagrant executable's stderr, stdout open
+- PR [#247](https://github.com/vagrant-landrush/landrush/pull/247) -  Change virtualbox DNS address to 10.0.2.3
 
 ## [1.1.1] - 2016-08-07
 
