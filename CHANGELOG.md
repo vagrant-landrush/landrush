@@ -1,3 +1,5 @@
+## Unreleased
+
 ## [1.1.2] - 2016-08-24
 
 - Issue [#249](https://github.com/vagrant-landrush/landrush/issues/249) - Spawned DNS server holds vagrant executable's stderr, stdout open

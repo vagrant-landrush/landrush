@@ -85,7 +85,7 @@ Steps:
 1. Make a release commit:
    `git add lib/landrush/version.rb CHANGELOG.md; git commit -m 'cut vX.Y.Z'`
 1. Make a release tag: `git tag -m vX.Y.Z vX.Y.Z`
-1. Push the release commit: `git push origin master`
+1. Push the release commit: `git push origin master; git push origin master --tags`
 1. Build the release: `rake build`
 1. Push the newly built gem: `gem push pkg/landrush-X.Y.Z.gem`
 1. Update the CHANGELOG to add an "Unreleased" section, commit as
