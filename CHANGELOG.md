@@ -1,4 +1,4 @@
-## Unreleased
+## [1.1.2] - 2016-08-24
 
 - Issue [#249](https://github.com/vagrant-landrush/landrush/issues/249) - Spawned DNS server holds vagrant executable's stderr, stdout open
 - PR [#243](https://github.com/vagrant-landrush/landrush/pull/243) - Vagrant would print error message "The system cannot find the path
