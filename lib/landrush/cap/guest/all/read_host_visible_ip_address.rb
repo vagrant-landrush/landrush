@@ -40,7 +40,7 @@ module Landrush
           addr      = nil
           addresses = machine.guest.capability(:landrush_ip_get)
 
-          # Short circuit this one first: if an explicit interface is defined, look for it && return it if found.
+          # Short circuit this one first: if an explicit interface is defined, look for it and return it if found.
           # Technically, we could do a single loop, but execution time is not vital here.
           # This allows us to be more accurate, especially with logging what's going on.
           unless machine.config.landrush.host_interface.nil?
