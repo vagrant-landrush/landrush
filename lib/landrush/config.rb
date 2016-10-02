@@ -7,8 +7,12 @@ module Landrush
     attr_accessor :host_ip_address
     attr_accessor :guest_redirect_dns
     attr_accessor :host_interface
+    attr_accessor :host_interface_class
     attr_accessor :host_interface_excludes
     attr_accessor :host_redirect_dns
+
+    INTERFACE_CLASSES = [:any, :ipv4, :ipv6].freeze
+    INTERFACE_CLASS_INVALID = "Invalid interface class, should be one of: #{INTERFACE_CLASSES.join(', ')}".freeze
 
     DEFAULTS = {
       :enabled                   => false,
@@ -18,6 +22,7 @@ module Landrush
       :guest_redirect_dns        => true,
       :host_interface            => nil,
       :host_interface_excludes   => [/lo[0-9]*/, /docker[0-9]+/, /tun[0-9]+/],
+      :host_interface_class      => :ipv4,
       :host_redirect_dns         => true
     }.freeze
 
@@ -30,6 +35,7 @@ module Landrush
       @guest_redirect_dns        = UNSET_VALUE
       @host_interface            = UNSET_VALUE
       @host_interface_excludes   = UNSET_VALUE
+      @host_interface_class      = UNSET_VALUE
       @host_redirect_dns         = UNSET_VALUE
     end
 
@@ -86,7 +92,18 @@ module Landrush
 
     def validate(machine)
       errors = _detected_errors
+      errors.concat validate_host_interface_class
+
       { 'landrush' => errors }
+    end
+
+    def validate_host_interface_class
+      @host_interface_class = @host_interface_class.intern if @host_interface_class.is_a? String
+
+      return [] if INTERFACE_CLASSES.include? @host_interface_class
+
+      # TODO: Should really be using I18n; makes testing a lot cleaner too.
+      [INTERFACE_CLASS_INVALID, fields: 'host_interface_class']
     end
   end
 end
