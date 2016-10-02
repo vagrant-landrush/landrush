@@ -14,10 +14,25 @@ module Landrush
           addresses
         end
 
+        def self.filter_preferred_addresses(addresses)
+          if @machine.config.landrush.host_interface_class == :any
+            addresses = addresses.select do |addr|
+              (addr.key?('ipv4') && !addr['ipv4'].empty?) ||
+                (addr.key?('ipv6') && !addr['ipv6'].empty?)
+            end
+          else
+            key = @machine.config.landrush.host_interface_class.to_s
+
+            addresses = addresses.select do |addr|
+              (addr.key?(key) && !addr[key].empty?)
+            end
+          end
+
+          addresses
+        end
+
         def self.read_host_visible_ip_address(machine)
           @machine = machine
-
-          @machine.guest.capability(:landrush_ip_install) unless @machine.guest.capability(:landrush_ip_installed)
 
           addr      = nil
           addresses = machine.guest.capability(:landrush_ip_get)
@@ -33,15 +48,24 @@ module Landrush
 
           if addr.nil?
             addresses = filter_addresses addresses
+            raise 'No addresses found' if addresses.empty?
 
+            addresses = filter_preferred_addresses addresses
             raise 'No addresses found' if addresses.empty?
 
             addr = addresses.last
           end
 
-          ip = IPAddr.new(addr['ipv4'])
+          # Keep preferring IPv4 over IPv6.
+          key = if machine.config.landrush.host_interface_class == :any
+                  addr['ipv4'].empty? ? 'ipv6' : 'ipv4'
+                else
+                  machine.config.landrush.host_interface_class.to_s
+                end
 
-          machine.env.ui.info "[landrush] Using #{addr['name']} (#{addr['ipv4']})"
+          ip = IPAddr.new(addr[key])
+
+          machine.env.ui.info "[landrush] Using #{addr['name']} (#{addr[key]})"
 
           ip.to_s
         end

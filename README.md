@@ -95,12 +95,16 @@ when no explicit value for `config.landrush.host_interface_excludes` is specifie
 If Landrush fails to detect the correct IP address (or none at all), you can extend this exclusion
 range to exclude more interfaces.
 
+You can also make sure to only select a specific class of IP address (`:ipv4`, `:ipv6` or `:any`). Either way, empty values will not be returned, but in the case of `:any` you may get the IPv6 address for an interface that has no IPv4 address. The default is to return the first non-empty IPv4 address:
+
+    config.landrush.host_interface_class = :ipv4
+
 If you need or want to select an interface explicitly and you know its name, you can also tell
 Landrush to grab that interface's IP address explicitly:
 
     config.landrush.host_interface = 'eth0'
 
-Do note that, if you specify an interface explicitly, it will have priority over
+Do note that if you specify an interface explicitly, it will have priority over
 `config.landrush.host_interface_excludes`. In other words, if `config.landrush.host_interface_excludes`
 is set to `[/eth[0-9]*/]`, but `config.landrush.host_interface` is set to `eth0` and `eth0` exists
 as an interface, the IP address of `eth0` is returned. The interface setting takes precedence over
