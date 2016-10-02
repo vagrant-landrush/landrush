@@ -83,7 +83,7 @@ A Landrush example configuration could look like this:
 
 Every time a VM is started, its IP address is automatically detected and a DNS record is created
 that maps the hostname to its IP. The detection works by listing all configured interfaces of the
-guest using [landrush-ip](https://rubygems.org/gems/landrush-ip/versions/0.2.3), picking the last
+guest using [landrush-ip](https://rubygems.org/gems/landrush-ip/versions/0.2.5), picking the last
 valid IP found, while ignoring any excluded interfaces.
 
 Excluded interfaces are an array of regular expressions; the value shown here is the default used
