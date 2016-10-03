@@ -35,7 +35,6 @@ module Landrush
 
             expected = addresses.last['ipv4']
 
-            # call_cap(machine).must_equal expected
             call_cap(machine).must_equal expected
           end
 
@@ -78,6 +77,41 @@ module Landrush
             machine.config.landrush.host_interface_excludes = []
 
             expected = addresses.last['ipv4']
+
+            call_cap(machine).must_equal expected
+          end
+
+          # Now, let's explicitly test the IPv4/IPv6 selection support, starting with the default (IPv4)
+          it 'should return the last non-empty IPv4 address' do
+            machine.config.landrush.host_interface          = nil
+            machine.config.landrush.host_interface_excludes = [/exclude[0-9]+/, /include[0-9]+/]
+
+            expected = addresses.detect { |a| a['name'] == 'ipv6empty2' }
+            expected = expected['ipv4']
+
+            call_cap(machine).must_equal expected
+          end
+
+          # Test IPv6 selection
+          it 'should return the last non-empty IPv6 address' do
+            machine.config.landrush.host_interface          = nil
+            machine.config.landrush.host_interface_class    = :ipv6
+            machine.config.landrush.host_interface_excludes = [/exclude[0-9]+/, /include[0-9]+/]
+
+            expected = addresses.detect { |a| a['name'] == 'ipv4empty2' }
+            expected = expected['ipv6']
+
+            call_cap(machine).must_equal expected
+          end
+
+          # Test ANY selection
+          it 'should return the last non-empty address of either class' do
+            machine.config.landrush.host_interface          = nil
+            machine.config.landrush.host_interface_class    = :any
+            machine.config.landrush.host_interface_excludes = [/exclude[0-9]+/, /include[0-9]+/]
+
+            expected = addresses.detect { |a| a['name'] == 'ipv4empty2' }
+            expected = expected['ipv6']
 
             call_cap(machine).must_equal expected
           end

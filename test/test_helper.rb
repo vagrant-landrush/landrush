@@ -19,6 +19,10 @@ require 'mocha/mini_test'
 # Putting include/exclude out of order is kind of the point though ;)
 def fake_addresses
   [
+    {'name' => 'ipv6empty1', 'ipv4' => '172.28.128.10', 'ipv6' => ''},
+    {'name' => 'ipv4empty1', 'ipv4' => '', 'ipv6' => '::10'},
+    {'name' => 'ipv6empty2', 'ipv4' => '172.28.128.11', 'ipv6' => ''},
+    {'name' => 'ipv4empty2', 'ipv4' => '', 'ipv6' => '::11'},
     {'name' => 'exclude1', 'ipv4' => '172.28.128.1', 'ipv6' => '::1'},
     {'name' => 'include1', 'ipv4' => '172.28.128.2', 'ipv6' => '::2'},
     {'name' => 'include2', 'ipv4' => '172.28.128.3', 'ipv6' => '::3'},
