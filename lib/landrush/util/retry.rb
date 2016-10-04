@@ -1,8 +1,8 @@
 module Landrush
   module Util
     class Retry
-      def self.retry(opts=nil)
-        opts = {tries: 1}.merge(opts || {})
+      def self.retry(opts = nil)
+        opts = { tries: 1 }.merge(opts || {})
         n = 0
         while n < opts[:tries]
           return true if yield

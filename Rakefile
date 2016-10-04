@@ -12,7 +12,7 @@ CLEAN.include('build')
 task :init do
   FileUtils.mkdir_p 'build'
 end
-task :features => :init
+task features: :init
 
 # Default test task
 desc 'Run all unit tests'
@@ -23,7 +23,7 @@ end
 
 # Cucumber acceptance test task
 Cucumber::Rake::Task.new(:features)
-task :features => :init
+task features: :init
 
 task default: [
   :rubocop,

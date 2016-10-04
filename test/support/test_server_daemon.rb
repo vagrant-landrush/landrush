@@ -16,7 +16,7 @@ module SilenceOutput
   def self.included(base)
     orig_stop_method = base.method(:stop)
     base.define_singleton_method :stop do
-      SilenceOutput.silence {orig_stop_method.call}
+      SilenceOutput.silence { orig_stop_method.call }
     end
   end
 end
@@ -31,9 +31,7 @@ module TestServerHooks
   def teardown
     super
     # Cleanup any stray server instances from tests
-    if Landrush::Server.running?
-      Landrush::Server.stop
-    end
+    Landrush::Server.stop if Landrush::Server.running?
     Landrush::Store.reset
   end
 end

@@ -11,7 +11,7 @@ module Landrush
         env[:machine].config.landrush.host_redirect_dns = false
       end
 
-      it "calls the next app in the chain" do
+      it 'calls the next app in the chain' do
         app = -> (e) { e[:called] = true }
         setup = Setup.new(app, env)
 
@@ -20,12 +20,12 @@ module Landrush
         env[:called].must_equal true
       end
 
-      it "records the booting host as a dependent VM" do
+      it 'records the booting host as a dependent VM' do
         setup = Setup.new(app, env)
 
         setup.call(env)
 
-        DependentVMs.list.must_equal %w[somehost.vagrant.test]
+        DependentVMs.list.must_equal %w(somehost.vagrant.test)
       end
 
       it "starts the landrush server if it's not already started" do
@@ -48,7 +48,7 @@ module Landrush
         Server.pid.must_equal original_pid
       end
 
-      it "does nothing if it is not enabled via config" do
+      it 'does nothing if it is not enabled via config' do
         setup = Setup.new(app, env)
 
         env[:machine].config.landrush.disable
@@ -57,7 +57,7 @@ module Landrush
         DependentVMs.list.must_equal []
       end
 
-      it "for multiple private network IPs host visible IP cant be retrieved if host_ip_address is set" do
+      it 'for multiple private network IPs host visible IP cant be retrieved if host_ip_address is set' do
         setup = Setup.new(app, env)
 
         env[:machine].config.vm.network :private_network, ip: '42.42.42.41'
@@ -67,7 +67,7 @@ module Landrush
         Store.hosts.get('somehost.vagrant.test').must_equal '42.42.42.42'
       end
 
-      it "is possible to add cnames via the config.landrush.host configuration option" do
+      it 'is possible to add cnames via the config.landrush.host configuration option' do
         setup = Setup.new(app, env)
 
         env[:machine].config.landrush.host 'foo', 'bar'
@@ -85,7 +85,7 @@ module Landrush
           Store.hosts.get('somehost.vagrant.test').must_equal '1.2.3.4'
         end
 
-        it "does nothing if it is not enabled via config" do
+        it 'does nothing if it is not enabled via config' do
           env = fake_environment(enabled: false)
           setup = Setup.new(app, env)
           setup.call(env)

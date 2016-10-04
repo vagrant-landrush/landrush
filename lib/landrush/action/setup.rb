@@ -64,15 +64,13 @@ module Landrush
       def setup_static_dns
         config.hosts.each do |hostname, dns_value|
           dns_value ||= host_ip_address
-          unless Store.hosts.has?(hostname, dns_value)
-            info "adding static DNS entry: #{hostname} => #{dns_value}"
-            Store.hosts.set hostname, dns_value
-            if ip_address?(dns_value)
-              reverse_dns = IPAddr.new(dns_value).reverse
-              info "adding static reverse DNS entry: #{reverse_dns} => #{dns_value}"
-              Store.hosts.set(reverse_dns, hostname)
-            end
-          end
+          next if Store.hosts.has?(hostname, dns_value)
+          info "adding static DNS entry: #{hostname} => #{dns_value}"
+          Store.hosts.set hostname, dns_value
+          next unless ip_address?(dns_value)
+          reverse_dns = IPAddr.new(dns_value).reverse
+          info "adding static reverse DNS entry: #{reverse_dns} => #{dns_value}"
+          Store.hosts.set(reverse_dns, hostname)
         end
       end
 

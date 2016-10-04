@@ -4,13 +4,17 @@ require 'resolv'
 module Landrush
   describe Server do
     def query(host)
-      Resolv::DNS.open(:nameserver_port => [["127.0.0.1", Server.port]]) do |r|
+      Resolv::DNS.open(nameserver_port: [['127.0.0.1', Server.port]]) do |r|
         r.getaddress(host).to_s
       end
     end
 
     def wait_for_port
-      sleep 1 until (TCPSocket.open('127.0.0.1', Server.port) rescue nil)
+      sleep 1 until begin
+                       TCPSocket.open('127.0.0.1', Server.port)
+                     rescue
+                       nil
+                     end
     end
 
     describe 'start/stop' do
@@ -32,7 +36,7 @@ module Landrush
 
         wait_for_port
 
-        query("phinze.com").must_match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/)
+        query('phinze.com').must_match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/)
       end
 
       it 'responds properly to configured machine entries' do

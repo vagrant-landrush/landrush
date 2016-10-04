@@ -41,7 +41,7 @@ module Landrush
           raise "The landrush plugin does not support the #{key} provider yet!"
         end
 
-        if provider_name == :parallels && Gem::Version.new(VagrantPlugins::Parallels::VERSION) < Gem::Version.new("1.0.3")
+        if provider_name == :parallels && Gem::Version.new(VagrantPlugins::Parallels::VERSION) < Gem::Version.new('1.0.3')
           raise "The landrush plugin supports the Parallels provider v1.0.3 and later. Please, update your 'vagrant-parallels' plugin."
         end
 
@@ -67,9 +67,7 @@ module Landrush
       end
 
       def read_machine_hostname
-        if machine.config.vm.hostname
-          return machine.config.vm.hostname
-        end
+        return machine.config.vm.hostname if machine.config.vm.hostname
 
         "#{Pathname.pwd.basename}.#{config.tld}"
       end

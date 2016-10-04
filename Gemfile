@@ -1,8 +1,5 @@
 source 'https://rubygems.org'
 
-# Can't use `gemspec` to pull in dependencies, because the landrush gem needs
-# to be in the :plugins group for Vagrant to detect and load it in development
-
 # Vagrant's special group
 group :plugins do
   gemspec
@@ -10,9 +7,8 @@ end
 
 group :development do
   gem 'vagrant',
-      :git => 'https://github.com/mitchellh/vagrant.git',
-      :ref => 'v1.8.4'
-
+      git: 'https://github.com/mitchellh/vagrant.git',
+      ref: 'v1.8.4'
   gem 'rake', '~> 10'
   gem 'rubocop', '~> 0.38.0'
   gem 'byebug'

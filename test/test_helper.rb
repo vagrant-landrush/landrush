@@ -1,4 +1,4 @@
-$:.push(File.expand_path('../../lib', __FILE__))
+$LOAD_PATH.push(File.expand_path('../../lib', __FILE__))
 
 require 'bundler/setup'
 require 'minitest/spec'
@@ -19,23 +19,23 @@ require 'mocha/mini_test'
 # Putting include/exclude out of order is kind of the point though ;)
 def fake_addresses
   [
-    {'name' => 'ipv6empty1', 'ipv4' => '172.28.128.10', 'ipv6' => ''},
-    {'name' => 'ipv4empty1', 'ipv4' => '', 'ipv6' => '::10'},
-    {'name' => 'ipv6empty2', 'ipv4' => '172.28.128.11', 'ipv6' => ''},
-    {'name' => 'ipv4empty2', 'ipv4' => '', 'ipv6' => '::11'},
-    {'name' => 'exclude1', 'ipv4' => '172.28.128.1', 'ipv6' => '::1'},
-    {'name' => 'include1', 'ipv4' => '172.28.128.2', 'ipv6' => '::2'},
-    {'name' => 'include2', 'ipv4' => '172.28.128.3', 'ipv6' => '::3'},
-    {'name' => 'include3', 'ipv4' => '172.28.128.4', 'ipv6' => '::4'},
-    {'name' => 'exclude2', 'ipv4' => '172.28.128.5', 'ipv6' => '::5'},
-    {'name' => 'exclude3', 'ipv4' => '172.28.128.6', 'ipv6' => '::6'}
+    { 'name' => 'ipv6empty1', 'ipv4' => '172.28.128.10', 'ipv6' => '' },
+    { 'name' => 'ipv4empty1', 'ipv4' => '',              'ipv6' => '::10' },
+    { 'name' => 'ipv6empty2', 'ipv4' => '172.28.128.11', 'ipv6' => '' },
+    { 'name' => 'ipv4empty2', 'ipv4' => '',              'ipv6' => '::11' },
+    { 'name' => 'exclude1',   'ipv4' => '172.28.128.1',  'ipv6' => '::1' },
+    { 'name' => 'include1',   'ipv4' => '172.28.128.2',  'ipv6' => '::2' },
+    { 'name' => 'include2',   'ipv4' => '172.28.128.3',  'ipv6' => '::3' },
+    { 'name' => 'include3',   'ipv4' => '172.28.128.4',  'ipv6' => '::4' },
+    { 'name' => 'exclude2',   'ipv4' => '172.28.128.5',  'ipv6' => '::5' },
+    { 'name' => 'exclude3',   'ipv4' => '172.28.128.6',  'ipv6' => '::6' }
   ]
 end
 
-def fake_environment(options = {enabled: true})
+def fake_environment(options = { enabled: true })
   # For the home_path we want the base Vagrant directory
   vagrant_test_home = Pathname(Landrush::Server.working_dir).parent.parent
-  {machine: fake_machine(options), ui: FakeUI.new, home_path: vagrant_test_home}
+  { machine: fake_machine(options), ui: FakeUI.new, home_path: vagrant_test_home }
 end
 
 class FakeUI
@@ -115,7 +115,7 @@ module Landrush
   end
 end
 
-def fake_machine(options={})
+def fake_machine(options = {})
   env = options.fetch(:env, Vagrant::Environment.new)
   machine = Vagrant::Machine.new(
     'fake_machine',
@@ -130,7 +130,7 @@ def fake_machine(options={})
     env.vagrantfile
   )
 
-  machine.instance_variable_set("@communicator", RecordingCommunicator.new)
+  machine.instance_variable_set('@communicator', RecordingCommunicator.new)
 
   machine.config.landrush.enabled = options.fetch(:enabled, false)
   machine.config.landrush.host_interface = nil
@@ -149,7 +149,7 @@ end
 
 module MiniTest
   class Spec
-    alias_method :hush, :capture_io
+    alias hush capture_io
   end
 end
 

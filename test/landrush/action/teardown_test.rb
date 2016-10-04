@@ -5,7 +5,7 @@ require 'landrush/action/teardown'
 module Landrush
   module Action
     describe Teardown do
-      it "calls the next app in the chain" do
+      it 'calls the next app in the chain' do
         env = fake_environment
         app = -> (e) { e[:called] = true }
         teardown = Teardown.new(app, env)
@@ -26,7 +26,7 @@ module Landrush
         Store.hosts.get('somehost.vagrant.test').must_equal nil
       end
 
-      it "removes the machine as a dependent VM" do
+      it 'removes the machine as a dependent VM' do
         app = proc {}
         env = fake_environment
         teardown = Teardown.new(app, env)
@@ -37,7 +37,7 @@ module Landrush
         DependentVMs.list.must_equal []
       end
 
-      it "stops the landrush server when there are no dependent machines left" do
+      it 'stops the landrush server when there are no dependent machines left' do
         app = proc {}
         env = fake_environment
         teardown = Teardown.new(app, env)
@@ -48,7 +48,7 @@ module Landrush
         Server.running?.must_equal false
       end
 
-      it "leaves the landrush server when other dependent vms exist" do
+      it 'leaves the landrush server when other dependent vms exist' do
         app = proc {}
         env = fake_environment
         teardown = Teardown.new(app, env)
@@ -61,7 +61,7 @@ module Landrush
         Server.running?.must_equal true
       end
 
-      it "leaves static entries when other dependent vms exist" do
+      it 'leaves static entries when other dependent vms exist' do
         app = proc {}
         env = fake_environment
         teardown = Teardown.new(app, env)
@@ -85,7 +85,7 @@ module Landrush
         Server.running?.must_equal false
       end
 
-      it "does nothing when landrush is disabled" do
+      it 'does nothing when landrush is disabled' do
         # somewhat unrealistic since this entry shouldn't be there if it was
         # disabled in the first place, but oh well
         Store.hosts.set('somehost.vagrant.test', '1.2.3.4')

@@ -43,7 +43,11 @@ module Landrush
     end
 
     def find(search)
-      search = IPAddr.new(search).reverse if (IPAddr.new(search) rescue nil)
+      search = IPAddr.new(search).reverse if begin
+                                                IPAddr.new(search)
+                                              rescue
+                                                nil
+                                              end
       current_config.keys.detect do |key|
         key.casecmp(search) == 0   ||
           search =~ /#{key}$/i     ||
@@ -74,7 +78,7 @@ module Landrush
     end
 
     def write(config)
-      File.open(backing_file, "w") do |f|
+      File.open(backing_file, 'w') do |f|
         f.write(JSON.pretty_generate(config))
       end
     end

@@ -15,15 +15,15 @@ module Landrush
     INTERFACE_CLASS_INVALID = "Invalid interface class, should be one of: #{INTERFACE_CLASSES.join(', ')}".freeze
 
     DEFAULTS = {
-      :enabled                   => false,
-      :tld                       => 'vagrant.test',
-      :upstream_servers          => [[:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53]],
-      :host_ip_address           => nil,
-      :guest_redirect_dns        => true,
-      :host_interface            => nil,
-      :host_interface_excludes   => [/lo[0-9]*/, /docker[0-9]+/, /tun[0-9]+/],
-      :host_interface_class      => :ipv4,
-      :host_redirect_dns         => true
+      enabled:                 false,
+      tld:                     'vagrant.test',
+      upstream_servers:        [[:udp, '8.8.8.8', 53], [:tcp, '8.8.8.8', 53]],
+      host_ip_address:         nil,
+      guest_redirect_dns:      true,
+      host_interface:          nil,
+      host_interface_excludes: [/lo[0-9]*/, /docker[0-9]+/, /tun[0-9]+/],
+      host_interface_class:    :ipv4,
+      host_redirect_dns:       true
     }.freeze
 
     def initialize
@@ -59,14 +59,12 @@ module Landrush
       @host_redirect_dns
     end
 
-    def host(hostname, ip_address=nil)
+    def host(hostname, ip_address = nil)
       @hosts[hostname] = ip_address
     end
 
-    def upstream(ip, port=53, protocol=nil)
-      if @upstream_servers == UNSET_VALUE
-        @upstream_servers = []
-      end
+    def upstream(ip, port = 53, protocol = nil)
+      @upstream_servers = [] if @upstream_servers == UNSET_VALUE
 
       if !protocol
         @upstream_servers.push [:udp, ip, port]
@@ -90,7 +88,7 @@ module Landrush
       end
     end
 
-    def validate(machine)
+    def validate(_machine)
       errors = _detected_errors
       errors.concat validate_host_interface_class
 

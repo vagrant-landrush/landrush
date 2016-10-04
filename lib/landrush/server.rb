@@ -49,7 +49,7 @@ module Landrush
 
     def self.upstream_servers
       # Doing collect to cast protocol to symbol because JSON store doesn't know about symbols
-      @upstream_servers ||= Store.config.get('upstream').collect {|i| [i[0].to_sym, i[1], i[2]]}
+      @upstream_servers ||= Store.config.get('upstream').collect { |i| [i[0].to_sym, i[1], i[2]] }
     end
 
     def self.interfaces
@@ -85,11 +85,11 @@ module Landrush
         # Today we don't pass any filehandles, so it isn't a problem.
         # Future self, make sure this doesn't become a problem.
 
-        info = Process.create(:command_line => "ruby #{__FILE__} #{port} #{working_dir}",
-                              :creation_flags => Process::DETACHED_PROCESS,
-                              :process_inherit => false,
-                              :thread_inherit => true,
-                              :cwd => working_dir.to_path)
+        info = Process.create(command_line:    "ruby #{__FILE__} #{port} #{working_dir}",
+                              creation_flags:  Process::DETACHED_PROCESS,
+                              process_inherit: false,
+                              thread_inherit:  true,
+                              cwd:             working_dir.to_path)
         pid = info.process_id
       else
         # Fix https://github.com/vagrant-landrush/landrush/issues/249)
@@ -97,9 +97,12 @@ module Landrush
         # and by explicitly closing STDIN, STDOUT, and STDERR
 
         pid = spawn('ruby', __FILE__, port.to_s, working_dir.to_s,
-                    :in => :close, :out => :close, :err => :close,
-                    :close_others => true, :chdir => working_dir.to_path,
-                    :pgroup => true)
+                    in:           :close,
+                    out:          :close,
+                    err:          :close,
+                    close_others: true,
+                    chdir:        working_dir.to_path,
+                    pgroup:       true)
         Process.detach pid
       end
 
@@ -141,7 +144,9 @@ module Landrush
     end
 
     def self.pid
-      IO.read(pid_file).to_i rescue nil
+      IO.read(pid_file).to_i
+    rescue
+      nil
     end
 
     def self.running?
@@ -155,20 +160,24 @@ module Landrush
           raise e unless e.class.name.start_with?('Errno::ENXIO')
         end
       else
-        !!Process.kill(0, pid) rescue false
+        begin
+          !!Process.kill(0, pid)
+        rescue
+          false
+        end
       end
     end
 
     def self.status
       case process_status
-        when :running
-          puts "Daemon status: running pid=#{read_pid}"
-        when :stopped
-          puts 'Daemon status: stopped'
-        else
-          puts 'Daemon status: unknown'
-          puts "#{pid_file} exists, but process is not running"
-          puts "Check log file: #{log_file_path}"
+      when :running
+        puts "Daemon status: running pid=#{read_pid}"
+      when :stopped
+        puts 'Daemon status: stopped'
+      else
+        puts 'Daemon status: unknown'
+        puts "#{pid_file} exists, but process is not running"
+        puts "Check log file: #{log_file_path}"
       end
     end
 
@@ -184,7 +193,7 @@ module Landrush
       @logger.level = Logger::INFO
 
       # Start the DNS server
-      run_dns_server(:listen => interfaces, :logger => @logger) do
+      run_dns_server(listen: interfaces, logger: @logger) do
         match(/.*/, IN::A) do |transaction|
           host = Store.hosts.find(transaction.name)
           if host
@@ -215,7 +224,7 @@ module Landrush
       server = RubyDNS::RuleBasedServer.new(options, &block)
 
       EventMachine.run do
-        trap("INT") do
+        trap('INT') do
           EventMachine.stop
         end
 
@@ -227,13 +236,15 @@ module Landrush
 
     def self.check_a_record(host, transaction)
       value = Store.hosts.get(host)
-      if value.nil?
-        return
-      end
+      return if value.nil?
 
-      if (IPAddr.new(value) rescue nil)
+      if begin
+            IPAddr.new(value)
+          rescue
+            nil
+          end
         name = transaction.name =~ /#{host}/ ? transaction.name : host
-        transaction.respond!(value, :ttl => 0, :name => name)
+        transaction.respond!(value, ttl: 0, name: name)
       else
         transaction.respond!(Name.create(value), resource_class: IN::CNAME, ttl: 0)
         check_a_record(value, transaction)
@@ -243,17 +254,17 @@ module Landrush
     # private methods
     def self.write_pid(pid)
       ensure_path_exits(pid_file)
-      File.open(pid_file, 'w') {|f| f << pid.to_s}
+      File.open(pid_file, 'w') { |f| f << pid.to_s }
     end
 
     def self.read_pid
-      IO.read(pid_file).to_i rescue nil
+      IO.read(pid_file).to_i
+    rescue
+      nil
     end
 
     def self.delete_pid_file
-      if File.exist? pid_file
-        FileUtils.rm(pid_file)
-      end
+      FileUtils.rm(pid_file) if File.exist? pid_file
     end
 
     def self.pid_file
@@ -261,18 +272,13 @@ module Landrush
     end
 
     def self.process_status
-      if File.exist? pid_file
-        return running? ? :running : :unknown
-      else
-        return :stopped
-      end
+      return running? ? :running : :unknown if File.exist? pid_file
+      :stopped
     end
 
     def self.ensure_path_exits(file_name)
       dirname = File.dirname(file_name)
-      unless File.directory?(dirname)
-        FileUtils.mkdir_p(dirname)
-      end
+      FileUtils.mkdir_p(dirname) unless File.directory?(dirname)
     end
 
     def self.terminate_process(pid)
@@ -298,11 +304,11 @@ module Landrush
       vagrant_binary = File.realpath(vagrant_binary) if File.symlink?(vagrant_binary)
       # in a Vagrant installation the Ruby executable is in ../embedded/bin relative to the vagrant executable
       # we don't use File.join here, since even on Cygwin we want a Windows path - see https://github.com/vagrant-landrush/landrush/issues/237
-      if Vagrant::Util::Platform.windows?
-        separator = '\\'
-      else
-        separator = '/'
-      end
+      separator = if Vagrant::Util::Platform.windows?
+                    '\\'
+                  else
+                    '/'
+                  end
       embedded_bin_dir = File.dirname(File.dirname(vagrant_binary)) + separator + 'embedded' + separator + 'bin'
       ENV['PATH'] = embedded_bin_dir + File::PATH_SEPARATOR + ENV['PATH'] if File.exist?(embedded_bin_dir)
     end
@@ -314,7 +320,7 @@ end
 
 # Only run the following code when this file is the main file being run
 # instead of having been required or loaded by another file
-if __FILE__ == $0
+if __FILE__ == $PROGRAM_NAME
   # TODO, Add some argument checks
   Landrush::Server.run(ARGV[0], ARGV[1])
 end

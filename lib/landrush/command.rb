@@ -3,7 +3,7 @@ module Landrush
     DAEMON_COMMANDS = %w(start stop restart status).freeze
 
     def self.synopsis
-      "manages DNS for both guest and host"
+      'manages DNS for both guest and host'
     end
 
     def execute
@@ -18,7 +18,7 @@ module Landrush
         if DependentVMs.any?
           @env.ui.info(DependentVMs.list.map { |dvm| " - #{dvm}" }.join("\n"))
         else
-          @env.ui.info("No dependent VMs")
+          @env.ui.info('No dependent VMs')
         end
       elsif command == 'ls' || command == 'list'
         Landrush::Store.hosts.each do |key, value|
@@ -40,7 +40,7 @@ module Landrush
     end
 
     def boom(msg)
-      raise Vagrant::Errors::CLIInvalidOptions, :help => usage(msg)
+      raise Vagrant::Errors::CLIInvalidOptions, help: usage(msg)
     end
 
     def usage(msg); <<-EOS.gsub(/^      /, '')
