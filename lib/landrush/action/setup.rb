@@ -29,15 +29,15 @@ module Landrush
       private
 
       def pre_boot_setup
-        record_dependent_vm
         add_prerequisite_network_interface
-        configure_server
-        start_server
       end
 
       def post_boot_setup
+        record_dependent_vm
+        configure_server
         record_machine_dns_entry
         setup_static_dns
+        start_server
         return unless machine.config.landrush.host_redirect_dns?
         env[:host].capability(:configure_visibility_on_host, host_ip_address, config.tld)
       end

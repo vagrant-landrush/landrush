@@ -17,3 +17,24 @@ Then(/^the hostname "([^"]+)" should resolve to "([^"]+)" on the guest/) do |hos
   run("vagrant ssh -c \"dig +short '#{host}' A\"")
   expect(last_command_started).to have_output(/^#{ip}$/)
 end
+
+Then(/^the host visible IP address of the guest is the IP of interface "([^"]+)"/) do |interface|
+  cmd = "vagrant ssh -c \"ip addr list #{interface} | grep 'inet ' | cut -d' ' -f6| cut -d/ -f1\""
+  run(cmd)
+  expect(last_command_started).to have_output(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/)
+
+  ip = last_command_started.output.split("\n").last
+
+  run('vagrant landrush list')
+
+  expect(last_command_started).to have_output(/#{ip}$/)
+end
+
+Then(/^Landrush is( not)? running$/) do |negated|
+  run('vagrant landrush status')
+  if negated
+    expect(last_command_started).to have_output(/Daemon status: stopped/)
+  else
+    expect(last_command_started).to have_output(/Daemon status: running pid=[0-9]+/)
+  end
+end

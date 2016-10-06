@@ -16,9 +16,9 @@ Feature: dns_resolution
     end
     """
     When I successfully run `bundle exec vagrant up --provider <provider>`
-    Then the hostname "my-host.landrush-acceptance-test" should resolve to "10.10.10.123" on the internal DNS server
-    And the hostname "my-host.landrush-acceptance-test" should resolve to "10.10.10.123" on the host
+    Then the hostname "my-host.landrush-acceptance-test" should resolve to "10.10.10.123" on the host
     And the hostname "my-host.landrush-acceptance-test" should resolve to "10.10.10.123" on the guest
+    And the hostname "my-host.landrush-acceptance-test" should resolve to "10.10.10.123" on the internal DNS server
 
     When I successfully run `bundle exec vagrant landrush set my-static-host.landrush-acceptance-test 42.42.42.42`
     Then the hostname "my-static-host.landrush-acceptance-test" should resolve to "42.42.42.42" on the internal DNS server
