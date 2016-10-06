@@ -8,10 +8,8 @@ module Landrush
         # Seems Vagrant only makes home_path available in this case, compared to custom commands where there is also data_dir
         Server.working_dir = File.join(env[:home_path], 'data', 'landrush')
 
-        handle_action_stack(env) do
-          pre_boot_setup if enabled?
-        end
-
+        pre_boot_setup if enabled?
+        app.call(env)
         # This is after the middleware stack returns, which, since we're right
         # before the Network action, should mean that all interfaces are good
         # to go.

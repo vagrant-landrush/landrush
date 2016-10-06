@@ -4,9 +4,8 @@ module Landrush
       include Common
 
       def call(env)
-        handle_action_stack(env) do
-          install_prerequisites if enabled?
-        end
+        install_prerequisites if enabled?
+        app.call(env)
       end
 
       def install_prerequisites

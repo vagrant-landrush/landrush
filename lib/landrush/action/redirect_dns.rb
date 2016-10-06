@@ -4,7 +4,7 @@ module Landrush
       include Common
 
       def call(env)
-        handle_action_stack(env) {}
+        app.call(env)
 
         # This is after the middleware stack returns, which, since we're right
         # before the Network action, should mean that all interfaces are good

@@ -1,5 +1,6 @@
 module Landrush
   module Action
+    # A module containing shared functionality for Vagrant middleware classes
     module Common
       SUPPORTED_PROVIDERS = {
         'VagrantPlugins::ProviderVirtualBox::Provider' => :virtualbox,
@@ -16,14 +17,7 @@ module Landrush
 
       def initialize(app, env)
         @app = app
-      end
-
-      def handle_action_stack(env)
         @env = env
-
-        yield
-
-        app.call(env)
       end
 
       def virtualbox?

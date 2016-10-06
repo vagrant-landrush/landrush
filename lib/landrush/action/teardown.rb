@@ -8,9 +8,8 @@ module Landrush
         # Seems Vagrant only makes home_path available in this case, compared to custom commands where there is also data_dir
         Server.working_dir = File.join(env[:home_path], 'data', 'landrush')
 
-        handle_action_stack(env) do
-          teardown if enabled?
-        end
+        teardown if enabled?
+        app.call(env)
       end
 
       def teardown
