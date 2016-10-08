@@ -11,6 +11,7 @@ require 'landrush/cap/host/darwin/configure_visibility_on_host'
 require 'landrush/cap/host/windows/configure_visibility_on_host'
 require 'landrush/cap/host/linux/configure_visibility_on_host'
 require 'landrush/util/retry'
+require 'landrush/util/dnsmasq'
 
 require 'minitest/autorun'
 require 'mocha/minitest'
