@@ -1,3 +1,5 @@
+require_relative '../../../util/dnsmasq'
+
 module Landrush
   module Cap
     module Redhat
@@ -13,8 +15,12 @@ module Landrush
           def restart_dnsmasq(_env)
             # TODO: At some stage we might want to make create_dnsmasq_config host specific and add the resolv.conf
             # changes there which seems more natural
-            system(SED_COMMAND) unless system("cat /etc/resolv.conf | grep 'nameserver 127.0.0.1' > /dev/null 2>&1")
-            system('sudo systemctl restart dnsmasq')
+            if Landrush::Util::Dnsmasq.nm_managed?
+              system('sudo systemctl reload NetworkManager')
+            else
+              system(SED_COMMAND) unless system("cat /etc/resolv.conf | grep 'nameserver 127.0.0.1' > /dev/null 2>&1")
+              system('sudo systemctl restart dnsmasq')
+            end
           end
         end
       end

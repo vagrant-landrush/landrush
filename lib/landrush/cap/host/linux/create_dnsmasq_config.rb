@@ -1,3 +1,5 @@
+require_relative '../../../util/dnsmasq'
+
 module Landrush
   module Cap
     module Linux
@@ -21,6 +23,7 @@ module Landrush
           end
 
           def config_dir
+            @config_dir ||= Pathname('/etc/NetworkManager/dnsmasq.d') if Landrush::Util::Dnsmasq.nm_managed?
             @config_dir ||= Pathname('/etc/dnsmasq.d')
           end
 
