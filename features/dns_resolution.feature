@@ -30,6 +30,7 @@ Feature: dns_resolution
     And the hostname "my-static-cname-host.landrush-acceptance-test" should resolve to "42.42.42.42" on the host
 
     Examples:
-      | box             | provider   |
-      | debian/jessie64 | virtualbox |
-      #| ubuntu/wily64   | virtualbox |
+      | box                           | provider   |
+      | debian/jessie64               | virtualbox |
+      #| opensuse/openSUSE-42.1-x86_64 | virtualbox |
+      #| ubuntu/wily64                 | virtualbox |
