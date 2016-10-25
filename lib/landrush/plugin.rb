@@ -87,6 +87,21 @@ module Landrush
       Cap::Redhat::InstallIptables
     end
 
+    guest_capability('suse', 'add_iptables_rule') do
+      require_relative 'cap/guest/suse/add_iptables_rule'
+      Cap::Suse::AddIptablesRule
+    end
+
+    guest_capability('suse', 'iptables_installed') do
+      require_relative 'cap/guest/suse/iptables_installed'
+      Cap::Suse::IptablesInstalled
+    end
+
+    guest_capability('suse', 'install_iptables') do
+      require_relative 'cap/guest/suse/install_iptables'
+      Cap::Suse::InstallIptables
+    end
+
     guest_capability('linux', 'configured_dns_servers') do
       require_relative 'cap/guest/linux/configured_dns_servers'
       Cap::Linux::ConfiguredDnsServers
@@ -165,6 +180,21 @@ module Landrush
     host_capability('redhat', 'restart_dnsmasq') do
       require_relative 'cap/host/redhat/restart_dnsmasq'
       Cap::Redhat::RestartDnsmasq
+    end
+
+    host_capability('suse', 'dnsmasq_installed') do
+      require_relative 'cap/host/suse/dnsmasq_installed'
+      Cap::Suse::DnsmasqInstalled
+    end
+
+    host_capability('suse', 'install_dnsmasq') do
+      require_relative 'cap/host/suse/install_dnsmasq'
+      Cap::Suse::InstallDnsmasq
+    end
+
+    host_capability('suse', 'restart_dnsmasq') do
+      require_relative 'cap/host/suse/restart_dnsmasq'
+      Cap::Suse::RestartDnsmasq
     end
   end
 end
