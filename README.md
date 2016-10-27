@@ -57,7 +57,7 @@ Install under Vagrant (1.1 or later):
 
 1. You are able to get your VM's hostname resolved on your host:
 
-    $ dig -p 10053 @localhost myhost.vagrant.test
+        $ dig -p 10053 @localhost myhost.vagrant.test
 
 1. If you shut down your guest, the entries associated with it will be removed.
 
