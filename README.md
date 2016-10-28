@@ -1,4 +1,4 @@
-# Landrush: DNS for Vagrant [![Build Status](https://travis-ci.org/vagrant-landrush/landrush.png)](https://travis-ci.org/vagrant-landrush/landrush)
+# Landrush: DNS for Vagrant [![Build Status](https://travis-ci.org/vagrant-landrush/landrush.png)](https://travis-ci.org/vagrant-landrush/landrush) [![Build status](https://ci.appveyor.com/api/projects/status/3iv8sv5v73s15mt6/branch/master?svg=true)](https://ci.appveyor.com/project/hferentschik/landrush-3agrx/branch/master)
 
 Landrush is a simple cross-platform DNS for Vagrant VMs that is visible on both,
 the guest and the host.

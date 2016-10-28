@@ -1,0 +1,20 @@
+# Landrush CI configuration for AppVeyor
+---
+version: "{build}"
+branches:
+  only:
+    - master
+install:
+  - set PATH=C:\Ruby22\bin;%PATH%
+  - ruby --version
+  - gem --version
+  - gem uninstall -x bundler
+  - gem install bundler -v 1.12.5
+  - bundler --version
+  - bundle install
+build_script:
+  - bundle exec rake clean install
+test_script:
+  - bundle exec rake rubocop test TESTOPTS="-v"
+artifacts:
+  - path: pkg\*.gem
