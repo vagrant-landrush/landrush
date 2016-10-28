@@ -15,25 +15,13 @@ module Landrush
       if DAEMON_COMMANDS.include?(command)
         Server.send(command)
       elsif command == 'dependentvms' || command == 'vms'
-        if DependentVMs.any?
-          @env.ui.info(DependentVMs.list.map { |dvm| " - #{dvm}" }.join("\n"))
-        else
-          @env.ui.info('No dependent VMs')
-        end
+        dependent_vms
       elsif command == 'ls' || command == 'list'
-        Landrush::Store.hosts.each do |key, value|
-          printf "%-30s %s\n", key, value
-        end
+        store_ls
       elsif command == 'set'
-        host, ip = ARGV[1, 2]
-        Landrush::Store.hosts.set(host, ip)
+        store_set
       elsif command == 'del' || command == 'rm'
-        key = ARGV[1]
-        if key == "--all"
-          Landrush::Store.hosts.clear!
-        else
-          Landrush::Store.hosts.delete(key)
-        end
+        store_del
       elsif command == 'help'
         @env.ui.info(help)
       else
@@ -66,12 +54,43 @@ module Landrush
           list vms currently dependent on the landrush server
         set { <host> <ip> | <alias> <host> }
           adds the given host-to-ip or alias-to-hostname mapping.
-          existing host ip addresses will be overwritten
+          Existing host ip addresses will be overwritten
         rm, del { <host> | <alias> | --all }
-          delete the given hostname or alias from the server
+          delete the given hostname or alias from the server.
+          --all removes all entries
         help
           you're lookin at it!
       EOS
+    end
+
+    private
+
+    def dependent_vms
+      if DependentVMs.any?
+        @env.ui.info(DependentVMs.list.map { |dvm| " - #{dvm}" }.join("\n"))
+      else
+        @env.ui.info('No dependent VMs')
+      end
+    end
+
+    def store_del
+      key = ARGV[1]
+      if key == '--all'
+        Landrush::Store.hosts.clear!
+      else
+        Landrush::Store.hosts.delete(key)
+      end
+    end
+
+    def store_set
+      host, ip = ARGV[1, 2]
+      Landrush::Store.hosts.set(host, ip)
+    end
+
+    def store_ls
+      Landrush::Store.hosts.each do |key, value|
+        printf "%-30s %s\n", key, value
+      end
     end
   end
 end

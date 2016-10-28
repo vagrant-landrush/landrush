@@ -38,3 +38,11 @@ Then(/^Landrush is( not)? running$/) do |negated|
     expect(last_command_started).to have_output(/Daemon status: running pid=[0-9]+/)
   end
 end
+
+Then(%r{^stdout from "([^"]*)" should( not)? match /(.*)/$}) do |cmd, negated, regexp|
+  if negated
+    aruba.command_monitor.find(Aruba.platform.detect_ruby(cmd)).send(:stdout) !~ /#{regexp}/
+  else
+    aruba.command_monitor.find(Aruba.platform.detect_ruby(cmd)).send(:stdout) =~ /#{regexp}/
+  end
+end

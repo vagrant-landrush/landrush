@@ -300,7 +300,25 @@ Please refer to [/doc/proxy-mobile](/doc/proxy-mobile) for instructions.
 <a name="additional-cli-commands"></a>
 ### Additional CLI commands
 
-Check out `vagrant landrush` for additional commands to monitor the DNS server daemon.
+Check out `vagrant landrush help` for additional commands.
+
+    vagrant landrush <command>
+    
+    commands:
+      {start|stop|restart|status}
+        control the landrush server daemon
+      list, ls
+        list all DNS entries known to landrush
+      dependentvms, vms
+        list vms currently dependent on the landrush server
+      set { <host> <ip> | <alias> <host> }
+        adds the given host-to-ip or alias-to-hostname mapping.
+        Existing host ip addresses will be overwritten
+      rm, del { <host> | <alias> | --all }
+        delete the given hostname or alias from the server.
+         --all removes all entries
+      help
+        you're lookin at it!
 
 
 <a name="miscellaneous-tricks-and-tips"></a>

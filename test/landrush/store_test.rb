@@ -77,5 +77,20 @@ module Landrush
         @store.find('someh').must_equal nil
       end
     end
+
+    describe 'clear' do
+      it 'clears all keys from the store' do
+        @store.set('foo', 'bar')
+        @store.set('foo', 'qux')
+
+        @store.clear!
+
+        count = 0
+        @store.each do
+          count += 1
+        end
+        count.must_equal 0
+      end
+    end
   end
 end
