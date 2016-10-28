@@ -29,7 +29,11 @@ module Landrush
         Landrush::Store.hosts.set(host, ip)
       elsif command == 'del' || command == 'rm'
         key = ARGV[1]
-        Landrush::Store.hosts.delete(key)
+        if key == "--all"
+          Landrush::Store.hosts.clear!
+        else
+          Landrush::Store.hosts.delete(key)
+        end
       elsif command == 'help'
         @env.ui.info(help)
       else
@@ -63,7 +67,7 @@ module Landrush
         set { <host> <ip> | <alias> <host> }
           adds the given host-to-ip or alias-to-hostname mapping.
           existing host ip addresses will be overwritten
-        rm, del { <host> | <alias> }
+        rm, del { <host> | <alias> | --all }
           delete the given hostname or alias from the server
         help
           you're lookin at it!
