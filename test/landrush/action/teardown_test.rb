@@ -55,6 +55,8 @@ module Landrush
 
         DependentVMs.add('otherhost.vagrant.test')
 
+        Server.working_dir = File.join(env[:home_path], 'data', 'landrush')
+        Server.gems_dir = env[:gems_path].to_s + '/gems'
         Server.start
         teardown.call(env)
 

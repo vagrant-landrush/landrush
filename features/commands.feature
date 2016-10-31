@@ -27,6 +27,9 @@ Feature: Landrush reload
     When I successfully run `bundle exec vagrant reload`
     Then Landrush is running
 
+    When I successfully run `bundle exec vagrant landrush stop`
+    Then Landrush is not running
+
     Examples:
       | box             | provider   |
       | debian/jessie64 | virtualbox |

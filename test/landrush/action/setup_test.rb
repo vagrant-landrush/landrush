@@ -7,13 +7,14 @@ module Landrush
     describe Setup do
       let(:env) { fake_environment }
       let(:app) { proc {} }
+
       before do
         env[:machine].config.landrush.host_redirect_dns = false
       end
 
       it 'calls the next app in the chain' do
         app = -> (e) { e[:called] = true }
-        setup = Setup.new(app, env)
+        setup = Landrush::Action::Setup.new(app, env)
 
         setup.call(env)
 
@@ -21,7 +22,7 @@ module Landrush
       end
 
       it 'records the booting host as a dependent VM' do
-        setup = Setup.new(app, env)
+        setup = Landrush::Action::Setup.new(app, env)
 
         setup.call(env)
 
@@ -29,7 +30,7 @@ module Landrush
       end
 
       it "starts the landrush server if it's not already started" do
-        setup = Setup.new(app, env)
+        setup = Landrush::Action::Setup.new(app, env)
 
         setup.call(env)
 
@@ -37,8 +38,10 @@ module Landrush
       end
 
       it "does not attempt to start the server if it's already up" do
-        setup = Setup.new(app, env)
+        setup = Landrush::Action::Setup.new(app, env)
 
+        Server.working_dir = File.join(env[:home_path], 'data', 'landrush')
+        Server.gems_dir = env[:gems_path].to_s + '/gems'
         Server.start
         original_pid = Server.pid
 
@@ -49,7 +52,7 @@ module Landrush
       end
 
       it 'does nothing if it is not enabled via config' do
-        setup = Setup.new(app, env)
+        setup = Landrush::Action::Setup.new(app, env)
 
         env[:machine].config.landrush.disable
         setup.call(env)
@@ -58,7 +61,7 @@ module Landrush
       end
 
       it 'for multiple private network IPs host visible IP cant be retrieved if host_ip_address is set' do
-        setup = Setup.new(app, env)
+        setup = Landrush::Action::Setup.new(app, env)
 
         env[:machine].config.vm.network :private_network, ip: '42.42.42.41'
         env[:machine].config.vm.network :private_network, ip: '42.42.42.42'
@@ -68,7 +71,7 @@ module Landrush
       end
 
       it 'is possible to add cnames via the config.landrush.host configuration option' do
-        setup = Setup.new(app, env)
+        setup = Landrush::Action::Setup.new(app, env)
 
         env[:machine].config.landrush.host 'foo', 'bar'
         setup.call(env)
@@ -78,7 +81,7 @@ module Landrush
 
       describe 'after boot' do
         it "stores the machine's hostname => ip address" do
-          setup = Setup.new(app, env)
+          setup = Landrush::Action::Setup.new(app, env)
 
           setup.call(env)
 
@@ -87,7 +90,7 @@ module Landrush
 
         it 'does nothing if it is not enabled via config' do
           env = fake_environment(enabled: false)
-          setup = Setup.new(app, env)
+          setup = Landrush::Action::Setup.new(app, env)
           setup.call(env)
 
           Store.hosts.get('somehost.vagrant.test').must_equal nil

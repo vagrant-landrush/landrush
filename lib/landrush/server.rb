@@ -1,29 +1,56 @@
 require 'rubydns'
 require 'ipaddr'
-require 'vagrant/util/platform'
-
+require 'win32/process' unless (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM).nil? # only require on Windows
 require_relative 'store'
+require_relative 'util/path'
+require_relative 'util/process_helper'
 
 module Landrush
   class Server
+    extend Landrush::Util::ProcessHelper
+
     Name = Resolv::DNS::Name
     IN   = Resolv::DNS::Resource::IN
 
-    def self.working_dir
-      # TODO, https://github.com/vagrant-landrush/landrush/issues/178
-      # Due to the fact that the whole server is just a bunch of static methods,
-      # there is no initalize method to ensure that the working directory is
-      # set prior to making calls to this method. Things work, since at the appropriate
-      # Vagrant plugin integrtion points (e.g. setup.rb) we set the working dir based
-      # on the enviroment passed to us.
-      if @working_dir.nil?
-        raise 'The Server\s working directory needs to be explicitly set prior to calling this method'
-      end
-      @working_dir
-    end
+    class << self
+      attr_reader :gems_dir
 
-    def self.working_dir=(working_dir)
-      @working_dir = Pathname(working_dir).tap(&:mkpath)
+      def gems_dir=(gems_dir)
+        @gems_dir = Pathname(gems_dir)
+      end
+
+      attr_reader :ui
+      attr_writer :ui
+
+      def working_dir
+        # TODO, https://github.com/vagrant-landrush/landrush/issues/178
+        # Due to the fact that the whole server is just a bunch of static methods,
+        # there is no initalize method to ensure that the working directory is
+        # set prior to making calls to this method. Things work, since at the appropriate
+        # Vagrant plugin integration points (e.g. setup.rb) we set the working dir based
+        # on the enviroment passed to us.
+        if @working_dir.nil?
+          raise 'The Server\s working directory needs to be explicitly set prior to calling this method'
+        end
+        @working_dir
+      end
+
+      def working_dir=(working_dir)
+        @working_dir = Pathname(working_dir).tap(&:mkpath)
+      end
+
+      def port
+        @port unless @port.nil?
+        if (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM).nil?
+          # Default Landrush port for non Windows OS
+          100_53
+        else
+          # On Windows we need to use the default DNS port, since there seems to be no way to configure it otherwise
+          53
+        end
+      end
+
+      attr_writer :port
     end
 
     def self.log_directory
@@ -32,19 +59,6 @@ module Landrush
 
     def self.log_file_path
       File.join(log_directory, 'landrush.log')
-    end
-
-    def self.port
-      if Vagrant::Util::Platform.windows?
-        # On Windows we need to use the default DNS port, since there seems to be no way to configure it otherwise
-        @port ||= 53
-      else
-        @port ||= 100_53
-      end
-    end
-
-    def self.port=(port)
-      @port = port
     end
 
     def self.upstream_servers
@@ -65,7 +79,14 @@ module Landrush
 
     # Used to start the Landrush DNS server as a child process using ChildProcess gem
     def self.start
-      ensure_ruby_on_path
+      # On a machine with just Vagrant installed there might be no other Ruby except the
+      # one bundled with Vagrant. Let's make sure the embedded bin directory containing
+      # the Ruby executable is added to the PATH.
+      Landrush::Util::Path.ensure_ruby_on_path
+
+      ruby_bin = Landrush::Util::Path.embedded_vagrant_ruby.nil? ? 'ruby' : Landrush::Util::Path.embedded_vagrant_ruby
+      start_server_script = Pathname(__dir__).join('start_server.rb').to_s
+      @ui.detail("[landrush] '#{ruby_bin} #{start_server_script} #{port} #{working_dir} #{gems_dir}'") unless @ui.nil?
       if Vagrant::Util::Platform.windows?
         # Need to handle Windows differently. Kernel.spawn fails to work, if
         # the shell creating the process is closed.
@@ -79,13 +100,11 @@ module Landrush
         # inherited by default, but if any filehandle is passed to
         # a spawned process then all files that are
         # set as inheritable will get inherited. In another project this
-        # created a problem (see:
-        # https://github.com/dustymabe/vagrant-sshfs/issues/41).
+        # created a problem (see: https://github.com/dustymabe/vagrant-sshfs/issues/41).
         #
         # Today we don't pass any filehandles, so it isn't a problem.
         # Future self, make sure this doesn't become a problem.
-
-        info = Process.create(command_line:    "ruby #{__FILE__} #{port} #{working_dir}",
+        info = Process.create(command_line:    "#{ruby_bin} #{start_server_script} #{port} #{working_dir} #{gems_dir}",
                               creation_flags:  Process::DETACHED_PROCESS,
                               process_inherit: false,
                               thread_inherit:  true,
@@ -95,8 +114,7 @@ module Landrush
         # Fix https://github.com/vagrant-landrush/landrush/issues/249)
         # by turning of filehandle inheritance with :close_others => true
         # and by explicitly closing STDIN, STDOUT, and STDERR
-
-        pid = spawn('ruby', __FILE__, port.to_s, working_dir.to_s,
+        pid = spawn(ruby_bin, start_server_script, port.to_s, working_dir.to_s, gems_dir.to_s,
                     in:           :close,
                     out:          :close,
                     err:          :close,
@@ -106,7 +124,9 @@ module Landrush
         Process.detach pid
       end
 
-      write_pid(pid)
+      write_pid(pid, pid_file)
+      # As of Vagrant 1.8.6 this additonal sleep is needed, otherwise the child process dies!?
+      sleep 1
     end
 
     def self.stop
@@ -118,7 +138,7 @@ module Landrush
         return
       end
 
-      pid = read_pid
+      pid = read_pid(pid_file)
 
       # Check if the daemon is already stopped...
       unless running?
@@ -135,7 +155,7 @@ module Landrush
       end
 
       # Otherwise the daemon has been stopped.
-      delete_pid_file
+      delete_pid_file(pid_file)
     end
 
     def self.restart
@@ -150,7 +170,7 @@ module Landrush
     end
 
     def self.running?
-      pid = read_pid
+      pid = read_pid(pid_file)
       return false if pid.nil?
       if Vagrant::Util::Platform.windows?
         begin
@@ -169,9 +189,9 @@ module Landrush
     end
 
     def self.status
-      case process_status
+      case process_status(pid_file)
       when :running
-        puts "Daemon status: running pid=#{read_pid}"
+        puts "Daemon status: running pid=#{read_pid(pid_file)}"
       when :stopped
         puts 'Daemon status: stopped'
       else
@@ -251,76 +271,8 @@ module Landrush
       end
     end
 
-    # private methods
-    def self.write_pid(pid)
-      ensure_path_exits(pid_file)
-      File.open(pid_file, 'w') { |f| f << pid.to_s }
-    end
-
-    def self.read_pid
-      IO.read(pid_file).to_i
-    rescue
-      nil
-    end
-
-    def self.delete_pid_file
-      FileUtils.rm(pid_file) if File.exist? pid_file
-    end
-
     def self.pid_file
       File.join(working_dir, 'run', 'landrush.pid')
     end
-
-    def self.process_status
-      return running? ? :running : :unknown if File.exist? pid_file
-      :stopped
-    end
-
-    def self.ensure_path_exits(file_name)
-      dirname = File.dirname(file_name)
-      FileUtils.mkdir_p(dirname) unless File.directory?(dirname)
-    end
-
-    def self.terminate_process(pid)
-      # Kill/Term loop - if the daemon didn't die easily, shoot
-      # it a few more times.
-      attempts = 5
-      while running? && attempts > 0
-        sig = (attempts >= 2) ? 'KILL' : 'TERM'
-
-        puts "Sending #{sig} to process #{pid}..."
-        Process.kill(sig, pid)
-
-        attempts -= 1
-        sleep 1
-      end
-    end
-
-    # On a machine with just Vagrant installed there might be no other Ruby except the
-    # one bundled with Vagrant. Let's make sure the embedded bin directory containing
-    # the Ruby executable is added to the PATH.
-    def self.ensure_ruby_on_path
-      vagrant_binary = Vagrant::Util::Which.which('vagrant')
-      vagrant_binary = File.realpath(vagrant_binary) if File.symlink?(vagrant_binary)
-      # in a Vagrant installation the Ruby executable is in ../embedded/bin relative to the vagrant executable
-      # we don't use File.join here, since even on Cygwin we want a Windows path - see https://github.com/vagrant-landrush/landrush/issues/237
-      separator = if Vagrant::Util::Platform.windows?
-                    '\\'
-                  else
-                    '/'
-                  end
-      embedded_bin_dir = File.dirname(File.dirname(vagrant_binary)) + separator + 'embedded' + separator + 'bin'
-      ENV['PATH'] = embedded_bin_dir + File::PATH_SEPARATOR + ENV['PATH'] if File.exist?(embedded_bin_dir)
-    end
-
-    private_class_method :write_pid, :read_pid, :delete_pid_file, :pid_file, :process_status, :ensure_path_exits,
-                         :terminate_process, :ensure_ruby_on_path
   end
-end
-
-# Only run the following code when this file is the main file being run
-# instead of having been required or loaded by another file
-if __FILE__ == $PROGRAM_NAME
-  # TODO, Add some argument checks
-  Landrush::Server.run(ARGV[0], ARGV[1])
 end

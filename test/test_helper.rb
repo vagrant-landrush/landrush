@@ -35,19 +35,36 @@ end
 def fake_environment(options = { enabled: true })
   # For the home_path we want the base Vagrant directory
   vagrant_test_home = Pathname(Landrush::Server.working_dir).parent.parent
-  { machine: fake_machine(options), ui: FakeUI.new, home_path: vagrant_test_home }
+  machine = fake_machine(options)
+  { machine: machine, ui: FakeUI.new, home_path: vagrant_test_home, gems_path: machine.env.gems_path }
+end
+
+# Returns the gem directory for running unit tests
+def gem_dir
+  `gem environment gemdir`.strip!
 end
 
 class FakeUI
+  attr_reader :received_detail_messages
   attr_reader :received_info_messages
+  attr_reader :received_error_messages
 
   def initialize
+    @received_detail_messages = []
     @received_info_messages = []
+    @received_error_messages = []
+  end
+
+  def detail(*args)
+    @received_detail_messages << args[0]
   end
 
   def info(*args)
-    # puts "#{args}"
     @received_info_messages << args[0]
+  end
+
+  def error(*args)
+    @received_error_messages << args[0]
   end
 end
 
@@ -116,7 +133,9 @@ module Landrush
 end
 
 def fake_machine(options = {})
+  gem_path = Pathname.new(gem_dir)
   env = options.fetch(:env, Vagrant::Environment.new)
+  env.stubs(:gems_path).returns(gem_path)
   machine = Vagrant::Machine.new(
     'fake_machine',
     'fake_provider',
@@ -126,7 +145,7 @@ def fake_machine(options = {})
     env.vagrantfile.config, # config
     Pathname('data_dir'),
     'box',
-    options.fetch(:env, Vagrant::Environment.new),
+    env,
     env.vagrantfile
   )
 

@@ -1,5 +1,8 @@
-require_relative '../test_helper'
 require 'resolv'
+require 'tmpdir'
+require 'fileutils'
+
+require_relative '../test_helper'
 
 module Landrush
   describe Server do
@@ -15,6 +18,17 @@ module Landrush
                      rescue
                        nil
                      end
+    end
+
+    before do
+      @tmp_dir = Dir.mktmpdir('landrush-server-test-')
+      Server.working_dir = @tmp_dir
+      Server.gems_dir = gem_dir
+    end
+
+    after do
+      Server.stop
+      FileUtils.rm_rf(@tmp_dir) if File.exist?(@tmp_dir)
     end
 
     describe 'start/stop' do

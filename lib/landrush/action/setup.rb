@@ -7,6 +7,8 @@ module Landrush
         # Make sure we use the right data directory for Landrush
         # Seems Vagrant only makes home_path available in this case, compared to custom commands where there is also data_dir
         Server.working_dir = File.join(env[:home_path], 'data', 'landrush')
+        Server.gems_dir = File.join(env[:gems_path].to_s, 'gems')
+        Server.ui = env[:ui]
 
         pre_boot_setup if enabled?
         app.call(env)

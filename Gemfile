@@ -8,7 +8,7 @@ end
 group :development do
   gem 'vagrant',
       git: 'https://github.com/mitchellh/vagrant.git',
-      ref: 'v1.8.4'
+      ref: 'v1.8.6'
   gem 'rake', '~> 10'
   gem 'rubocop', '~> 0.38.0'
   gem 'byebug'

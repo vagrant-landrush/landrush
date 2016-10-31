@@ -9,6 +9,8 @@ module Landrush
     def execute
       # Make sure we use the right data directory for Landrush
       Server.working_dir = File.join(@env.data_dir, 'landrush')
+      Server.gems_dir = File.join(@env.gems_path, 'gems')
+      Server.ui = @env.ui
 
       ARGV.shift # flush landrush from ARGV
       command = ARGV.first || 'help'
