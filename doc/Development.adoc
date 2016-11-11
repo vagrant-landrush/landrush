@@ -1,0 +1,92 @@
+= Development
+:toc:
+:toc-placement!:
+
+The following should get you started on setting up your development environment. As a prerequisite you will need a Ruby 2.2 environment. We
+recommend to use https://rvm.io/[RVM] to create an isolated development
+environment. On Windows the http://rubyinstaller.org/[RubyInstaller for
+Windows] is probably the easiest way to get started. In this case you
+will need the http://rubyinstaller.org/add-ons/devkit/[DevKit] as well.
+
+'''
+toc::[]
+'''
+
+Once you have a working Ruby environment it is time to
+https://help.github.com/articles/fork-a-repo/[fork] the repository. Refer to the link:CONTRIBUTING.md[Contributing] guide for more information.
+
+The following sections list the most important commands you will need for
+development.
+
+== Setup
+
+* Install http://bundler.io/[Bundler]:
++
+....
+$ gem install bundler
+....
+* Install dependencies:
++
+....
+$ bundle install
+....
+* Get a list of all available build tasks:
++
+....
+$ bundle exec rake -T
+....
+
+* Build the Landrush gem:
++
+....
+$ bundle exec rake install
+....
+* Clean all generated files:
++
+....
+$ bundle exec rake clean clobber
+....
+
+== Tests
+
+* Run the test suite:
++
+....
+$ bundle exec rake test
+....
+* Run a single test file:
++
+....
+$ bundle exec rake test TEST=<path to test file>
+....
+* Run cucumber/aruba acceptance tests:
++
+....
+$ bundle exec rake features
+....
+
+NOTE: The acceptance tests currently work only for OS X, out of the box.
+On Linux, one has to manually configure the host visibility for the
+TLD _landrush-acceptance-test_. See *Linux* in the *Visibility on the Host* section of the link:Usage.adoc[Usage guide]. On Windows,
+the acceptance tests won't work due to a bug in
+https://github.com/cucumber/aruba/issues/387[Aruba].
+
+* Run a single cucumber/aruba acceptance tests:
++
+....
+$ bundle exec rake features FEATURE=features/<feature-filename>.feature
+....
+
+== Release
+
+* Deploy to RubyGems:
++
+....
+$ bundle exec rake release
+....
+* Run the vagrant binary with the Landrush plugin loaded from your local
+source code:
++
+....
+bundle exec vagrant landrush <command>
+....

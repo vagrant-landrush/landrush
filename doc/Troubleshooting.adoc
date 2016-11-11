@@ -1,0 +1,42 @@
+= Troubleshooting
+:toc:
+:toc-placement!:
+
+Use this guide to resolve basic Landrush issues you run into.
+
+'''
+toc::[]
+'''
+
+== How to avoid providing sudo password on OS X
+
+When using Landrush on OS X, Landrush will try to create a file in
+`/etc/resolver` to make the guest VM visible via DNS on the host. See *OS X* in the *Visibility on the Host* section of the link:Usage.adoc[Usage guide]. To create this file, sudo permissions are needed and Landrush
+will ask you for your sudo password. +
+ +
+This can be avoided by adding the
+following entries to the bottom of the sudoer configuration. Make sure
+to edit your `/etc/sudoers` configuration via `sudo visudo`:
+
+....
+# Begin Landrush config
+Cmnd_Alias VAGRANT_LANDRUSH_HOST_MKDIR = /bin/mkdir /etc/resolver/*
+Cmnd_Alias VAGRANT_LANDRUSH_HOST_CP = /bin/cp /*/vagrant_landrush_host_config* /etc/resolver/*
+Cmnd_Alias VAGRANT_LANDRUSH_HOST_CHMOD = /bin/chmod 644 /etc/resolver/*
+%admin ALL=(ALL) NOPASSWD: VAGRANT_LANDRUSH_HOST_MKDIR, VAGRANT_LANDRUSH_HOST_CP, VAGRANT_LANDRUSH_HOST_CHMOD
+# End Landrush config
+....
+
+== Guest is unable to access the Internet
+
+In some network configurations the access to outside DNS servers is
+restricted (firewalls, VPN, etc). Since unmatched DNS queries are per
+default passed through to Google's DNS servers, this can lead to the
+fact that the guest cannot access anything in the outside world. +
+ +
+If you face problem with the guest's DNS, verify that you can access
+Google's DNS server under __8.8.8.8__. If it does not work, you will
+need to set a custom upstream DNS server. Check your network
+configuration on the host or ask your network administrator about the
+right DNS server address to use. You can set the custom DNS server via
+the `config.landrush.upstream` option, see section on *Unmatched Queries* in the link:Usage.adoc[Usage guide].
