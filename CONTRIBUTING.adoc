@@ -1,0 +1,91 @@
+= Contributing to Landrush
+:toc:
+:toc-placement!:
+
+The following is a set of guidelines for contributing to Landrush. These
+are just guidelines. Please use your best judgment and feel free to
+propose changes to this document in a pull request.
+
+'''
+toc::[]
+'''
+
+At this point, this document is not complete, but as decisions are made
+they will be added to this document.
+
+== Working on an issue
+
+* All changes should have a matching issue in the GitHub
+https://github.com/vagrant-landrush/landrush/issues[issue tracker]. If
+there is not one, create one.
+* Prepend each commit of a proposed change with the GitHub issue number,
+eg `Issue #xyz Fixing foo in bar`
+* All changes should be applied to master via
+https://help.github.com/articles/using-pull-requests/[pull requests]
+(even from maintainers).
+* All changes should include documentation updates.
+* Small changes need only one ACK while larger changes need two ACKs from
+maintainers before they will be merged. If the author of the pull
+request is a maintainer, the submission is considered one of the two ACKs.
+Therefore pull requests from maintainers only require one additional
+ACK.
+
+By "two ACKs" we mean that two maintainers must acknowledge that the change
+is a good one. The second person to ACK the pull request should merge the
+pull request with a comment including their agreement. We default to
+moving forward and using revert if needed.
+
+== Merging pull requests
+
+The merging committer should merge the pull request as follows.
+Avoid using the GitHub web UI. Instead, perform merges using the `git`
+command line. This avoids merge commits and keeps a linear commit
+history. The commands below demonstrate the suggested process.
+
+----
+# Create a local branch for the pull request $ git checkout -b
+master
++
+# Pull the changes $ git pull
++
+# If necessary rebase changes on master to ensure we have a fast #
+forward. Also resolve any conflicts $ git rebase -i master
++
+# Merge changes into master $ git checkout master $ git merge
++
+# Update changelog in the unreleased section. Commit!
++
+# Push to origin $ git push origin master ```
+----
+
+== Releasing
+
+Prerequisites:
+
+* Push access to the `landrush` GitHub repository
+* Owner of the `landrush` gem Rubygems
+
+Steps:
+
+. Update `lib/landrush/version.rb` with the new version number.
+. Update the `CHANGELOG.md` header with the new version number and
+current date.
+. Make a release commit:
+`git add lib/landrush/version.rb CHANGELOG.md; git commit -m 'cut vX.Y.Z'`
+. Make a release tag: `git tag -m vX.Y.Z vX.Y.Z`
+. Push the release commit:
+`git push origin master; git push origin master --tags`
+. Build the release: `rake build`
+. Push the newly built gem: `gem push pkg/landrush-X.Y.Z.gem`
+. Update the CHANGELOG to add an "Unreleased" section, commit as
+"clean up after vX.Y.Z".
+
+== Maintainers
+
+* Brian Exelbierd (@bexelbie)
+* Eric Sorenson (@ahpook)
+* Florian Holzhauer (@fh)
+* Hardy Ferentschik (@hferentschik)
+* Josef Strzibny (@strzibny)
+* Paul Hinze (@phinze)
+* Reto Kaiser (@njam)
