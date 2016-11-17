@@ -13,7 +13,7 @@ toc::[]
 '''
 
 Once you have a working Ruby environment it is time to
-https://help.github.com/articles/fork-a-repo/[fork] the repository. Refer to the link:CONTRIBUTING.md[Contributing] guide for more information.
+https://help.github.com/articles/fork-a-repo/[fork] the repository. Refer to the link:../CONTRIBUTING.adoc[Contributing] guide for more information.
 
 The following sections list the most important commands you will need for
 development.
@@ -76,6 +76,31 @@ https://github.com/cucumber/aruba/issues/387[Aruba].
 ....
 $ bundle exec rake features FEATURE=features/<feature-filename>.feature
 ....
+
+== Documentation
+
+The documentation of this plugin is written in http://asciidoctor.org[Asciidoc]. If you need some syntax help,
+refer to the http://asciidoctor.org/docs/asciidoc-syntax-quick-reference/[AsciiDoc Syntax Quick Reference].
+
+To build the documentation you can execute
+
+----
+$ bundle exec rake html
+----
+
+which will build the HTML documentation into the folder _build/html_.
+
+The source code also contains a link:../Guardfile[Guardfile] for the https://github.com/guard/guard[Guard] library.
+You can execute
+
+----
+$ bundle exec guard
+----
+
+and your HTML documentation will be automatically updated on each change to an Asciidoc source file.
+https://github.com/guard/guard-livereload[Live reload] is also enabled, so you just need to install the right
+http://livereload.com/extensions/#installing-sections[LiveReload Safari/Chrome/Firefox extension] and your
+browser can refresh the page each time you save a change to your Asciidoc files.
 
 == Release
 

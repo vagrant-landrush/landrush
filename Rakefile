@@ -5,6 +5,7 @@ require 'rake/clean'
 require 'rubocop/rake_task'
 require 'cucumber/rake/task'
 require 'fileutils'
+require 'asciidoctor'
 
 CLOBBER.include('pkg')
 CLEAN.include('build')
@@ -24,6 +25,14 @@ end
 # Cucumber acceptance test task
 Cucumber::Rake::Task.new(:features)
 task features: :init
+
+desc 'Render Asciidoc into HTML'
+adoc_files = Rake::FileList['**/*.adoc']
+task html: adoc_files.ext('.html')
+rule '.html' => '.adoc' do |t|
+  FileUtils.mkdir_p 'build/html'
+  Asciidoctor.convert_file t.source, to_dir: 'build/html'
+end
 
 task default: [
   :rubocop,

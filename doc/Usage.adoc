@@ -266,6 +266,6 @@ Settings,title="Advanced TCP/IP Settings"] +
 +
 You might want to resolve Landrush's DNS-entries on _additional_
 computing devices, like a mobile phone.
-Please refer to link:/doc/proxy-mobile[mobile instructions] for further details.
+Please refer to link:ProxyMobile.adoc[mobile instructions] for further details.
 
 You can refer to the link:Troubleshooting.adoc[Troubleshooting guide] if you encounter any problems while using Landrush.

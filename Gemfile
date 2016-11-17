@@ -17,4 +17,7 @@ group :development do
   gem 'cucumber', '~> 2.1'
   gem 'aruba', '~> 0.13'
   gem 'komenda', '~> 0.1.6'
+  gem 'guard-rake'
+  gem 'guard-livereload', '~> 2.5', require: false
+  gem 'asciidoctor'
 end

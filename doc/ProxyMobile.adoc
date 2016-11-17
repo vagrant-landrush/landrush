@@ -1,0 +1,66 @@
+= Resolve Landrush entries on a mobile device
+:toc:
+:toc-placement!:
+
+'''
+toc::[]
+'''
+
+For your mobile phone to access VM-hosts two conditions need to be met:
+
+* Your VM _needs to be accessible_ from the network your phone's on
+(configure a http://docs.vagrantup.com/v2/networking/public_network.html[public network]).
+* The phone should query Landrush to resolve DNS entries.
+
+Most smartphones allow you to configure a custom DNS server (instructions further below),
+but unfortunately some don't allow you to configure a DNS server running on port 10053.
+
+To work around that one can proxy queries to the default port 53 with a system-wide DNS server to Landrush.
+
+== Proxy bind to your Landrush server
+
+The DNS-server `bind` can be installed with http://brew.sh/[homebrew] on
+OS X.
+
+In its configuration file forward all queries to your local Landrush and
+disable caching:
+
+....
+options {
+    directory "/usr/local/var/named";
+
+    forwarders {
+        127.0.0.1 port 10053;
+    };
+
+    max-cache-ttl 0;
+    max-ncache-ttl 0;
+};
+....
+
+After restarting bind you should be able to resolve your VM's entries on
+your local default DNS server (port 53):
+
+....
+$ dig -p 53 @localhost myhost.vagrant.test
+....
+
+== Configure DNS server on your mobile phone
+
+Set your bind server's IP address as the DNS server on your external device.
+
+=== How to set the DNS server on iOS
+
+.  Open _Settings_ > _Wi-Fi_
+.  Tap the _i_-icon next to your network
+.  Tap the _DNS_-row and edit the value
+
+=== How to set the DNS server on Android
+
+.  Open _Settings_ > _Wi-Fi_
+.  Tap and hold your network, then chose _Modify network_
+.  Check _Show advanced options_
+.  Under _IP Settings_ tap _DHCP / Static_ and change the value to _Static_
+.  Change the _DNS 1_ value and tap _Save_
+
+Or use the https://play.google.com/store/apps/details?id=net.emrekoc.dnschanger[Dns Changer] application.
