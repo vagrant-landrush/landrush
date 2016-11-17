@@ -1,0 +1,104 @@
+= Landrush: DNS for Vagrant
+:toc:
+:toc-placement!:
+
+
+https://travis-ci.org/vagrant-landrush/landrush[image:https://travis-ci.org/vagrant-landrush/landrush.png[Build
+Status]]
+https://ci.appveyor.com/project/hferentschik/landrush-3agrx/branch/master[image:https://ci.appveyor.com/api/projects/status/3iv8sv5v73s15mt6/branch/master?svg=true[Build
+status]]
+
+Landrush is a simple cross-platform DNS for Vagrant VMs that is visible
+on both, the guest and the host.
+
+It spins up a small DNS server and redirects DNS traffic from your VMs
+to use it, automatically registering/unregistering IP addresses of
+guests as they come up and go down.
+
+'''
+toc::[]
+'''
+
+== Installation
+
+Install under Vagrant (1.1 or later):
+
+....
+$ vagrant plugin install landrush
+....
+
+== Getting started
+
+.  Enable the plugin in your `Vagrantfile`:
++
+....
+config.landrush.enabled = true
+....
+.  Bring up a machine.
++
+....
+$ vagrant up
+....
+.  You are able to get your VM's hostname resolved on your host:
++
+....
+$ dig -p 10053 @localhost myhost.vagrant.test
+....
+.  If you shut down your guest, the entries associated with it will be
+removed.
+
+Landrush retrieves your VM's hostname from either the vagrant config or
+it uses the system's actual hostname by running the `hostname` command.
+A default hostname of "guest-vm" is assumed if the hostname is otherwise not
+available.
+
+A Landrush example configuration could look like this:
+
+....
+Vagrant.configure("2") do |config|
+  config.vm.box = "hashicorp/precise64"
+
+  config.landrush.enabled = true
+
+  config.vm.hostname = "myhost.vagrant.test"
+
+  config.landrush.host 'static1.example.com', '1.2.3.4'
+  config.landrush.host 'static2.example.com', '2.3.4.5'
+end
+....
+
+See the link:Usage.adoc[Usage guide] for further information.
+
+== Available CLI commands
+
+Check out `vagrant landrush help` for the available commands.
+
+....
+vagrant landrush <command>
+
+commands:
+  {start|stop|restart|status}
+    control the landrush server daemon
+  list, ls
+    list all DNS entries known to landrush
+  dependentvms, vms
+    list vms currently dependent on the landrush server
+  set { <host> <ip> | <alias> <host> }
+    adds the given host-to-ip or alias-to-hostname mapping.
+    Existing host ip addresses will be overwritten
+  rm, del { <host> | <alias> | --all }
+    delete the given hostname or alias from the server.
+     --all removes all entries
+  help
+    you're lookin at it!
+....
+
+== Troubleshooting
+
+See the link:Troubleshooting.adoc[Troubleshooting guide] to resolve issues you face while using Landrush.
+
+== Help Out!
+
+This project could use your feedback and help! Please don't hesitate to
+open issues or submit pull requests. We welcome your input. +
+If you wish to contribute to the development of Landrush, refer to the link:CONTRIBUTING.adoc[Contributing guide] for details on how you can contribute. The link:Development.adoc[Development guide] will help you setup your development environment.
