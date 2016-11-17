@@ -2,83 +2,104 @@
 :toc:
 :toc-placement!:
 
-The following is a set of guidelines for contributing to Landrush. These
-are just guidelines. Please use your best judgment and feel free to
-propose changes to this document in a pull request.
+The following is a set of guidelines for contributing to the Landrush plugin.
 
 '''
 toc::[]
 '''
 
-At this point, this document is not complete, but as decisions are made
-they will be added to this document.
+== Submitting issues
 
-== Working on an issue
+You can submit issues with respect to the Landrush plugin
+https://github.com/vagrant-landrush/landrush/issues[here].
+Make sure you include all the relevant details pertaining the issue.
 
-* All changes should have a matching issue in the GitHub
-https://github.com/vagrant-landrush/landrush/issues[issue tracker]. If
-there is not one, create one.
-* Prepend each commit of a proposed change with the GitHub issue number,
-eg `Issue #xyz Fixing foo in bar`
-* All changes should be applied to master via
-https://help.github.com/articles/using-pull-requests/[pull requests]
-(even from maintainers).
-* All changes should include documentation updates.
-* Small changes need only one ACK while larger changes need two ACKs from
-maintainers before they will be merged. If the author of the pull
-request is a maintainer, the submission is considered one of the two ACKs.
-Therefore pull requests from maintainers only require one additional
-ACK.
+Before submitting a new issue, it is suggested to check the
+https://github.com/vagrant-landrush/landrush/issues[existing issues] in order to avoid duplication.
 
-By "two ACKs" we mean that two maintainers must acknowledge that the change
-is a good one. The second person to ACK the pull request should merge the
-pull request with a comment including their agreement. We default to
-moving forward and using revert if needed.
+== Submitting pull requests
+
+=== Get Started
+
+If you are just getting started with Git and GitHub there are a few
+prerequisite steps.
+
+* Make sure you have a https://github.com/signup/free[GitHub account].
+* https://help.github.com/articles/fork-a-repo/[Fork] the
+Landrush repository. As discussed in the linked page, this also includes:
+** https://help.github.com/articles/set-up-git[Setting up] your local
+git install.
+** Cloning your fork.
+
+=== Create a topic branch
+
+Create a http://git-scm.com/book/en/Git-Branching-Branching-Workflows#Topic-Branches[topic branch]
+on which you will work. The convention is to name the branch
+using the issue key you are working on. If there is not already an issue
+covering the work you want to do, create one. Assuming for example you
+will be working from the master branch and working on the GitHub issue 123 : `git checkout -b issue-123 master`
+
+=== Code
+
+Do your work! Refer to the link:doc/Development.adoc#development[development guide] to get started.
+
+=== Commit
+
+* Make commits of logical units.
+* Be sure to use the GitHub issue key in the commit message, eg `Issue #123 ...`.
+* Make sure your code conforms to the coding style
+* Make sure you have added the necessary tests for your changes.
+* Make sure you have added appropriate documentation updates.
+* Run _all_ the tests to assure nothing else was accidentally broken.
+
+=== Submit
+
+* Push your changes to the topic branch in your fork of the repository.
+* Initiate a https://help.github.com/articles/using-pull-requests/[pull
+request].
 
 == Merging pull requests
 
-The merging committer should merge the pull request as follows.
-Avoid using the GitHub web UI. Instead, perform merges using the `git`
-command line. This avoids merge commits and keeps a linear commit
-history. The commands below demonstrate the suggested process.
+A project maintainer will merge the pull request. Here is an example work-flow
+of a merge assuming issue 123 from above:
 
-----
-# Create a local branch for the pull request $ git checkout -b
-master
-+
-# Pull the changes $ git pull
-+
-# If necessary rebase changes on master to ensure we have a fast #
-forward. Also resolve any conflicts $ git rebase -i master
-+
-# Merge changes into master $ git checkout master $ git merge
-+
-# Update changelog in the unreleased section. Commit!
-+
-# Push to origin $ git push origin master ```
-----
+-------------------------------------------------------------------------
+# Create a local branch for the pull request
+$ git checkout -b fix-123 master
+
+# Pull the changes
+$ git pull <remote of the pull request> fix-123
+
+# If necessary rebase changes on master to ensure we have a fast forward.
+$ git rebase -i master
+
+# Merge changes into master
+$ git checkout master
+$ git merge fix-123
+
+# Push to origin
+$ git push origin master
+-------------------------------------------------------------------------
 
 == Releasing
 
-Prerequisites:
-
-* Push access to the `landrush` GitHub repository
-* Owner of the `landrush` gem Rubygems
-
-Steps:
-
-. Update `lib/landrush/version.rb` with the new version number.
-. Update the `CHANGELOG.md` header with the new version number and
-current date.
-. Make a release commit:
-`git add lib/landrush/version.rb CHANGELOG.md; git commit -m 'cut vX.Y.Z'`
-. Make a release tag: `git tag -m vX.Y.Z vX.Y.Z`
-. Push the release commit:
-`git push origin master; git push origin master --tags`
-. Build the release: `rake build`
-. Push the newly built gem: `gem push pkg/landrush-X.Y.Z.gem`
-. Update the CHANGELOG to add an "Unreleased" section, commit as
-"clean up after vX.Y.Z".
+* Make sure the HEAD of development builds and passes all tests:
+  `bundle exec rake clean rubocop test features install`.
+* Review https://github.com/vagrant-landrush/landrush/milestones[milestone] for the current release
+** Make sure all issues are resolved
+** Move unresolved issues into an upcoming release
+** Close milestone
+* Update the link:CHANGELOG.md[CHANGELOG]
+* Update link:lib/landrush/version.rb[version.rb] with the correct
+  release version. Consider http://semver.org/:[Semantic Versioning] guidelines
+  when deciding on the release version
+* Commit _CHANGELOG_ and _version.rb_ using commit message of the form:
+  `cut v<version>`
+* Push commit to upstream
+* Release the gem: `bundle exec rake release`
+* Update link:lib/landrush/version.rb[version.rb] with the next anticipated release version, eg _1.4.0.dev_
+* Commit with message: `setting dev version <version>.dev`
+* Push upstream
 
 == Maintainers
 

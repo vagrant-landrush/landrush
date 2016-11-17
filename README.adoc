@@ -2,11 +2,8 @@
 :toc:
 :toc-placement!:
 
-
-https://travis-ci.org/vagrant-landrush/landrush[image:https://travis-ci.org/vagrant-landrush/landrush.png[Build
-Status]]
-https://ci.appveyor.com/project/hferentschik/landrush-3agrx/branch/master[image:https://ci.appveyor.com/api/projects/status/3iv8sv5v73s15mt6/branch/master?svg=true[Build
-status]]
+https://travis-ci.org/vagrant-landrush/landrush[image:https://travis-ci.org/vagrant-landrush/landrush.png[Build Status]]
+https://ci.appveyor.com/project/hferentschik/landrush-3agrx/branch/master[image:https://ci.appveyor.com/api/projects/status/3iv8sv5v73s15mt6/branch/master?svg=true[Build Status]]
 
 Landrush is a simple cross-platform DNS for Vagrant VMs that is visible
 on both, the guest and the host.
@@ -44,8 +41,7 @@ $ vagrant up
 ....
 $ dig -p 10053 @localhost myhost.vagrant.test
 ....
-.  If you shut down your guest, the entries associated with it will be
-removed.
+.  If you shut down your guest, the entries associated with it will be removed.
 
 Landrush retrieves your VM's hostname from either the vagrant config or
 it uses the system's actual hostname by running the `hostname` command.
@@ -67,7 +63,7 @@ Vagrant.configure("2") do |config|
 end
 ....
 
-See the link:Usage.adoc[Usage guide] for further information.
+See the link:doc/Usage.adoc[Usage guide] for further information.
 
 == Available CLI commands
 
@@ -95,10 +91,10 @@ commands:
 
 == Troubleshooting
 
-See the link:Troubleshooting.adoc[Troubleshooting guide] to resolve issues you face while using Landrush.
+See the link:doc/Troubleshooting.adoc[Troubleshooting guide] to resolve issues you face while using Landrush.
 
 == Help Out!
 
-This project could use your feedback and help! Please don't hesitate to
-open issues or submit pull requests. We welcome your input. +
-If you wish to contribute to the development of Landrush, refer to the link:CONTRIBUTING.adoc[Contributing guide] for details on how you can contribute. The link:Development.adoc[Development guide] will help you setup your development environment.
+This project needs your feedback and help! Please do not hesitate to open issues or submit pull requests. We welcome your input.
+If you wish to contribute to the development of Landrush, refer to the link:CONTRIBUTING.adoc[Contributing guide] for details
+on how you can contribute. The link:doc/Development.adoc[Development guide] will help you setup your development environment.
