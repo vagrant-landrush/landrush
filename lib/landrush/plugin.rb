@@ -196,5 +196,20 @@ module Landrush
       require_relative 'cap/host/suse/restart_dnsmasq'
       Cap::Suse::RestartDnsmasq
     end
+
+    host_capability('arch', 'dnsmasq_installed') do
+      require_relative 'cap/host/arch/dnsmasq_installed'
+      Cap::Arch::DnsmasqInstalled
+    end
+
+    host_capability('arch', 'install_dnsmasq') do
+      require_relative 'cap/host/arch/install_dnsmasq'
+      Cap::Arch::InstallDnsmasq
+    end
+
+    host_capability('arch', 'restart_dnsmasq') do
+      require_relative 'cap/host/arch/restart_dnsmasq'
+      Cap::Arch::RestartDnsmasq
+    end
   end
 end
