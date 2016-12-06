@@ -11,7 +11,10 @@ CLOBBER.include('pkg')
 CLEAN.include('build')
 
 task :init do
+  # general build directory
   FileUtils.mkdir_p 'build'
+  # Vagrant home directory for integration tests
+  FileUtils.mkdir_p 'build/vagrant.d'
 end
 task features: :init
 

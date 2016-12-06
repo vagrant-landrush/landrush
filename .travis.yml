@@ -1,6 +1,8 @@
 language: ruby
 
 before_install:
+- rvm gemset use global
+- gem uninstall bundler -Iax --version '<1.14'
 - gem install bundler -v 1.12.5
 
 script:
