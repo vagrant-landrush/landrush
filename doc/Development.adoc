@@ -102,13 +102,8 @@ https://github.com/guard/guard-livereload[Live reload] is also enabled, so you j
 http://livereload.com/extensions/#installing-sections[LiveReload Safari/Chrome/Firefox extension] and your
 browser can refresh the page each time you save a change to your Asciidoc files.
 
-== Release
+== Misc
 
-* Deploy to RubyGems:
-+
-....
-$ bundle exec rake release
-....
 * Run the vagrant binary with the Landrush plugin loaded from your local
 source code:
 +

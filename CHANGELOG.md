@@ -1,9 +1,22 @@
-## Unreleased
+## [1.2.0] - 2016-12-07
+
+- Issue [#298](https://github.com/vagrant-landrush/landrush/issues/298) - Travis CI used wrong Bundler version
+- Issue [#288](https://github.com/vagrant-landrush/landrush/issues/288) - Landrush 1.1.2 failing to start - OSX 10.11, Vagrant 1.8.6
+- Issue [#284](https://github.com/vagrant-landrush/landrush/issues/284) - Inconsistent command layout in README.md
+- Issue [#282](https://github.com/vagrant-landrush/landrush/issues/282) - Add support for Suse
+- Issue [#280](https://github.com/vagrant-landrush/landrush/issues/280) - Configure CI build on Windows using AppVeyor
+- Issue [#271](https://github.com/vagrant-landrush/landrush/issues/271) - Update landrush ip dependency
+- Issue [#268](https://github.com/vagrant-landrush/landrush/issues/268) - "host_interface" ignored if only 1 private interface is configured
+- Issue [#264](https://github.com/vagrant-landrush/landrush/issues/264) - Convert documentation to asciidoc
+- Issue [#262](https://github.com/vagrant-landrush/landrush/issues/262) - Add command to clear all entries at once
+- Issue [#259](https://github.com/vagrant-landrush/landrush/issues/259) - Landrush daemon stopped after a 'vagrant reload'
+- Issue [#255](https://github.com/vagrant-landrush/landrush/issues/255) - read_host_visible_ip_address failure in presence of interface without IPv4, with IPv6 address
+- Issue [#216](https://github.com/vagrant-landrush/landrush/issues/216) - Apply Rubocop auto corrections
 
 ## [1.1.2] - 2016-08-24
 
 - Issue [#249](https://github.com/vagrant-landrush/landrush/issues/249) - Spawned DNS server holds vagrant executable's stderr, stdout open
-- PR [#243](https://github.com/vagrant-landrush/landrush/pull/243) - Vagrant would print error message "The system cannot find the path
+- PR [#243](https://github.com/vagrant-landrush/landrush/pull/243)      - Vagrant would print error message "The system cannot find the path
 
 ## [1.1.1] - 2016-08-07
 
@@ -55,6 +68,8 @@
 ## [0.16.0] - 2015-01-18
 - Added: Support for IN::PTR records (#98)
 
+[1.2.0]: https://github.com/phinze/landrush/compare/v1.1.2...v1.2.0
+[1.1.2]: https://github.com/phinze/landrush/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/phinze/landrush/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/phinze/landrush/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/phinze/landrush/compare/v0.19.0...v1.0.0
