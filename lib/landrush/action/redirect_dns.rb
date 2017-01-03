@@ -24,7 +24,7 @@ module Landrush
       def _target_host
         case provider
         when :virtualbox then
-          '10.0.2.2'
+          '10.0.2.3'
         when :vmware_fusion, :libvirt then
           _gateway_for_ip(machine.guest.capability(:configured_dns_servers).first)
         when :parallels then
