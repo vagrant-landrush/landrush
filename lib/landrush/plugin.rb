@@ -21,6 +21,7 @@ module Landrush
       # Hooks for VirtualBox and HyperV providers
       hook.before(VagrantPlugins::ProviderVirtualBox::Action::Network, pre_boot_actions)
       hook.before(VagrantPlugins::HyperV::Action::WaitForIPAddress, pre_boot_actions)
+      hook.after(VagrantPlugins::DockerProvider::Action::Start, pre_boot_actions)
       hook.after(Vagrant::Action::Builtin::WaitForCommunicator, post_boot_actions)
 
       # Hooks for Libvirt provider
