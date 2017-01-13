@@ -8,6 +8,7 @@ module Landrush
         'HashiCorp::VagrantVMwarefusion::Provider'     => :vmware_fusion,
         'VagrantPlugins::Parallels::Provider'          => :parallels,
         'VagrantPlugins::HyperV::Provider'             => :hyperv,
+        'VagrantPlugins::DockerProvider::Provider'     => :docker,
         'Landrush::FakeProvider'                       => :fake_provider
       }.freeze
 
@@ -18,6 +19,10 @@ module Landrush
       def initialize(app, env)
         @app = app
         @env = env
+      end
+
+      def docker?
+        provider == :docker
       end
 
       def virtualbox?
