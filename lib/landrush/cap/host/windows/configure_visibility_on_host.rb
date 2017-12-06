@@ -146,8 +146,8 @@ module Landrush
           end
 
           def wired_autoconfig_service_running?
-            cmd_out = `net start`
-            cmd_out =~ /Wired AutoConfig/m
+            cmd_out = `sc query dot3svc`
+            cmd_out =~ /\s*STATE\s+:\s+4\s+RUNNING/m
           end
 
           def command_found(cmd)
