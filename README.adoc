@@ -12,6 +12,13 @@ It spins up a small DNS server and redirects DNS traffic from your VMs
 to use it, automatically registering/unregistering IP addresses of
 guests as they come up and go down.
 
+[NOTE]
+====
+This project is currently _unmaintained_ and looking for maintainers! Anybody interested in helping out please contact @hferentschik.
+
+I'd be happy to help coach anybody who wants to drop in and pick up the maintainer role for this plugin!
+====
+
 '''
 toc::[]
 '''
