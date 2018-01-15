@@ -24,6 +24,8 @@ module Landrush
         store_set
       elsif command == 'del' || command == 'rm'
         store_del
+      elsif command == 'run-server'
+        Landrush::Server.run(ARGV[1], ARGV[2])
       elsif command == 'help'
         @env.ui.info(help)
       else

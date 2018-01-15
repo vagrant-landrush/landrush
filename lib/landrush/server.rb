@@ -2,7 +2,6 @@ require 'rubydns'
 require 'ipaddr'
 require 'win32/process' unless (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM).nil? # only require on Windows
 require_relative 'store'
-require_relative 'util/path'
 require_relative 'util/process_helper'
 
 module Landrush
@@ -79,14 +78,8 @@ module Landrush
 
     # Used to start the Landrush DNS server as a child process using ChildProcess gem
     def self.start
-      # On a machine with just Vagrant installed there might be no other Ruby except the
-      # one bundled with Vagrant. Let's make sure the embedded bin directory containing
-      # the Ruby executable is added to the PATH.
-      Landrush::Util::Path.ensure_ruby_on_path
-
-      ruby_bin = Landrush::Util::Path.embedded_vagrant_ruby.nil? ? 'ruby' : Landrush::Util::Path.embedded_vagrant_ruby
-      start_server_script = Pathname(__dir__).join('start_server.rb').to_s
-      @ui.detail("[landrush] '#{ruby_bin} #{start_server_script} #{port} #{working_dir} #{gems_dir}'") unless @ui.nil?
+      vagrant_bin = 'vagrant'
+      @ui.detail("[landrush] '#{vagrant_bin} landrush run-server #{port} #{working_dir} #{gems_dir}'") unless @ui.nil?
       if Vagrant::Util::Platform.windows?
         # Need to handle Windows differently. Kernel.spawn fails to work, if
         # the shell creating the process is closed.
@@ -104,7 +97,7 @@ module Landrush
         #
         # Today we don't pass any filehandles, so it isn't a problem.
         # Future self, make sure this doesn't become a problem.
-        info = Process.create(command_line:    "#{ruby_bin} #{start_server_script} #{port} #{working_dir} #{gems_dir}",
+        info = Process.create(command_line:    "#{vagrant_bin} landrush run-server #{port} #{working_dir} #{gems_dir}",
                               creation_flags:  Process::DETACHED_PROCESS,
                               process_inherit: false,
                               thread_inherit:  true,
@@ -114,7 +107,7 @@ module Landrush
         # Fix https://github.com/vagrant-landrush/landrush/issues/249)
         # by turning of filehandle inheritance with :close_others => true
         # and by explicitly closing STDIN, STDOUT, and STDERR
-        pid = spawn(ruby_bin, start_server_script, port.to_s, working_dir.to_s, gems_dir.to_s,
+        pid = spawn(vagrant_bin, 'landrush', 'run-server', port.to_s, working_dir.to_s, gems_dir.to_s,
                     in:           :close,
                     out:          :close,
                     err:          :close,
