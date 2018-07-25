@@ -15,7 +15,7 @@ module Landrush
         end
 
         def self._redirect_dns_rule(protocol, original_server, target_server, target_port)
-          "OUTPUT -t nat -p #{protocol} -d #{original_server} --dport 53 -j DNAT --to-destination #{target_server}:#{target_port}"
+          "PREROUTING -t nat -p #{protocol} -d #{original_server} --dport 53 -j DNAT --to-destination #{target_server}:#{target_port}"
         end
       end
     end
