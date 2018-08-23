@@ -8,8 +8,8 @@ module Landrush
 
         def self._run(machine, command)
           machine.communicate.sudo(command) do |data, type|
-            if [:stderr, :stdout].include?(type)
-              color = (type == :stdout) ? :green : :red
+            if %i[stderr stdout].include?(type)
+              color = type == :stdout ? :green : :red
               machine.env.ui.info(data.chomp, color: color, prefix: false)
             end
           end

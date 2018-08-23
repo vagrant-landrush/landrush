@@ -1,6 +1,6 @@
 module Landrush
   class Command < Vagrant.plugin('2', :command)
-    DAEMON_COMMANDS = %w(start stop restart status).freeze
+    DAEMON_COMMANDS = %w[start stop restart status].freeze
 
     def self.synopsis
       'manages DNS for both guest and host'
@@ -37,14 +37,16 @@ module Landrush
       raise Vagrant::Errors::CLIInvalidOptions, help: usage(msg)
     end
 
-    def usage(msg); <<-EOS.gsub(/^      /, '')
+    def usage(msg)
+      <<-EOS.gsub(/^      /, '')
       ERROR: #{msg}
 
       #{help}
       EOS
     end
 
-    def help; <<-EOS.gsub(/^      /, '')
+    def help
+      <<-EOS.gsub(/^      /, '')
       vagrant landrush <command>
 
       commands:

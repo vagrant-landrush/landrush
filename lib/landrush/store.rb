@@ -45,7 +45,7 @@ module Landrush
     def find(search)
       search = IPAddr.new(search).reverse if begin
                                                 IPAddr.new(search)
-                                              rescue
+                                              rescue StandardError
                                                 nil
                                               end
       current_config.keys.detect do |key|

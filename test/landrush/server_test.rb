@@ -15,7 +15,7 @@ module Landrush
     def wait_for_port
       sleep 1 until begin
                        TCPSocket.open('127.0.0.1', Server.port)
-                     rescue
+                     rescue StandardError
                        nil
                      end
     end

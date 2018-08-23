@@ -9,7 +9,7 @@ module Landrush
 
       def read_pid(pid_file)
         IO.read(pid_file).to_i
-      rescue
+      rescue StandardError
         nil
       end
 
@@ -32,7 +32,7 @@ module Landrush
         # it a few more times.
         attempts = 5
         while running? && attempts > 0
-          sig = (attempts >= 2) ? 'KILL' : 'TERM'
+          sig = attempts >= 2 ? 'KILL' : 'TERM'
 
           puts "Sending #{sig} to process #{pid}..."
           Process.kill(sig, pid)

@@ -6,8 +6,8 @@ module Landrush
           unless @machine.config.landrush.host_interface_excludes.nil?
             re = Regexp.union(@machine.config.landrush.host_interface_excludes)
 
-            addresses = addresses.select do |addr|
-              !addr['name'].match(re)
+            addresses = addresses.reject do |addr|
+              addr['name'].match(re)
             end
           end
 

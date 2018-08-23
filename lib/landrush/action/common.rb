@@ -86,7 +86,7 @@ module Landrush
 
       def log(level, msg)
         # Levels from github.com/mitchellh/vagrant/blob/master/lib/vagrant/ui.rb
-        valid_levels = [:ask, :detail, :warn, :error, :info, :output, :success]
+        valid_levels = %i[ask detail warn error info output success]
 
         if valid_levels.include? level
           env[:ui].send level, "[landrush] #{msg}"

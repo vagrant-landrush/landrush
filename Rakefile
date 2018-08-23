@@ -37,9 +37,9 @@ rule '.html' => '.adoc' do |t|
   Asciidoctor.convert_file t.source, to_dir: 'build/html'
 end
 
-task default: [
-  :rubocop,
-  :test
+task default: %i[
+  rubocop
+  test
 ]
 
 task :generate_diagrams do

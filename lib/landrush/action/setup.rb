@@ -103,7 +103,7 @@ module Landrush
       def private_network_ips
         # machine.config.vm.networks is an array of two elements. The first containing the type as symbol, the second is a
         # hash containing other config data which varies between types
-        machine.config.vm.networks.select { |network| :private_network == network[0] && !network[1][:ip].nil? }
+        machine.config.vm.networks.select { |network| network[0] == :private_network && !network[1][:ip].nil? }
                .map { |network| network[1][:ip] }
       end
     end

@@ -8,4 +8,4 @@ Dir.entries(gem_path).each { |gem_dir| $LOAD_PATH.unshift "#{File.join(ARGV[2], 
 
 require_relative 'server'
 
-Landrush::Server.run(ARGV[0], ARGV[1]) if __FILE__ == $PROGRAM_NAME
+Landrush::Server.run(ARGV[0], ARGV[1]) if $PROGRAM_NAME == __FILE__

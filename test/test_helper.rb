@@ -1,4 +1,4 @@
-$LOAD_PATH.push(File.expand_path('../../lib', __FILE__))
+$LOAD_PATH.push(File.expand_path('../lib', __dir__))
 
 require 'bundler/setup'
 require 'minitest/spec'
@@ -13,7 +13,7 @@ require 'landrush/cap/host/linux/configure_visibility_on_host'
 require 'landrush/util/retry'
 
 require 'minitest/autorun'
-require 'mocha/mini_test'
+require 'mocha/minitest'
 
 # Make sure to keep the numbering sequential here
 # Putting include/exclude out of order is kind of the point though ;)
@@ -105,14 +105,11 @@ end
 
 module Landrush
   class FakeProvider
-    def initialize(*args)
-    end
+    def initialize(*args); end
 
-    def _initialize(*args)
-    end
+    def _initialize(*args); end
 
-    def ssh_info
-    end
+    def ssh_info; end
 
     def state
       @state ||= Vagrant::MachineState.new('fake-state', 'fake-state', 'fake-state')
