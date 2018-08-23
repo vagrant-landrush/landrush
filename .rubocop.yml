@@ -6,3 +6,6 @@ AllCops:
     - 'vendor/**/*'
     - 'tmp/**/*'
 
+Style/FrozenStringLiteralComment:
+  Enabled: false
+  

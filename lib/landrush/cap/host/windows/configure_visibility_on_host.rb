@@ -125,7 +125,7 @@ module Landrush
                 address = IPAddr.new(ip)
 
                 mask.include?(address)
-              rescue
+              rescue StandardError
                 false
               end
             end
@@ -180,6 +180,6 @@ end
 
 # Only run the following code when this file is the main file being run
 # instead of having been required or loaded by another file
-if __FILE__ == $PROGRAM_NAME
+if $PROGRAM_NAME == __FILE__
   Landrush::Cap::Windows::ConfigureVisibilityOnHost.configure_visibility_on_host(nil, ARGV[0], ARGV[1])
 end

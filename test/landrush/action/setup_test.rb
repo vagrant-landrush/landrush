@@ -13,7 +13,7 @@ module Landrush
       end
 
       it 'calls the next app in the chain' do
-        app = -> (e) { e[:called] = true }
+        app = ->(e) { e[:called] = true }
         setup = Landrush::Action::Setup.new(app, env)
 
         setup.call(env)
@@ -26,7 +26,7 @@ module Landrush
 
         setup.call(env)
 
-        DependentVMs.list.must_equal %w(somehost.vagrant.test)
+        DependentVMs.list.must_equal %w[somehost.vagrant.test]
       end
 
       it "starts the landrush server if it's not already started" do
@@ -93,7 +93,7 @@ module Landrush
           setup = Landrush::Action::Setup.new(app, env)
           setup.call(env)
 
-          Store.hosts.get('somehost.vagrant.test').must_equal nil
+          assert_nil Store.hosts.get('somehost.vagrant.test')
         end
       end
     end

@@ -5,7 +5,7 @@ require 'find'
 
 Aruba.configure do |config|
   config.exit_timeout = 3600
-  config.activate_announcer_on_command_failure = [:stdout, :stderr]
+  config.activate_announcer_on_command_failure = %i[stdout stderr]
   config.working_directory = 'build/aruba'
 end
 

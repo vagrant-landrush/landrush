@@ -7,7 +7,7 @@ module Landrush
     describe Teardown do
       it 'calls the next app in the chain' do
         env = fake_environment
-        app = -> (e) { e[:called] = true }
+        app = ->(e) { e[:called] = true }
         teardown = Teardown.new(app, env)
 
         teardown.call(env)
@@ -23,7 +23,7 @@ module Landrush
         Store.hosts.set('somehost.vagrant.test', '1.2.3.4')
         teardown.call(env)
 
-        Store.hosts.get('somehost.vagrant.test').must_equal nil
+        assert_nil Store.hosts.get('somehost.vagrant.test')
       end
 
       it 'removes the machine as a dependent VM' do

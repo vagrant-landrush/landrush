@@ -3,7 +3,7 @@ require_relative '../test_helper'
 module Landrush
   describe Store do
     before do
-      @temp_file = Tempfile.new(%w(landrush_test_store .json))
+      @temp_file = Tempfile.new(%w[landrush_test_store .json])
       @store = Store.new(@temp_file)
     end
 
@@ -28,7 +28,7 @@ module Landrush
 
     describe 'get' do
       it 'returns nil for unset values' do
-        @store.get('notakey').must_equal nil
+        assert_nil @store.get('notakey')
       end
 
       it 'returns the latest set value (no caching)' do
@@ -37,7 +37,7 @@ module Landrush
         @store.set('foo', 'second')
         @store.get('foo').must_equal 'second'
         @store.delete('foo')
-        @store.get('foo').must_equal nil
+        assert_nil @store.get('foo')
       end
     end
 
@@ -49,7 +49,7 @@ module Landrush
 
         @store.delete('now')
 
-        @store.get('now').must_equal nil # you don't!
+        assert_nil @store.get('now')
       end
     end
 
@@ -59,8 +59,8 @@ module Landrush
 
         @store.find('foo.somehost.vagrant.test').must_equal 'somehost.vagrant.test'
         @store.find('bar.somehost.vagrant.test').must_equal 'somehost.vagrant.test'
-        @store.find('foo.otherhost.vagrant.test').must_equal nil
-        @store.find('host.vagrant.test').must_equal nil
+        assert_nil @store.find('foo.otherhost.vagrant.test')
+        assert_nil @store.find('host.vagrant.test')
       end
 
       it 'returns exact matches too' do
@@ -73,8 +73,8 @@ module Landrush
 
         @store.find('somehost').must_equal 'somehost.vagrant.test'
         @store.find('somehost.vagrant').must_equal 'somehost.vagrant.test'
-        @store.find('somehost.vagr').must_equal nil
-        @store.find('someh').must_equal nil
+        assert_nil @store.find('somehost.vagr')
+        assert_nil @store.find('someh')
       end
     end
 

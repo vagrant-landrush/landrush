@@ -11,7 +11,7 @@ module Landrush
     attr_accessor :host_interface_excludes
     attr_accessor :host_redirect_dns
 
-    INTERFACE_CLASSES = [:any, :ipv4, :ipv6].freeze
+    INTERFACE_CLASSES = %i[any ipv4 ipv6].freeze
     INTERFACE_CLASS_INVALID = "Invalid interface class, should be one of: #{INTERFACE_CLASSES.join(', ')}".freeze
 
     DEFAULTS = {

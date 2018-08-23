@@ -26,7 +26,7 @@ module Landrush
               get_dns_for_name(network_name).must_be_nil
               Landrush::Cap::Windows::ConfigureVisibilityOnHost.configure_visibility_on_host(fake_environment, TEST_IP, 'landrush.test')
               get_dns_for_name(network_name).must_equal '127.0.0.1'
-            rescue
+            rescue StandardError
               delete_test_interface network_description
             end
           end
@@ -60,7 +60,7 @@ module Landrush
           # TODO: better error handling
           begin
             dns[0].match(/.* (\d{1,3}\.\d{1,3}\.\d{1,3}.\d{1,3}).*/).captures[0]
-          rescue
+          rescue StandardError
             return nil
           end
         end

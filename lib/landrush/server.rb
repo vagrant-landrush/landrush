@@ -165,7 +165,7 @@ module Landrush
 
     def self.pid
       IO.read(pid_file).to_i
-    rescue
+    rescue StandardError
       nil
     end
 
@@ -182,7 +182,7 @@ module Landrush
       else
         begin
           !!Process.kill(0, pid)
-        rescue
+        rescue StandardError
           false
         end
       end
@@ -260,7 +260,7 @@ module Landrush
 
       if begin
             IPAddr.new(value)
-          rescue
+          rescue StandardError
             nil
           end
         name = transaction.name =~ /#{host}/ ? transaction.name : host
