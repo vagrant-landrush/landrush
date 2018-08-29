@@ -20,7 +20,7 @@ Before do |_scenario|
      .each { |file| FileUtils.rmtree(File.join(ENV['VAGRANT_HOME'], file)) }
 
   # Actual gems are in ~/vagrant.d/gems/gems
-  gems_path = File.join(vagrant_home, 'gems', 'gems')
+  gems_path = File.join(vagrant_home, 'gems', RUBY_VERSION)
   FileUtils.mkdir_p gems_path
 
   # Find the path to the Bundler gems
