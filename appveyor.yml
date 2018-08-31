@@ -9,7 +9,7 @@ install:
   - ruby --version
   - gem --version
   - gem uninstall -x bundler
-  - gem install bundler -v 1.12.5
+  - gem install bundler -v 1.16.4
   - bundler --version
   - bundle install
 build_script:
