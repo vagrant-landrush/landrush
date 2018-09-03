@@ -8,6 +8,3 @@ AllCops:
 
 Style/FrozenStringLiteralComment:
   Enabled: false
-
-Style/EndOfLine:
-  EnforcedStyle: lf

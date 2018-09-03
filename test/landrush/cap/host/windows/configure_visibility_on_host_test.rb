@@ -6,6 +6,25 @@ module Landrush
       describe ConfigureVisibilityOnHost do
         TEST_IP = '10.42.42.42'.freeze
 
+        DOT_3_SVC_RUNNING = 'SERVICE_NAME: dot3svc
+        TYPE               : 30  WIN32
+        STATE              : 4  RUNNING
+                                (STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
+        WIN32_EXIT_CODE    : 0  (0x0)
+        SERVICE_EXIT_CODE  : 0  (0x0)
+        CHECKPOINT         : 0x0
+        WAIT_HINT          : 0x0
+'.freeze
+
+        DOT_3_SVC_STOPPED = 'SERVICE_NAME: dot3svc
+        TYPE               : 30  WIN32
+        STATE              : 1  STOPPED
+        WIN32_EXIT_CODE    : 0  (0x0)
+        SERVICE_EXIT_CODE  : 0  (0x0)
+        CHECKPOINT         : 0x0
+        WAIT_HINT          : 0x0
+'.freeze
+
         before do
           @vboxmanage_found = !Vagrant::Util::Which.which('VBoxManage').nil?
           @has_admin_privileges = Landrush::Cap::Windows::ConfigureVisibilityOnHost.admin_mode?
@@ -32,13 +51,25 @@ module Landrush
           end
         end
 
+        describe '#wired_autoconfig_service_running?' do
+          it 'service running' do
+            Landrush::Cap::Windows::ConfigureVisibilityOnHost.expects(:wired_autoconfig_service_state).returns(DOT_3_SVC_RUNNING)
+            assert ConfigureVisibilityOnHost.send(:wired_autoconfig_service_running?)
+          end
+
+          it 'service stopped' do
+            Landrush::Cap::Windows::ConfigureVisibilityOnHost.expects(:wired_autoconfig_service_state).returns(DOT_3_SVC_STOPPED)
+            refute ConfigureVisibilityOnHost.send(:wired_autoconfig_service_running?)
+          end
+        end
+
         def network_state
           `netsh interface ip show config`.split(/\n/).reject(&:empty?)
         end
 
         def get_network_name(old_network_state, new_network_state)
           new_network_state.reject! { |line| old_network_state.include? line }
-          new_network_state[0].match(/.*\"(.*)\"$/).captures[0]
+          new_network_state[0].match(/.*"(.*)"$/).captures[0]
         end
 
         # Creates a test interface using VBoxMange and sets a known test IP

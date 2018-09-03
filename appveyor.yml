@@ -4,6 +4,8 @@ version: "{build}"
 branches:
   only:
     - master
+init:
+  - git config --global core.autocrlf true
 install:
   - set PATH=C:\Ruby22\bin;%PATH%
   - ruby --version
