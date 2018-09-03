@@ -145,8 +145,12 @@ module Landrush
             @env.ui.info("[landrush] #{msg}") unless @env.nil?
           end
 
+          def wired_autoconfig_service_state
+            `sc query dot3svc`
+          end
+
           def wired_autoconfig_service_running?
-            cmd_out = `sc query dot3svc`
+            cmd_out = wired_autoconfig_service_state
             cmd_out =~ /\s*STATE\s+:\s+4\s+RUNNING/m
           end
 
