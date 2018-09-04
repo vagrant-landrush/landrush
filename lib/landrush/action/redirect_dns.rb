@@ -29,6 +29,9 @@ module Landrush
           _gateway_for_ip(machine.guest.capability(:configured_dns_servers).first)
         when :parallels then
           machine.provider.capability(:host_address)
+        else
+          # As a fallthrough default use the first non loopback IP. This IP should be reachable from the guest as well
+          Socket.ip_address_list.find { |ai| ai.ipv4? && !ai.ipv4_loopback? }.ip_address
         end
       end
 
