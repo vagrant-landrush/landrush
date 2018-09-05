@@ -29,6 +29,9 @@ Feature: dns_resolution
     Then the hostname "my-static-cname-host.landrush-acceptance-test" should resolve to "42.42.42.42" on the internal DNS server
     And the hostname "my-static-cname-host.landrush-acceptance-test" should resolve to "42.42.42.42" on the host
 
+    When I successfully run `bundle exec vagrant landrush stop`
+    Then Landrush is not running
+
     Examples:
       | box                           | provider   |
       | debian/jessie64               | virtualbox |
