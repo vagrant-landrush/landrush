@@ -3,6 +3,8 @@ module Landrush
     class Setup
       include Common
 
+      @@lock = Mutex.new # rubocop:disable ClassVars
+
       def call(env)
         # Make sure we use the right data directory for Landrush
         # Seems Vagrant only makes home_path available in this case, compared to custom commands where there is also data_dir
@@ -34,10 +36,14 @@ module Landrush
 
       def post_boot_setup
         record_dependent_vm
-        configure_server
         record_machine_dns_entry
-        setup_static_dns
-        start_server
+        # ensure only one thread at a time attempts to configure and start
+        # the server, once done should be a noop for remaining threads.
+        @@lock.synchronize do
+          configure_server
+          setup_static_dns
+          start_server
+        end
         return unless machine.config.landrush.host_redirect_dns?
         env[:host].capability(:configure_visibility_on_host, host_ip_address, config.tld)
       end
