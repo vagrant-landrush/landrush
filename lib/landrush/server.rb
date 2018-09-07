@@ -25,10 +25,10 @@ module Landrush
       def working_dir
         # TODO, https://github.com/vagrant-landrush/landrush/issues/178
         # Due to the fact that the whole server is just a bunch of static methods,
-        # there is no initalize method to ensure that the working directory is
+        # there is no initialize method to ensure that the working directory is
         # set prior to making calls to this method. Things work, since at the appropriate
         # Vagrant plugin integration points (e.g. setup.rb) we set the working dir based
-        # on the enviroment passed to us.
+        # on the environment passed to us.
         if @working_dir.nil?
           raise 'The Server\s working directory needs to be explicitly set prior to calling this method'
         end
@@ -40,7 +40,7 @@ module Landrush
       end
 
       def port
-        @port unless @port.nil?
+        return @port unless @port.nil?
         if (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM).nil?
           # Default Landrush port for non Windows OS
           100_53
@@ -74,11 +74,17 @@ module Landrush
     end
 
     def self.upstream
-      @upstream ||= RubyDNS::Resolver.new(upstream_servers)
+      @upstream ||= RubyDNS::Resolver.new(upstream_servers, logger: @logger)
     end
 
     # Used to start the Landrush DNS server as a child process using ChildProcess gem
     def self.start
+      # Check if the daemon is already started...
+      if running?
+        @ui.info "[landrush] DNS server already running with pid #{read_pid(pid_file)}" unless @ui.nil?
+        return
+      end
+
       # On a machine with just Vagrant installed there might be no other Ruby except the
       # one bundled with Vagrant. Let's make sure the embedded bin directory containing
       # the Ruby executable is added to the PATH.
@@ -86,7 +92,7 @@ module Landrush
 
       ruby_bin = Landrush::Util::Path.embedded_vagrant_ruby.nil? ? 'ruby' : Landrush::Util::Path.embedded_vagrant_ruby
       start_server_script = Pathname(__dir__).join('start_server.rb').to_s
-      @ui.detail("[landrush] '#{ruby_bin} #{start_server_script} #{port} #{working_dir} #{gems_dir}'") unless @ui.nil?
+      @ui.detail("[landrush] starting DNS server: '#{ruby_bin} #{start_server_script} #{port} #{working_dir} #{gems_dir}'") unless @ui.nil?
       if Vagrant::Util::Platform.windows?
         # Need to handle Windows differently. Kernel.spawn fails to work, if
         # the shell creating the process is closed.
@@ -125,7 +131,7 @@ module Landrush
       end
 
       write_pid(pid, pid_file)
-      # As of Vagrant 1.8.6 this additonal sleep is needed, otherwise the child process dies!?
+      # As of Vagrant 1.8.6 this additional sleep is needed, otherwise the child process dies!?
       sleep 1
     end
 
@@ -206,11 +212,7 @@ module Landrush
       server.port = port
       server.working_dir = working_dir
 
-      ensure_path_exits(log_file_path)
-      log_file = File.open(log_file_path, 'w')
-      log_file.sync = true
-      @logger = Logger.new(log_file)
-      @logger.level = Logger::INFO
+      @logger = setup_logging
 
       # Start the DNS server
       run_dns_server(listen: interfaces, logger: @logger) do
@@ -234,7 +236,6 @@ module Landrush
 
         # Default DNS handler
         otherwise do |transaction|
-          # @logger.info "Passing on to upstream: #{transaction.to_s}"
           transaction.passthrough!(server.upstream)
         end
       end
@@ -273,6 +274,31 @@ module Landrush
 
     def self.pid_file
       File.join(working_dir, 'run', 'landrush.pid')
+    end
+
+    def self.setup_logging
+      ensure_path_exits(log_file_path)
+      log_file = File.open(log_file_path, 'w')
+      log_file.sync = true
+      logger = Logger.new(log_file)
+
+      case ENV.fetch(:LANDRUSH_LOG.to_s) { 'info' }
+      when 'debug'
+        logger.level = Logger::DEBUG
+      when 'info'
+        logger.level = Logger::INFO
+      when 'warn'
+        logger.level = Logger::WARN
+      when 'error'
+        logger.level = Logger::ERROR
+      when 'fatal'
+        logger.level = Logger::FATAL
+      when 'unknown'
+        logger.level = Logger::UNKNOWN
+      else
+        raise ArgumentError, "invalid log level: #{severity}"
+      end
+      logger
     end
   end
 end

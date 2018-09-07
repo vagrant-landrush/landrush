@@ -19,7 +19,9 @@ Metrics/BlockLength:
 # Offense count: 3
 # Configuration parameters: CountComments.
 Metrics/ClassLength:
-  Max: 187
+  Max: 200
+  Exclude:
+  - 'lib/landrush/server.rb'
 
 # Offense count: 3
 Metrics/CyclomaticComplexity:
