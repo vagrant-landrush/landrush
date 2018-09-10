@@ -17,12 +17,14 @@ module Landrush
         DependentVMs.remove(machine_hostname)
 
         return unless DependentVMs.none?
+
         teardown_static_dns
         teardown_server
       end
 
       def teardown_machine_dns
         return unless Store.hosts.has? machine_hostname
+
         info "removing machine entry: #{machine_hostname}"
         Store.hosts.delete(machine_hostname)
       end

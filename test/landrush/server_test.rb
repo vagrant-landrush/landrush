@@ -14,22 +14,11 @@ module Landrush
 
     def wait_for_port
       sleep 1 until begin
-                       TCPSocket.open('127.0.0.1', Server.port)
-                     rescue StandardError
-                       nil
-                     end
+                      TCPSocket.open('127.0.0.1', Server.port)
+                    rescue StandardError
+                      nil
+                    end
     end
-
-    # before do
-    #   @tmp_dir = Dir.mktmpdir('landrush-server-test-')
-    #   Server.working_dir = @tmp_dir
-    #   Server.gems_dir = gem_dir
-    # end
-    #
-    # after do
-    #   Server.stop
-    #   FileUtils.rm_rf(@tmp_dir) if File.exist?(@tmp_dir)
-    # end
 
     describe 'start/stop' do
       it 'starts and stops a daemon' do

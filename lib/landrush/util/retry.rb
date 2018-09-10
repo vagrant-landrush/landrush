@@ -6,6 +6,7 @@ module Landrush
         n = 0
         while n < opts[:tries]
           return true if yield
+
           sleep opts[:sleep].to_f if opts[:sleep]
           n += 1
         end
