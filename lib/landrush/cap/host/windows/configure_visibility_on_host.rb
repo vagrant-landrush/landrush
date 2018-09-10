@@ -96,6 +96,7 @@ module Landrush
             cmd_out = `netsh lan show interfaces`
             interface_details = cmd_out.split(/\n\n/).select { |settings| settings.match(/#{Regexp.quote(network_name)}/m) }
             return nil if interface_details.empty?
+
             interface_details[0].split(/\n/)[2].match(/.*:(.*)/).captures[0].strip
           end
 
@@ -130,6 +131,7 @@ module Landrush
               end
             end
             return nil if network_details[0].nil?
+
             network_details[0].split(/\n/)[0].match(/Configuration for interface "(.*)"/).captures[0].strip
           end
 

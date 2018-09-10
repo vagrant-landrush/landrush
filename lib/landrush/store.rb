@@ -58,10 +58,10 @@ module Landrush
     def find(search)
       with_file_lock do |file|
         search = IPAddr.new(search).reverse if begin
-                                                  IPAddr.new(search)
-                                                rescue StandardError
-                                                  nil
-                                                end
+                                                 IPAddr.new(search)
+                                               rescue StandardError
+                                                 nil
+                                               end
         current_config(file).keys.detect do |key|
           key.casecmp(search) == 0   ||
             search =~ /#{key}$/i     ||

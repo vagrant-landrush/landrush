@@ -30,6 +30,7 @@ module Landrush
         if @working_dir.nil?
           raise 'The Server\s working directory needs to be explicitly set prior to calling this method'
         end
+
         @working_dir
       end
 
@@ -44,6 +45,7 @@ module Landrush
 
       def port
         return @port unless @port.nil?
+
         if (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM).nil?
           # Default Landrush port for non Windows OS
           100_53
@@ -156,7 +158,7 @@ module Landrush
         server = self
         server.port = port
         server.working_dir = working_dir
-        
+
         DnsServer.start_dns_server(@logger)
       end
 
@@ -165,6 +167,7 @@ module Landrush
       def running?(file)
         pid = read_pid(file)
         return false if pid.nil? || pid.zero?
+
         if Vagrant::Util::Platform.windows?
           begin
             Process.get_exitcode(pid).nil?
