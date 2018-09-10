@@ -31,7 +31,7 @@ module TestServerHooks
   def teardown
     super
     # Cleanup any stray server instances from tests
-    Landrush::Server.stop if Landrush::Server.running?
+    Landrush::Server.stop
     Landrush::Store.reset
   end
 end

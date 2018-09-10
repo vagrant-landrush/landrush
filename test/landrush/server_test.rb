@@ -20,24 +20,24 @@ module Landrush
                      end
     end
 
-    before do
-      @tmp_dir = Dir.mktmpdir('landrush-server-test-')
-      Server.working_dir = @tmp_dir
-      Server.gems_dir = gem_dir
-    end
-
-    after do
-      Server.stop
-      FileUtils.rm_rf(@tmp_dir) if File.exist?(@tmp_dir)
-    end
+    # before do
+    #   @tmp_dir = Dir.mktmpdir('landrush-server-test-')
+    #   Server.working_dir = @tmp_dir
+    #   Server.gems_dir = gem_dir
+    # end
+    #
+    # after do
+    #   Server.stop
+    #   FileUtils.rm_rf(@tmp_dir) if File.exist?(@tmp_dir)
+    # end
 
     describe 'start/stop' do
       it 'starts and stops a daemon' do
         Server.start
-        Server.running?.must_equal true
+        Server.status.must_equal :running
 
         Server.stop
-        Server.running?.must_equal false
+        Server.status.must_equal :stopped
       end
 
       # FIXME: This test requires network access.

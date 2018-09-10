@@ -34,7 +34,7 @@ module Landrush
 
         setup.call(env)
 
-        Server.running?.must_equal true
+        Server.status.must_equal :running
       end
 
       it "does not attempt to start the server if it's already up" do
@@ -43,12 +43,13 @@ module Landrush
         Server.working_dir = File.join(env[:home_path], 'data', 'landrush')
         Server.gems_dir = env[:gems_path].to_s + '/gems'
         Server.start
-        original_pid = Server.pid
+        original_pid = Server.read_pid(File.open(File.join(Server.working_dir, 'run', 'landrush.pid')))
 
         setup.call(env)
 
-        Server.running?.must_equal true
-        Server.pid.must_equal original_pid
+        Server.status.must_equal :running
+        new_pid = Server.read_pid(File.open(File.join(Server.working_dir, 'run', 'landrush.pid')))
+        new_pid.must_equal original_pid
       end
 
       it 'does nothing if it is not enabled via config' do

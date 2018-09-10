@@ -45,7 +45,7 @@ module Landrush
         Server.start
         teardown.call(env)
 
-        Server.running?.must_equal false
+        Server.status.must_equal :stopped
       end
 
       it 'leaves the landrush server when other dependent vms exist' do
@@ -60,7 +60,7 @@ module Landrush
         Server.start
         teardown.call(env)
 
-        Server.running?.must_equal true
+        Server.status.must_equal :running
       end
 
       it 'leaves static entries when other dependent vms exist' do
@@ -84,7 +84,7 @@ module Landrush
 
         teardown.call(env)
 
-        Server.running?.must_equal false
+        Server.status.must_equal :stopped
       end
 
       it 'does nothing when landrush is disabled' do

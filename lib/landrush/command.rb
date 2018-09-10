@@ -1,6 +1,6 @@
 module Landrush
   class Command < Vagrant.plugin('2', :command)
-    DAEMON_COMMANDS = %w[start stop restart status].freeze
+    DAEMON_COMMANDS = %w[start stop restart].freeze
 
     def self.synopsis
       'manages DNS for both guest and host'
@@ -16,6 +16,8 @@ module Landrush
       command = ARGV.first || 'help'
       if DAEMON_COMMANDS.include?(command)
         Server.send(command)
+      elsif command == 'status'
+        status
       elsif command == 'dependentvms' || command == 'vms'
         dependent_vms
       elsif command == 'ls' || command == 'list'
@@ -68,6 +70,17 @@ module Landrush
     end
 
     private
+
+    def status
+      case Landrush::Server.status
+      when :running
+        puts "Daemon status: running pid=#{Landrush::Server.pid}"
+      when :stopped
+        puts 'Daemon status: stopped'
+      else
+        puts 'Daemon status: unknown'
+      end
+    end
 
     def dependent_vms
       if DependentVMs.any?

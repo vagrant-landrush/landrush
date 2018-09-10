@@ -1,7 +1,7 @@
 module DeleteFakeWorkingDirHooks
   def teardown
     super
-    Landrush::Server.working_dir.rmtree if Landrush::Server.working_dir.directory?
+    FileUtils.rm_rf(@temp_dir)
   end
 end
 

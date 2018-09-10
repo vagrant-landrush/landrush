@@ -57,12 +57,6 @@ module Landrush
         Store.config.set('upstream', config.upstream_servers)
       end
 
-      def start_server
-        return if Server.running?
-        info 'starting dns server'
-        Server.start
-      end
-
       def setup_static_dns
         config.hosts.each do |hostname, dns_value|
           dns_value ||= host_ip_address
