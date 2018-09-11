@@ -2,21 +2,20 @@
 :toc:
 :toc-placement!:
 
-The following should get you started on setting up your development environment. As a prerequisite you will need a Ruby 2.2 environment. We
-recommend to use https://rvm.io/[RVM] to create an isolated development
-environment. On Windows the http://rubyinstaller.org/[RubyInstaller for
-Windows] is probably the easiest way to get started. In this case you
-will need the http://rubyinstaller.org/add-ons/devkit/[DevKit] as well.
+The following should get you started on setting up your development environment.
+As a prerequisite you will need a Ruby environment (Ruby version >= 2.2, 2.5 recommended).
+We recommend to use https://rvm.io/[RVM] to create an isolated development environment.
+On Windows the http://rubyinstaller.org/[RubyInstaller for Windows] is probably the easiest way to get started.
+In this case you will need the http://rubyinstaller.org/add-ons/devkit/[DevKit] as well.
 
 '''
 toc::[]
 '''
 
-Once you have a working Ruby environment it is time to
-https://help.github.com/articles/fork-a-repo/[fork] the repository. Refer to the link:../CONTRIBUTING.adoc[Contributing] guide for more information.
+Once you have a working Ruby environment it is time to https://help.github.com/articles/fork-a-repo/[fork] the repository.
+Refer to the link:../CONTRIBUTING.adoc[Contributing] guide for more information.
 
-The following sections list the most important commands you will need for
-development.
+The following sections list the most important commands you will need for development.
 
 == Setup
 
@@ -25,11 +24,13 @@ development.
 ....
 $ gem install bundler
 ....
+
 * Install dependencies:
 +
 ....
 $ bundle install
 ....
+
 * Get a list of all available build tasks:
 +
 ....
@@ -39,8 +40,9 @@ $ bundle exec rake -T
 * Build the Landrush gem:
 +
 ....
-$ bundle exec rake install
+$ bundle exec rake build
 ....
+
 * Clean all generated files:
 +
 ....
@@ -54,11 +56,18 @@ $ bundle exec rake clean clobber
 ....
 $ bundle exec rake test
 ....
+
+TIP: The unit tests utilize https://github.com/seattlerb/minitest[minitest] as test harness.
+Tests are mainly written in Spec style.
+To make testing simpler, each test will be configured against a newly created temporary working directly which will be deleted on teardown.
+Refer to https://github.com/vagrant-landrush/landrush/blob/master/test/test_helper.rb#L173[test_helper.rb] to see how this setup and teardown works.
+
 * Run a single test file:
 +
 ....
 $ bundle exec rake test TEST=<path to test file>
 ....
+
 * Run cucumber/aruba acceptance tests:
 +
 ....
@@ -66,10 +75,9 @@ $ bundle exec rake features
 ....
 
 NOTE: The acceptance tests currently work only for OS X, out of the box.
-On Linux, one has to manually configure the host visibility for the
-TLD _landrush-acceptance-test_. See *Linux* in the *Visibility on the Host* section of the link:Usage.adoc[Usage guide]. On Windows,
-the acceptance tests won't work due to a bug in
-https://github.com/cucumber/aruba/issues/387[Aruba].
+On Linux, one has to manually configure the host visibility for the TLD _landrush-acceptance-test_.
+See *Linux* in the *Visibility on the Host* section of the link:Usage.adoc[Usage guide].
+On Windows, the acceptance tests won't work due to a bug in https://github.com/cucumber/aruba/issues/387[Aruba].
 
 * Run a single cucumber/aruba acceptance tests:
 +
@@ -82,7 +90,7 @@ $ bundle exec rake features FEATURE=features/<feature-filename>.feature
 The documentation of this plugin is written in http://asciidoctor.org[Asciidoc]. If you need some syntax help,
 refer to the http://asciidoctor.org/docs/asciidoc-syntax-quick-reference/[AsciiDoc Syntax Quick Reference].
 
-To build the documentation you can execute
+To build the documentation you can execute:
 
 ----
 $ bundle exec rake html
@@ -91,16 +99,13 @@ $ bundle exec rake html
 which will build the HTML documentation into the folder _build/html_.
 
 The source code also contains a link:../Guardfile[Guardfile] for the https://github.com/guard/guard[Guard] library.
-You can execute
+You can execute:
 
 ----
 $ bundle exec guard
 ----
 
 and your HTML documentation will be automatically updated on each change to an Asciidoc source file.
-https://github.com/guard/guard-livereload[Live reload] is also enabled, so you just need to install the right
-http://livereload.com/extensions/#installing-sections[LiveReload Safari/Chrome/Firefox extension] and your
-browser can refresh the page each time you save a change to your Asciidoc files.
 
 == Misc
 
