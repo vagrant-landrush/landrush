@@ -59,7 +59,7 @@ A Landrush example configuration could look like this:
 
 ....
 Vagrant.configure("2") do |config|
-  config.vm.box = "hashicorp/precise64"
+  config.vm.box = "ubuntu/xenial64"
 
   config.landrush.enabled = true
 
