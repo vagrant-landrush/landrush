@@ -1,3 +1,14 @@
+## [1.3.0] - 2018-09-19
+
+- Issue [#177](https://github.com/vagrant-landrush/landrush/issues/177) - Allow multiple TLD kind/feature priority/major
+- Issue [#329](https://github.com/vagrant-landrush/landrush/issues/329) - Update dev docs component/documentation kind/task priority/major
+- Issue [#304](https://github.com/vagrant-landrush/landrush/issues/304) - Concurrency issue when nodes are brought up in parallel kind/bug priority/major
+- Issue [#261](https://github.com/vagrant-landrush/landrush/issues/261) - Example shown in README results in error component/documentation kind/bug priority/minor
+- Issue [#274](https://github.com/vagrant-landrush/landrush/issues/274) - Host DNS configuration should consider NetworkManager on Fedora kind/bug priority/major resolution/duplicate
+- Issue [#71](https://github.com/vagrant-landrush/landrush/issues/71)   - Support for docker provider in vagrant 1.6 kind/feature priority/major
+- Issue [#324](https://github.com/vagrant-landrush/landrush/issues/324) - Upgrade dev environment component/build kind/task priority/major
+- Issue [#297](https://github.com/vagrant-landrush/landrush/issues/297) - Support Arch Linux as host kind/feature 
+
 ## [1.2.0] - 2016-12-07
 
 - Issue [#298](https://github.com/vagrant-landrush/landrush/issues/298) - Travis CI used wrong Bundler version
