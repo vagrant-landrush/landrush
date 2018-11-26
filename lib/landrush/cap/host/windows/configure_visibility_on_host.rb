@@ -23,6 +23,41 @@ module Landrush
             (`reg query HKU\\S-1-5-19 2>&1` =~ /ERROR/).nil?
           end
 
+          # Given an IP determines the network name, if any. Uses netsh which generates output like this:
+          #
+          # ...
+          # \n\n
+          # Configuration for interface "Ethernet 2"
+          #    DHCP enabled:                         Yes
+          #    IP Address:                           10.10.10.1
+          #    Subnet Prefix:                        10.10.10.0/24 (mask 255.255.255.0)
+          #    InterfaceMetric:                      10
+          #    DNS servers configured through DHCP:  None
+          #    Register with which suffix:           Primary only
+          #    WINS servers configured through DHCP: None
+          # \n\n
+          # ...
+          def get_network_name(ip)
+            cmd_out = `netsh interface ip show config`
+            network_details = cmd_out.split(/^$/).reject(&:empty?).select do |settings|
+              begin
+                lines = settings.split(/\n/).reject(&:empty?)
+                subnet = lines[3]
+                next false unless subnet =~ /Subnet Prefix/
+
+                mask = IPAddr.new(subnet.match(%r{.* (\d{1,3}\.\d{1,3}\.\d{1,3}.\d{1,3}/\d{1,3}).*}).captures[0])
+                address = IPAddr.new(ip)
+
+                mask.include?(address)
+              rescue StandardError
+                false
+              end
+            end
+            return nil if network_details[0].nil? || network_details[0].empty?
+
+            network_details[0].split(/\n/).reject(&:empty?)[0].match(/Configuration for interface "(.*)"/).captures[0].strip
+          end
+
           private
 
           # Checks that all required tools are on the PATH and that the Wired AutoConfig service is started
@@ -100,41 +135,6 @@ module Landrush
             return nil if interface_details.empty?
 
             interface_details[0].split(/\n/)[2].match(/.*:(.*)/).captures[0].strip
-          end
-
-          # Given an IP determines the network name, if any. Uses netsh which generates output like this:
-          #
-          # ...
-          # \n\n
-          # Configuration for interface "Ethernet 2"
-          #    DHCP enabled:                         Yes
-          #    IP Address:                           10.10.10.1
-          #    Subnet Prefix:                        10.10.10.0/24 (mask 255.255.255.0)
-          #    InterfaceMetric:                      10
-          #    DNS servers configured through DHCP:  None
-          #    Register with which suffix:           Primary only
-          #    WINS servers configured through DHCP: None
-          # \n\n
-          # ...
-          def get_network_name(ip)
-            cmd_out = `netsh interface ip show config`
-            network_details = cmd_out.split(/\n\n/).select do |settings|
-              begin
-                lines = settings.split(/\n/).reject(&:empty?)
-                subnet = lines[3]
-                next false unless subnet =~ /Subnet Prefix/
-
-                mask = IPAddr.new(subnet.match(%r{.* (\d{1,3}\.\d{1,3}\.\d{1,3}.\d{1,3}/\d{1,3}).*}).captures[0])
-                address = IPAddr.new(ip)
-
-                mask.include?(address)
-              rescue StandardError
-                false
-              end
-            end
-            return nil if network_details[0].nil?
-
-            network_details[0].split(/\n/)[0].match(/Configuration for interface "(.*)"/).captures[0].strip
           end
 
           # Makes sure that we have admin privileges and if nor starts a new shell with the required
