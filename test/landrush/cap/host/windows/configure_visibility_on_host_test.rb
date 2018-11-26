@@ -1,12 +1,8 @@
 require_relative '../../../../test_helper'
 
-module Landrush
-  module Cap
-    module Windows
-      describe ConfigureVisibilityOnHost do
-        TEST_IP = '10.42.42.42'.freeze
+TEST_IP = '10.42.42.42'.freeze
 
-        DOT_3_SVC_RUNNING = 'SERVICE_NAME: dot3svc
+DOT_3_SVC_RUNNING = 'SERVICE_NAME: dot3svc
         TYPE               : 30  WIN32
         STATE              : 4  RUNNING
                                 (STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
@@ -16,7 +12,7 @@ module Landrush
         WAIT_HINT          : 0x0
 '.freeze
 
-        DOT_3_SVC_STOPPED = 'SERVICE_NAME: dot3svc
+DOT_3_SVC_STOPPED = 'SERVICE_NAME: dot3svc
         TYPE               : 30  WIN32
         STATE              : 1  STOPPED
         WIN32_EXIT_CODE    : 0  (0x0)
@@ -25,6 +21,54 @@ module Landrush
         WAIT_HINT          : 0x0
 '.freeze
 
+NETSH_EXAMPLE = '
+Configuration for interface "VirtualBox Host-Only Network #1"
+    DHCP enabled:                         No
+    IP Address:                           192.168.99.1
+    Subnet Prefix:                        192.168.99.0/24 (mask 255.255.255.0)
+    InterfaceMetric:                      25
+    Statically Configured DNS Servers:    None
+    Register with which suffix:           Primary only
+    Statically Configured WINS Servers:   None
+
+Configuration for interface "Ethernet"
+    DHCP enabled:                         Yes
+    IP Address:                           192.168.1.193
+    Subnet Prefix:                        192.168.1.0/24 (mask 255.255.255.0)
+    Default Gateway:                      192.168.1.1
+    Gateway Metric:                       0
+    InterfaceMetric:                      35
+    DNS servers configured through DHCP:  192.168.1.1
+    Register with which suffix:           Primary only
+    WINS servers configured through DHCP: None
+
+Configuration for interface "Loopback Pseudo-Interface 1"
+    DHCP enabled:                         No
+    IP Address:                           127.0.0.1
+    Subnet Prefix:                        127.0.0.0/8 (mask 255.0.0.0)
+    InterfaceMetric:                      75
+    Statically Configured DNS Servers:    None
+    Register with which suffix:           Primary only
+    Statically Configured WINS Servers:   None
+'.freeze
+
+NETSH_EXAMPLE_SINGLE_INTERFACE = '
+Configuration for interface "Ethernet"
+    DHCP enabled:                         Yes
+    IP Address:                           192.168.1.193
+    Subnet Prefix:                        192.168.1.0/24 (mask 255.255.255.0)
+    Default Gateway:                      192.168.1.1
+    Gateway Metric:                       0
+    InterfaceMetric:                      35
+    DNS servers configured through DHCP:  192.168.1.1
+    Register with which suffix:           Primary only
+    WINS servers configured through DHCP: None
+'.freeze
+
+module Landrush
+  module Cap
+    module Windows
+      describe ConfigureVisibilityOnHost do
         before do
           @vboxmanage_found = !Vagrant::Util::Which.which('VBoxManage').nil?
           @has_admin_privileges = Landrush::Cap::Windows::ConfigureVisibilityOnHost.admin_mode?
@@ -60,6 +104,35 @@ module Landrush
           it 'service stopped' do
             Landrush::Cap::Windows::ConfigureVisibilityOnHost.expects(:wired_autoconfig_service_state).returns(DOT_3_SVC_STOPPED)
             refute ConfigureVisibilityOnHost.send(:wired_autoconfig_service_running?)
+          end
+        end
+
+        describe '#get_network_name' do
+          it 'returns network name for matching IP' do
+            ConfigureVisibilityOnHost.expects(:`).with('netsh interface ip show config').returns(NETSH_EXAMPLE)
+            expect(ConfigureVisibilityOnHost.get_network_name('192.168.1.193')).must_equal('Ethernet')
+          end
+
+          it 'returns nil for non matching IP' do
+            ConfigureVisibilityOnHost.expects(:`).with('netsh interface ip show config').returns(NETSH_EXAMPLE)
+            expect(ConfigureVisibilityOnHost.get_network_name('42.42.42.42')).must_be_nil
+          end
+
+          it 'returns nil for nil input' do
+            ConfigureVisibilityOnHost.expects(:`).with('netsh interface ip show config').returns(NETSH_EXAMPLE)
+            expect(ConfigureVisibilityOnHost.get_network_name(nil)).must_be_nil
+          end
+
+          it 'returns nil for empty input' do
+            ConfigureVisibilityOnHost.expects(:`).with('netsh interface ip show config').returns(NETSH_EXAMPLE)
+            expect(ConfigureVisibilityOnHost.get_network_name('')).must_be_nil
+          end
+
+          describe '#get_network_name' do
+            it 'returns network name for single interface' do
+              ConfigureVisibilityOnHost.expects(:`).with('netsh interface ip show config').returns(NETSH_EXAMPLE_SINGLE_INTERFACE)
+              expect(ConfigureVisibilityOnHost.get_network_name('192.168.1.193')).must_equal('Ethernet')
+            end
           end
         end
 

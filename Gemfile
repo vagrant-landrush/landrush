@@ -16,7 +16,7 @@ group :development do
   gem 'minitest'
   gem 'mocha'
   gem 'rake', '~> 10'
-  gem 'rubocop'
+  gem 'rubocop', '~> 0.59.0'
   gem 'vagrant',
       git: 'https://github.com/mitchellh/vagrant.git',
       ref: 'v2.1.2'
