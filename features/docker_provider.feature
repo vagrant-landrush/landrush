@@ -1,4 +1,4 @@
-Feature: Landrush with Docker provider
+Feature: Docker provider
   Landrush should work with Docker provider
 
   Scenario: Booting box with Docker provider

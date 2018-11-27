@@ -50,7 +50,7 @@ module Landrush
       def add_prerequisite_network_interface
         return unless virtualbox? && !private_network_exists?
 
-        info 'virtualbox requires an additional private network; adding it'
+        info 'Virtualbox requires an additional private network; adding it'
         machine.config.vm.network :private_network, type: :dhcp
       end
 
@@ -93,7 +93,7 @@ module Landrush
         end
 
         unless Store.hosts.has?(machine_hostname, ip_address)
-          info "adding machine entry: #{machine_hostname} => #{ip_address}"
+          info "Adding '#{machine_hostname} => #{ip_address}' to #{Store.hosts.backing_file}"
           Store.hosts.set(machine_hostname, ip_address)
           Store.hosts.set(IPAddr.new(ip_address).reverse, machine_hostname)
         end

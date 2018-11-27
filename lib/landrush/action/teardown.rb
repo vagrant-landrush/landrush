@@ -25,7 +25,7 @@ module Landrush
       def teardown_machine_dns
         return unless Store.hosts.has? machine_hostname
 
-        info "removing machine entry: #{machine_hostname}"
+        info "Removing machine entry: #{machine_hostname}"
         Store.hosts.delete(machine_hostname)
       end
 

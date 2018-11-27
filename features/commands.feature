@@ -1,5 +1,5 @@
-Feature: Landrush reload
-  Landrush DNS server should restart on a 'vagrant reload'
+Feature: Basic commands
+  Basic Landrush commands including reload.
 
   Scenario Outline: booting a box and restarting it
     Given a file named "Vagrantfile" with:

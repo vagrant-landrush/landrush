@@ -1,4 +1,4 @@
-Feature: dns_resolution
+Feature: DNS resolution
   Landrush should make a virtual machine's IP address DNS-resolvable.
 
   Scenario Outline: booting a box
@@ -33,7 +33,7 @@ Feature: dns_resolution
     Then Landrush is not running
 
     Examples:
-      | box                           | provider   |
-      | debian/jessie64               | virtualbox |
-      #| opensuse/openSUSE-42.1-x86_64 | virtualbox |
-      #| ubuntu/wily64                 | virtualbox |
+      | box              | provider   |
+      | debian/jessie64  | virtualbox |
+      | ubuntu/xenial64  | virtualbox |
+      | ubuntu/bionic64  | virtualbox |

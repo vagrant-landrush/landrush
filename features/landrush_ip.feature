@@ -25,6 +25,9 @@ Feature: landrush-ip
     When I successfully run `bundle exec vagrant up --provider <provider>`
     Then the host visible IP address of the guest is the IP of interface "eth3"
 
+    When I successfully run `bundle exec vagrant landrush stop`
+    Then Landrush is not running
+
     Examples:
       | box             | provider   |
       | debian/jessie64 | virtualbox |
@@ -52,6 +55,10 @@ Feature: landrush-ip
     When I successfully run `bundle exec vagrant up --provider <provider>`
     Then the host visible IP address of the guest is the IP of interface "eth4"
 
+    When I successfully run `bundle exec vagrant landrush stop`
+    Then Landrush is not running
+
     Examples:
       | box             | provider   |
       | debian/jessie64 | virtualbox |
+

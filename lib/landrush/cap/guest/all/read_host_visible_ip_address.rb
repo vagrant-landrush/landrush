@@ -42,8 +42,7 @@ module Landrush
           # This allows us to be more accurate, especially with logging what's going on.
           unless machine.config.landrush.host_interface.nil?
             addr = addresses.detect { |a| a['name'] == machine.config.landrush.host_interface }
-
-            machine.env.ui.warn "[landrush] Unable to find interface #{machine.config.landrush.host_interface}" if addr.nil?
+            log_with_prefix(:warn, "Unable to find interface #{machine.config.landrush.host_interface}", machine) if addr.nil?
           end
 
           if addr.nil?
@@ -64,10 +63,13 @@ module Landrush
                 end
 
           ip = IPAddr.new(addr[key])
-
-          machine.env.ui.info "[landrush] Using #{addr['name']} (#{addr[key]})"
-
+          log_with_prefix(:info, "Using #{addr['name']} (#{addr[key]})", machine)
           ip.to_s
+        end
+
+        def self.log_with_prefix(level, msg, machine)
+          @prefix_ui = Vagrant::UI::Prefixed.new(machine.env.ui, machine.name) if @prefix_ui.nil?
+          @prefix_ui.send level, "[landrush] #{msg}"
         end
       end
     end
