@@ -21,41 +21,47 @@ The following sections list the most important commands you will need for develo
 
 * Install http://bundler.io/[Bundler]:
 +
-....
+[source,bash]
+----
 $ gem install bundler
-....
+----
 
 * Install dependencies:
 +
-....
+[source,bash]
+----
 $ bundle install
-....
+----
 
 * Get a list of all available build tasks:
 +
-....
+[source,bash]
+----
 $ bundle exec rake -T
-....
+----
 
 * Build the Landrush gem:
 +
-....
+[source,bash]
+----
 $ bundle exec rake build
-....
+----
 
 * Clean all generated files:
 +
-....
+[source,bash]
+----
 $ bundle exec rake clean clobber
-....
+----
 
 == Tests
 
 * Run the test suite:
 +
-....
+[source,bash]
+----
 $ bundle exec rake test
-....
+----
 
 TIP: The unit tests utilize https://github.com/seattlerb/minitest[minitest] as test harness.
 Tests are mainly written in Spec style.
@@ -64,15 +70,17 @@ Refer to https://github.com/vagrant-landrush/landrush/blob/master/test/test_help
 
 * Run a single test file:
 +
-....
+[source,bash]
+----
 $ bundle exec rake test TEST=<path to test file>
-....
+----
 
 * Run cucumber/aruba acceptance tests:
 +
-....
+[source,bash]
+----
 $ bundle exec rake features
-....
+----
 
 NOTE: The acceptance tests currently work only for OS X, out of the box.
 On Linux, one has to manually configure the host visibility for the TLD _landrush-acceptance-test_.
@@ -81,9 +89,10 @@ On Windows, the acceptance tests won't work due to a bug in https://github.com/c
 
 * Run a single cucumber/aruba acceptance tests:
 +
-....
+[source,bash]
+----
 $ bundle exec rake features FEATURE=features/<feature-filename>.feature
-....
+----
 
 == Documentation
 
@@ -92,6 +101,7 @@ refer to the http://asciidoctor.org/docs/asciidoc-syntax-quick-reference/[AsciiD
 
 To build the documentation you can execute:
 
+[source,bash]
 ----
 $ bundle exec rake html
 ----
@@ -101,11 +111,43 @@ which will build the HTML documentation into the folder _build/html_.
 The source code also contains a link:../Guardfile[Guardfile] for the https://github.com/guard/guard[Guard] library.
 You can execute:
 
+[source,bash]
 ----
 $ bundle exec guard
 ----
 
 and your HTML documentation will be automatically updated on each change to an Asciidoc source file.
+
+== Releasing
+
+[NOTE]
+====
+In order to publish to RubyGems you need to have an account and you need to have an API key configured on your machine.
+If you have an account you can setup the API key using:
+
+[source,bash]
+----
+curl -u carlos https://rubygems.org/api/v1/api_key.yaml > ~/.gem/credentials
+----
+====
+
+* Make sure the HEAD of development builds and passes all tests:
+  `bundle exec rake clean rubocop test features install`.
+* Review https://github.com/vagrant-landrush/landrush/milestones[milestone] for the current release
+** Make sure all issues are resolved
+** Move unresolved issues into an upcoming release
+** Close milestone
+* Update the link:CHANGELOG.md[CHANGELOG]
+* Update link:lib/landrush/version.rb[version.rb] with the correct
+  release version. Consider http://semver.org/:[Semantic Versioning] guidelines
+  when deciding on the release version
+* Commit _CHANGELOG_ and _version.rb_ using commit message of the form:
+  `cut v<version>`
+* Push commit to upstream
+* Release the gem: `bundle exec rake release`
+* Update link:lib/landrush/version.rb[version.rb] with the next anticipated release version, eg _1.4.0.dev_
+* Commit with message: `setting dev version <version>.dev`
+* Push upstream
 
 == Misc
 

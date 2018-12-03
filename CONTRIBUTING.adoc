@@ -81,26 +81,6 @@ $ git merge fix-123
 $ git push origin master
 -------------------------------------------------------------------------
 
-== Releasing
-
-* Make sure the HEAD of development builds and passes all tests:
-  `bundle exec rake clean rubocop test features install`.
-* Review https://github.com/vagrant-landrush/landrush/milestones[milestone] for the current release
-** Make sure all issues are resolved
-** Move unresolved issues into an upcoming release
-** Close milestone
-* Update the link:CHANGELOG.md[CHANGELOG]
-* Update link:lib/landrush/version.rb[version.rb] with the correct
-  release version. Consider http://semver.org/:[Semantic Versioning] guidelines
-  when deciding on the release version
-* Commit _CHANGELOG_ and _version.rb_ using commit message of the form:
-  `cut v<version>`
-* Push commit to upstream
-* Release the gem: `bundle exec rake release`
-* Update link:lib/landrush/version.rb[version.rb] with the next anticipated release version, eg _1.4.0.dev_
-* Commit with message: `setting dev version <version>.dev`
-* Push upstream
-
 == Maintainers
 
 * Brian Exelbierd (@bexelbie)
