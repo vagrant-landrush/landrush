@@ -127,7 +127,7 @@ If you have an account you can setup the API key using:
 
 [source,bash]
 ----
-curl -u carlos https://rubygems.org/api/v1/api_key.yaml > ~/.gem/credentials
+curl -u <user> https://rubygems.org/api/v1/api_key.yaml > ~/.gem/credentials
 ----
 ====
 

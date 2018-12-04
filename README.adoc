@@ -2,7 +2,7 @@
 :toc:
 :toc-placement!:
 
-https://travis-ci.org/vagrant-landrush/landrush[image:https://travis-ci.org/vagrant-landrush/landrush.png[Build Status]]
+image:https://travis-ci.org/vagrant-landrush/landrush.svg?branch=master["Build Status", link="https://travis-ci.org/vagrant-landrush/landrush"]
 https://ci.appveyor.com/project/hferentschik/landrush-3agrx/branch/master[image:https://ci.appveyor.com/api/projects/status/3iv8sv5v73s15mt6/branch/master?svg=true[Build Status]]
 image:https://badge.fury.io/rb/landrush.svg["Gem Version", link="https://badge.fury.io/rb/landrush"]
 
