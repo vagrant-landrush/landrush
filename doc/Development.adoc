@@ -137,7 +137,7 @@ curl -u carlos https://rubygems.org/api/v1/api_key.yaml > ~/.gem/credentials
 ** Make sure all issues are resolved
 ** Move unresolved issues into an upcoming release
 ** Close milestone
-* Update the link:CHANGELOG.md[CHANGELOG]
+* Update the link:CHANGELOG.md[CHANGELOG] (you can use _scripts/changelog.sh to generate the content)
 * Update link:lib/landrush/version.rb[version.rb] with the correct
   release version. Consider http://semver.org/:[Semantic Versioning] guidelines
   when deciding on the release version

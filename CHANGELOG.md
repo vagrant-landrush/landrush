@@ -1,3 +1,11 @@
+## [1.3.1] - 2018-12-04
+
+- Issue [#11](https://github.com/vagrant-landrush/landrush/issues/11)   - Landrush prevents the machine from reaching internet
+- Issue [#165](https://github.com/vagrant-landrush/landrush/issues/165) - Unable to use with CentOS v5 boxes on vmware_fusion
+- Issue [#314](https://github.com/vagrant-landrush/landrush/issues/314) - get_network_name fails on windows 10
+- Issue [#319](https://github.com/vagrant-landrush/landrush/issues/319) - Installation error because can't build eventmachine gem
+- Issue [#321](https://github.com/vagrant-landrush/landrush/issues/321) - iptables rule - move from OUTPUT => PREROUTING
+
 ## [1.3.0] - 2018-09-19
 
 - Issue [#177](https://github.com/vagrant-landrush/landrush/issues/177) - Allow multiple TLD kind/feature priority/major
