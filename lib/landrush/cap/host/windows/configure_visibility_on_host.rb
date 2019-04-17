@@ -1,5 +1,6 @@
 # This file needs to be able to execute out of the Vagrant context. Do not require any non core or non relative files
 require 'ipaddr'
+require 'English'
 require_relative '../../../util/retry'
 
 module Landrush
@@ -19,46 +20,101 @@ module Landrush
 
           # If this registry query succeeds we assume we have Admin rights
           # http://stackoverflow.com/questions/8268154/run-ruby-script-in-elevated-mode/27954953
+          # https://stackoverflow.com/a/2400/1040571
+          # "[...] $?, which is the same as $CHILD_STATUS,
+          # accesses the status of the last system executed command if you use
+          # the backticks, system() or %x{} [...]"
           def admin_mode?
-            (`reg query HKU\\S-1-5-19 2>&1` =~ /ERROR/).nil?
+            `reg query HKU\\S-1-5-19 2>&1`
+            $CHILD_STATUS.exitstatus.zero?
           end
 
-          # Given an IP determines the network name, if any. Uses netsh which generates output like this:
-          #
-          # ...
-          # \n\n
-          # Configuration for interface "Ethernet 2"
-          #    DHCP enabled:                         Yes
-          #    IP Address:                           10.10.10.1
-          #    Subnet Prefix:                        10.10.10.0/24 (mask 255.255.255.0)
-          #    InterfaceMetric:                      10
-          #    DNS servers configured through DHCP:  None
-          #    Register with which suffix:           Primary only
-          #    WINS servers configured through DHCP: None
-          # \n\n
-          # ...
-          def get_network_name(ip)
-            cmd_out = `netsh interface ip show config`
-            network_details = cmd_out.split(/^$/).reject(&:empty?).select do |settings|
-              begin
-                lines = settings.split(/\n/).reject(&:empty?)
-                subnet = lines[3]
-                next false unless subnet =~ /Subnet Prefix/
+          # Given an IP determines the network adapter guid, if any.
+          # We can't use netsh due to its output being locale dependant.
+          # Using Windows registry we achieve the same result of netsh in
+          # whatever language Windows is.
+          def get_network_guid(address)
+            address = IPAddr.new(address.to_s)
 
-                mask = IPAddr.new(subnet.match(%r{.* (\d{1,3}\.\d{1,3}\.\d{1,3}.\d{1,3}/\d{1,3}).*}).captures[0])
-                address = IPAddr.new(ip)
+            interfaces do |interface_guid|
+              interface = open_interface("#{INTERFACES}\\#{interface_guid}")
+              if_ip, if_mask = interface_address(interface)
 
-                mask.include?(address)
-              rescue StandardError
-                false
-              end
+              next if if_ip.nil?
+
+              if_net = IPAddr.new("#{if_ip}/#{if_mask}")
+              return interface_guid if if_net.include?(address)
             end
-            return nil if network_details[0].nil? || network_details[0].empty?
-
-            network_details[0].split(/\n/).reject(&:empty?)[0].match(/Configuration for interface "(.*)"/).captures[0].strip
+          rescue StandardError
+            nil
           end
 
           private
+
+          # Fetch interfaces from registry
+          # This is a separate method to make testing easier
+          def interfaces
+            Win32::Registry::HKEY_LOCAL_MACHINE.open(INTERFACES) do |interfaces|
+              interfaces.each_key do |guid, _|
+                yield guid
+              end
+            end
+          end
+
+          # Opens an interface key from registry
+          # This is a separate method to make testing easier
+          def open_interface(guid_path)
+            Win32::Registry::HKEY_LOCAL_MACHINE.open(guid_path)
+          end
+
+          # Fetches IP/mask info from registry from a given registry entry
+          # This is a separate method to make testing easier
+          #
+          # The registry may look like this:
+          # {46666082-84ff-4888-8d75-31079e325934}:
+          #         EnableDHCP => 1
+          #         DhcpIPAddress => 172.29.5.24
+          #         DhcpSubnetMask => 255.255.254.0
+          # {61e509a1-cffa-4b7f-8e7f-5a6991deba2b}:
+          #         EnableDHCP => 0
+          #         IPAddress => ["192.168.56.1"]
+          #         SubnetMask => ["255.255.255.0"]
+          # {6c902ac7-4845-46d4-843e-2707e2270b0d}:
+          #         EnableDHCP => 0
+          #         IPAddress => ["0.0.0.0"]
+          #         SubnetMask => ["0.0.0.0"]
+          # {6d2f3579-bc95-4a18-bed5-fb8b87b8673b}:
+          #         EnableDHCP => 0
+          #
+          # If a given interface does not have an address, win32/registry
+          # will trow an Win32::Registry::Error (which inherits directly from StandardError).
+          def interface_address(interface)
+            dhcp_enabled = interface.read('EnableDHCP')[1]
+
+            if dhcp_enabled
+              if_ip = interface.read('DhcpIPAddress')[1]
+              if_mask = interface.read('DhcpSubnetMask')[1]
+            else
+              if_ip = interface.read('IPAddress')[1]
+              if_mask = interface.read('SubnetMask')[1]
+            end
+
+            if if_ip.is_a? Array
+              if_ip = if_ip[0]
+            end
+
+            if if_mask.is_a? Array
+              if_mask = if_mask[0]
+            end
+
+            if if_ip == '0.0.0.0'
+              if_ip, if_mask = nil
+            end
+
+            [if_ip, if_mask]
+          rescue StandardError
+            [nil, nil]
+          end
 
           # Checks that all required tools are on the PATH and that the Wired AutoConfig service is started
           def ensure_prerequisites
@@ -92,19 +148,15 @@ module Landrush
             # Need to defer loading to ensure cross OS compatibility
             require 'win32/registry'
             if admin_mode?
-              network_name = get_network_name(ip)
-              if network_name.nil?
-                info("unable to determine network interface for #{ip}. DNS on host cannot be configured. Try manual configuration.")
-                return
-              else
-                info("adding Landrush'es DNS server to network '#{network_name}' using DNS IP '#{ip}'' and search domain '#{tld}'")
-              end
-              network_guid = get_guid(network_name)
+              address = IPAddr.new(ip)
+
+              network_guid = get_network_guid(address)
+
               if network_guid.nil?
                 info("unable to determine network GUID for #{ip}. DNS on host cannot be configured. Try manual configuration.")
                 return
               end
-              interface_path = INTERFACES + "\\{#{network_guid}}"
+              interface_path = INTERFACES + "\\#{network_guid}"
               Win32::Registry::HKEY_LOCAL_MACHINE.open(interface_path, Win32::Registry::KEY_ALL_ACCESS) do |reg|
                 reg['NameServer'] = '127.0.0.1'
                 reg['Domain'] = tld
