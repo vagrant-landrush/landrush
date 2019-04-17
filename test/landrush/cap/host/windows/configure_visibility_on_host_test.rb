@@ -21,49 +21,7 @@ DOT_3_SVC_STOPPED = 'SERVICE_NAME: dot3svc
         WAIT_HINT          : 0x0
 '.freeze
 
-NETSH_EXAMPLE = '
-Configuration for interface "VirtualBox Host-Only Network #1"
-    DHCP enabled:                         No
-    IP Address:                           192.168.99.1
-    Subnet Prefix:                        192.168.99.0/24 (mask 255.255.255.0)
-    InterfaceMetric:                      25
-    Statically Configured DNS Servers:    None
-    Register with which suffix:           Primary only
-    Statically Configured WINS Servers:   None
-
-Configuration for interface "Ethernet"
-    DHCP enabled:                         Yes
-    IP Address:                           192.168.1.193
-    Subnet Prefix:                        192.168.1.0/24 (mask 255.255.255.0)
-    Default Gateway:                      192.168.1.1
-    Gateway Metric:                       0
-    InterfaceMetric:                      35
-    DNS servers configured through DHCP:  192.168.1.1
-    Register with which suffix:           Primary only
-    WINS servers configured through DHCP: None
-
-Configuration for interface "Loopback Pseudo-Interface 1"
-    DHCP enabled:                         No
-    IP Address:                           127.0.0.1
-    Subnet Prefix:                        127.0.0.0/8 (mask 255.0.0.0)
-    InterfaceMetric:                      75
-    Statically Configured DNS Servers:    None
-    Register with which suffix:           Primary only
-    Statically Configured WINS Servers:   None
-'.freeze
-
-NETSH_EXAMPLE_SINGLE_INTERFACE = '
-Configuration for interface "Ethernet"
-    DHCP enabled:                         Yes
-    IP Address:                           192.168.1.193
-    Subnet Prefix:                        192.168.1.0/24 (mask 255.255.255.0)
-    Default Gateway:                      192.168.1.1
-    Gateway Metric:                       0
-    InterfaceMetric:                      35
-    DNS servers configured through DHCP:  192.168.1.1
-    Register with which suffix:           Primary only
-    WINS servers configured through DHCP: None
-'.freeze
+NETWORK_GUIDS = %w[{1abb8efe-c0d5-4ddf-8e29-eae8499e92ba} {34d34575-bc0d-4ca7-8571-97bccc35b437} {46666082-84ff-4888-8d75-31079e325934}].freeze
 
 module Landrush
   module Cap
@@ -107,31 +65,119 @@ module Landrush
           end
         end
 
-        describe '#get_network_name' do
-          it 'returns network name for matching IP' do
-            ConfigureVisibilityOnHost.expects(:`).with('netsh interface ip show config').returns(NETSH_EXAMPLE)
-            expect(ConfigureVisibilityOnHost.get_network_name('192.168.1.193')).must_equal('Ethernet')
+        describe '#get_network_guid' do
+          it 'should not be nil for IPAddr' do
+            ConfigureVisibilityOnHost.expects(:interfaces).multiple_yields(*NETWORK_GUIDS)
+
+            interface = MiniTest::Mock.new
+            interface.expect(:read, [0, false], ['EnableDHCP'])
+            interface.expect(:read, [0, '172.16.1.193'], ['IPAddress'])
+            interface.expect(:read, [0, '255.0.0.0'], ['SubnetMask'])
+            ConfigureVisibilityOnHost.expects(:open_interface).returns(interface)
+
+            address = IPAddr.new('172.28.128.3/32')
+            expect(ConfigureVisibilityOnHost.get_network_guid(address)).wont_be_nil
+          end
+
+          it 'should take into account that registry sometimes stores multiple IPs' do
+            ConfigureVisibilityOnHost.expects(:interfaces).yields(NETWORK_GUIDS[0])
+
+            interface = MiniTest::Mock.new
+            interface.expect(:read, [0, false], ['EnableDHCP'])
+            interface.expect(:read, [0, ['192.168.1.193']], ['IPAddress'])
+            interface.expect(:read, [0, ['255.255.255.0']], ['SubnetMask'])
+            ConfigureVisibilityOnHost.expects(:open_interface).returns(interface)
+            expect(ConfigureVisibilityOnHost.get_network_guid('192.168.1.193')).must_equal('{1abb8efe-c0d5-4ddf-8e29-eae8499e92ba}')
+          end
+
+          it 'should ignore 0.0.0.0 interfaces' do
+            ConfigureVisibilityOnHost.expects(:interfaces).multiple_yields(*NETWORK_GUIDS)
+
+            interface1 = MiniTest::Mock.new
+            interface1.expect(:read, [0, false], ['EnableDHCP'])
+            interface1.expect(:read, [0, '0.0.0.0'], ['IPAddress'])
+            interface1.expect(:read, [0, '0.0.0.0'], ['SubnetMask'])
+            interface2 = MiniTest::Mock.new
+            interface2.expect(:read, [0, false], ['EnableDHCP'])
+            interface2.expect(:read, [0, '192.168.1.193'], ['IPAddress'])
+            interface2.expect(:read, [0, '255.255.255.0'], ['SubnetMask'])
+            ConfigureVisibilityOnHost.expects(:open_interface).returns(interface1, interface2, interface1).at_most(3)
+
+            expect(ConfigureVisibilityOnHost.get_network_guid('192.168.1.193')).must_equal('{34d34575-bc0d-4ca7-8571-97bccc35b437}')
+          end
+
+          it 'returns the interface guid for matching static IP' do
+            ConfigureVisibilityOnHost.expects(:interfaces).multiple_yields(*NETWORK_GUIDS)
+
+            interface1 = MiniTest::Mock.new
+            interface1.expect(:read, [0, false], ['EnableDHCP'])
+            interface1.expect(:read, [0, '10.42.42.42'], ['IPAddress'])
+            interface1.expect(:read, [0, '255.0.0.0'], ['SubnetMask'])
+            interface2 = MiniTest::Mock.new
+            interface2.expect(:read, [0, false], ['EnableDHCP'])
+            interface2.expect(:read, [0, '192.168.1.193'], ['IPAddress'])
+            interface2.expect(:read, [0, '255.255.255.0'], ['SubnetMask'])
+            ConfigureVisibilityOnHost.expects(:open_interface).returns(interface1, interface2).at_most(2)
+
+            expect(ConfigureVisibilityOnHost.get_network_guid('192.168.1.193')).must_equal('{34d34575-bc0d-4ca7-8571-97bccc35b437}')
           end
 
           it 'returns nil for non matching IP' do
-            ConfigureVisibilityOnHost.expects(:`).with('netsh interface ip show config').returns(NETSH_EXAMPLE)
-            expect(ConfigureVisibilityOnHost.get_network_name('42.42.42.42')).must_be_nil
+            ConfigureVisibilityOnHost.expects(:interfaces).multiple_yields(*NETWORK_GUIDS)
+
+            interface1 = MiniTest::Mock.new
+            interface1.expect(:read, [0, false], ['EnableDHCP'])
+            interface1.expect(:read, [0, '10.42.42.42'], ['IPAddress'])
+            interface1.expect(:read, [0, '255.0.0.0'], ['SubnetMask'])
+            interface2 = MiniTest::Mock.new
+            interface2.expect(:read, [0, false], ['EnableDHCP'])
+            interface2.expect(:read, [0, '192.168.1.193'], ['IPAddress'])
+            interface2.expect(:read, [0, '255.255.255.0'], ['SubnetMask'])
+            interface3 = MiniTest::Mock.new
+            interface3.expect(:read, [0, false], ['EnableDHCP'])
+            interface3.expect(:read, [0, '172.16.1.193'], ['IPAddress'])
+            interface3.expect(:read, [0, '255.255.0.0'], ['SubnetMask'])
+            ConfigureVisibilityOnHost.expects(:open_interface).returns(interface1, interface2, interface3).at_most(3)
+            expect(ConfigureVisibilityOnHost.get_network_guid('42.42.42.42')).must_be_nil
+          end
+
+          it 'should work for DHCP set interfaces' do
+            ConfigureVisibilityOnHost.expects(:interfaces).multiple_yields(*NETWORK_GUIDS)
+
+            interface1 = MiniTest::Mock.new
+            interface1.expect(:read, [0, false], ['EnableDHCP'])
+            interface1.expect(:read, [0, '10.42.42.42'], ['IPAddress'])
+            interface1.expect(:read, [0, '255.0.0.0'], ['SubnetMask'])
+            interface2 = MiniTest::Mock.new
+            interface2.expect(:read, [0, true], ['EnableDHCP'])
+            interface2.expect(:read, [0, '192.168.1.193'], ['DhcpIPAddress'])
+            interface2.expect(:read, [0, '255.255.255.0'], ['DhcpSubnetMask'])
+            interface3 = MiniTest::Mock.new
+            interface3.expect(:read, [0, false], ['EnableDHCP'])
+            interface3.expect(:read, [0, '172.16.1.193'], ['IPAddress'])
+            interface3.expect(:read, [0, '255.255.0.0'], ['SubnetMask'])
+            ConfigureVisibilityOnHost.expects(:open_interface).returns(interface1, interface2, interface3).at_most(3)
+            expect(ConfigureVisibilityOnHost.get_network_guid('42.42.42.42')).must_be_nil
           end
 
           it 'returns nil for nil input' do
-            ConfigureVisibilityOnHost.expects(:`).with('netsh interface ip show config').returns(NETSH_EXAMPLE)
-            expect(ConfigureVisibilityOnHost.get_network_name(nil)).must_be_nil
+            expect(ConfigureVisibilityOnHost.get_network_guid(nil)).must_be_nil
           end
 
           it 'returns nil for empty input' do
-            ConfigureVisibilityOnHost.expects(:`).with('netsh interface ip show config').returns(NETSH_EXAMPLE)
-            expect(ConfigureVisibilityOnHost.get_network_name('')).must_be_nil
+            expect(ConfigureVisibilityOnHost.get_network_guid('')).must_be_nil
           end
 
           describe '#get_network_name' do
-            it 'returns network name for single interface' do
-              ConfigureVisibilityOnHost.expects(:`).with('netsh interface ip show config').returns(NETSH_EXAMPLE_SINGLE_INTERFACE)
-              expect(ConfigureVisibilityOnHost.get_network_name('192.168.1.193')).must_equal('Ethernet')
+            it 'returns network guid for single interface' do
+              ConfigureVisibilityOnHost.expects(:interfaces).yields(NETWORK_GUIDS[0])
+
+              interface = MiniTest::Mock.new
+              interface.expect(:read, [0, false], ['EnableDHCP'])
+              interface.expect(:read, [0, '192.168.1.193'], ['IPAddress'])
+              interface.expect(:read, [0, '255.255.255.0'], ['SubnetMask'])
+              ConfigureVisibilityOnHost.expects(:open_interface).returns(interface)
+              expect(ConfigureVisibilityOnHost.get_network_guid('192.168.1.193')).must_equal('{1abb8efe-c0d5-4ddf-8e29-eae8499e92ba}')
             end
           end
         end

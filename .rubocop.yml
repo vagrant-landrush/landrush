@@ -8,3 +8,11 @@ AllCops:
 
 Style/FrozenStringLiteralComment:
   Enabled: false
+
+Metrics/BlockLength:
+  Max: 50
+  ExcludedMethods: ['describe', 'context']
+
+Metrics/ModuleLength:
+  Exclude:
+    - !ruby/regexp /^test\//
