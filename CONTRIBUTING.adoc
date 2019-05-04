@@ -83,10 +83,6 @@ $ git push origin master
 
 == Maintainers
 
-* Brian Exelbierd (@bexelbie)
-* Eric Sorenson (@ahpook)
-* Florian Holzhauer (@fh)
+* Davi Koscianski Vidal (@davividal)
 * Hardy Ferentschik (@hferentschik)
-* Josef Strzibny (@strzibny)
-* Paul Hinze (@phinze)
-* Reto Kaiser (@njam)
+
