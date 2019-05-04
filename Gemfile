@@ -19,5 +19,5 @@ group :development do
   gem 'rubocop', '~> 0.59.0'
   gem 'vagrant',
       git: 'https://github.com/mitchellh/vagrant.git',
-      ref: 'v2.1.2'
+      ref: 'v2.2.4'
 end

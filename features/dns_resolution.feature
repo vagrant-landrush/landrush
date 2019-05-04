@@ -36,4 +36,4 @@ Feature: DNS resolution
       | box              | provider   |
       | debian/jessie64  | virtualbox |
       | ubuntu/xenial64  | virtualbox |
-      | ubuntu/bionic64  | virtualbox |
+#      | ubuntu/bionic64  | virtualbox |
