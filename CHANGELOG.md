@@ -1,3 +1,9 @@
+## [1.3.2] - 2019-05-06
+
+- Issue [#339](https://github.com/vagrant-landrush/landrush/issues/339) - Update link to TravisCI badge in README
+- Issue [#344](https://github.com/vagrant-landrush/landrush/issues/344) - Unable to determine network interface on non-English Windows
+- Issue [#346](https://github.com/vagrant-landrush/landrush/issues/346) - Upgrade Vagrant development version
+
 ## [1.3.1] - 2018-12-04
 
 - Issue [#11](https://github.com/vagrant-landrush/landrush/issues/11)   - Landrush prevents the machine from reaching internet
