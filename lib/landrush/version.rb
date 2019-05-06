@@ -1,3 +1,3 @@
 module Landrush
-  VERSION = '1.3.2'.freeze
+  VERSION = '1.3.3.dev'.freeze
 end
