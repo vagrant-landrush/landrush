@@ -187,7 +187,7 @@ It is recommended to use an elevated command prompt (command prompt with
 full administrator permissions), since admin privileges are needed to
 make the required changes. Landrush will try to elevate your prompt
 automatically, but this requires spawning of additional processes which in
-turn loose some potentially important log messages.
+turn lose some potentially important log messages.
 +
 In the following section manual network configuration is described using
 Windows 10 and VirtualBox.
