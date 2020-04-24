@@ -45,6 +45,7 @@ module Landrush
               if_net = IPAddr.new("#{if_ip}/#{if_mask}")
               return interface_guid if if_net.include?(address)
             end
+            nil
           rescue StandardError
             nil
           end
