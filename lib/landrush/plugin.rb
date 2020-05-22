@@ -33,9 +33,9 @@ module Landrush
       end
 
       # Hooks for VMWarefusion provider
-      if defined?(HashiCorp::VagrantVMwarefusion)
-        hook.before(HashiCorp::VagrantVMwarefusion::Action::Network, pre_boot_actions)
-        hook.after(HashiCorp::VagrantVMwarefusion::Action::WaitForCommunicator, post_boot_actions)
+      if defined?(HashiCorp::VagrantVMwareDesktop)
+        hook.before(HashiCorp::VagrantVMwareDesktop::Action::Network, pre_boot_actions)
+        hook.after(HashiCorp::VagrantVMwareDesktop::Action::WaitForCommunicator, post_boot_actions)
       end
 
       # Hooks for Parallels provider
