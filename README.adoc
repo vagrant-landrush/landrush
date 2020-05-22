@@ -32,6 +32,9 @@ Install under Vagrant (1.1 or later):
 $ vagrant plugin install landrush
 ....
 
+If you're using the VMware provider, you'll need the
+link:https://www.vagrantup.com/vmware/index.html[Vagrant VMWare Desktop plugin].
+
 == Getting started
 
 .  Enable the plugin in your `Vagrantfile`:
