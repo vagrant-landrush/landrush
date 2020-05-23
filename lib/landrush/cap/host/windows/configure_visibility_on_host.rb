@@ -202,7 +202,7 @@ module Landrush
           end
 
           def wired_autoconfig_service_state
-            `sc query dot3svc`
+            `chcp 437 | sc query dot3svc`
           end
 
           def wired_autoconfig_service_running?
